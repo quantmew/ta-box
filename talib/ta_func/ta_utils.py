@@ -10,7 +10,7 @@ def check_array(real: np.ndarray) -> np.ndarray:
         real = np.ascontiguousarray(real)
     return real
 
-def check_begidx1(a1: np.array) -> cython.int:
+def check_begidx1(a1: np.ndarray) -> cython.int:
     length = a1.shape[0]
     for i in range(length):
         val = a1[i]

@@ -6,7 +6,7 @@ from .ta_utils import check_array, check_begidx1
 def TA_SMA_Lookback(optInTimePeriod: cython.int):
     return optInTimePeriod - 1
 
-def TA_SMA(startIdx: cython.int, endIdx: cython.int, inReal: np.array, optInTimePeriod: cython.int, outReal: np.array) -> None:
+def TA_SMA(startIdx: cython.int, endIdx: cython.int, inReal: np.ndarray, optInTimePeriod: cython.int, outReal: np.ndarray) -> None:
     
     lookbackTotal: cython.int = optInTimePeriod - 1
 
