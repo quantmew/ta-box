@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 extensions = [
-    Extension("*", ["tabox/*/*.py"])
+    Extension("*", ["tabox/*/*.py"]) # extra_compile_args=["-O3", "/Ox"]
     # Extension("mandheling", ["mandheling/*/*.pyx"]),
     # Everything but primes.pyx is included here.
     # Extension("*", ["*.pyx"],
@@ -34,6 +34,10 @@ setuptools.setup(
     ],
     packages=setuptools.find_packages(),
     python_requires='>=3.8',
-    ext_modules=cythonize(extensions, language_level = "3", annotate=True),
-    compiler_directives={'language_level' : "3"},   # or "2" or "3str"
+    ext_modules=cythonize(
+        extensions,
+        language_level = "3",
+        annotate=True,
+        compiler_directives={'language_level' : "3"},   # or "2" or "3str"
+    ),
 )

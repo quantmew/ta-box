@@ -2,16 +2,16 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1
 
-def TA_SQRT_Lookback() -> cython.int:
+def TA_TAN_Lookback() -> cython.int:
     return 0
 
-def TA_SQRT(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], outReal: cython.double[::1]) -> None:
+def TA_TAN(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], outReal: cython.double[::1]) -> None:
     outReal = np.sqrt(inReal[startIdx:endIdx])
 
-def SQRT(real: np.ndarray) -> np.ndarray:
-    """ SQRT(real)
+def TAN(real: np.ndarray) -> np.ndarray:
+    """ TAN(real)
 
-    Vector Square Root (Math Transform)
+    Vector Trigonometric Tan (Math Transform)
 
     Inputs:
         real: (any ndarray)
@@ -25,5 +25,5 @@ def SQRT(real: np.ndarray) -> np.ndarray:
 
     startIdx: cython.int = check_begidx1(real)
     endIdx: cython.int = length - 1
-    lookback = startIdx + TA_SQRT_Lookback()
-    return TA_SQRT(startIdx, endIdx, real[startIdx:], outReal[lookback:])
+    lookback = startIdx + TA_TAN_Lookback()
+    return TA_TAN(startIdx, endIdx, real[startIdx:], outReal[lookback:])

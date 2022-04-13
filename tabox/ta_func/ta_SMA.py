@@ -1,5 +1,4 @@
 
-from typing import List
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1, check_timeperiod
