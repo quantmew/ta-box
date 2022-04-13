@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 extensions = [
-    Extension("*", ["talib/*/*.py"])
+    Extension("*", ["tabox/*/*.py"])
     # Extension("mandheling", ["mandheling/*/*.pyx"]),
     # Everything but primes.pyx is included here.
     # Extension("*", ["*.pyx"],

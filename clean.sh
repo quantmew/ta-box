@@ -1,3 +1,3 @@
-rm talib/*/*.c
-rm talib/*/*.pyd
-rm talib/*/*.html
+rm tabox/*/*.c
+rm tabox/*/*.pyd
+rm tabox/*/*.html
