@@ -26,4 +26,4 @@ def SQRT(real: np.ndarray) -> np.ndarray:
     startIdx: cython.int = check_begidx1(real)
     endIdx: cython.int = length - 1
     lookback = startIdx + TA_SQRT_Lookback()
-    return TA_SQRT(startIdx, endIdx, real[startIdx:], outReal[lookback:])
+    return TA_SQRT(0, endIdx, real[startIdx:], outReal[lookback:])

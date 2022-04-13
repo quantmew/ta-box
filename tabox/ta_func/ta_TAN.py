@@ -6,7 +6,7 @@ def TA_TAN_Lookback() -> cython.int:
     return 0
 
 def TA_TAN(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], outReal: cython.double[::1]) -> None:
-    outReal = np.sqrt(inReal[startIdx:endIdx])
+    outReal = np.tan(inReal[startIdx:endIdx])
 
 def TAN(real: np.ndarray) -> np.ndarray:
     """ TAN(real)
@@ -26,4 +26,4 @@ def TAN(real: np.ndarray) -> np.ndarray:
     startIdx: cython.int = check_begidx1(real)
     endIdx: cython.int = length - 1
     lookback = startIdx + TA_TAN_Lookback()
-    return TA_TAN(startIdx, endIdx, real[startIdx:], outReal[lookback:])
+    return TA_TAN(0, endIdx, real[startIdx:], outReal[lookback:])
