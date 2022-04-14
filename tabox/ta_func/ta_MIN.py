@@ -3,6 +3,15 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1, check_timeperiod
 
+def min_double(left: cython.double, right: cython.double) -> cython.double:
+    """ min_double(left, right) -> double
+
+    Return the minimum of two doubles
+    """
+    if left < right:
+        return right
+    else:
+        return left
 
 def TA_MIN_Lookback(optInTimePeriod: cython.int) -> cython.int:
     """ TA_MIN_Lookback(optInTimePeriod) -> int
@@ -16,25 +25,85 @@ def TA_MIN_Lookback(optInTimePeriod: cython.int) -> cython.int:
     """
     return optInTimePeriod - 1
 
-def TA_MIN(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> None:
+@cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.cdivision(True)
+def TA_MIN_LARGE_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> None:
     n: cython.int = endIdx - startIdx + 1
-    prefixMin = np.zeros((n,))
-    suffixMin = np.zeros((n,))
+    prefixMin: cython.double[::1] = np.empty(shape=(n,), dtype=np.float64) # [0] * n
+    suffixMin: cython.double[::1] = np.empty(shape=(n,), dtype=np.float64)
 
-    for i in range(n):
+    i: cython.int = 0
+    inIdx: cython.int = startIdx
+    while i < n:
         if i % optInTimePeriod == 0:
-            prefixMin[i] = inReal[startIdx + i]
+            prefixMin[i] = inReal[inIdx]
         else:
-            prefixMin[i] = min(prefixMin[i-1], inReal[startIdx + i])
+            prefixMin[i] = min_double(prefixMin[i-1], inReal[inIdx])
+        i += 1
+        inIdx += 1
 
-    for i in range(n-1, -1, -1):
+    i: cython.int = n-1
+    inIdx: cython.int = startIdx + i
+    while i >= 0:
         if i == n - 1 or (i + 1) % optInTimePeriod == 0:
-            suffixMin[i] = inReal[startIdx + i]
+            suffixMin[i] = inReal[inIdx]
         else:
-            suffixMin[i] = min(suffixMin[i+1], inReal[startIdx + i])
+            suffixMin[i] = min_double(suffixMin[i+1], inReal[inIdx])
+        i -= 1
+        inIdx -= 1
 
-    for i in range(n - optInTimePeriod + 1):
-        outReal[i] = min(suffixMin[i], prefixMin[i + optInTimePeriod - 1])
+    suffix_i: cython.int = 0
+    prefix_i: cython.int = optInTimePeriod - 1
+    while suffix_i < n - optInTimePeriod + 1:
+        outReal[i] = min_double(suffixMin[suffix_i], prefixMin[prefix_i])
+        suffix_i += 1
+        prefix_i += 1
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.cdivision(True)
+def TA_MIN_SMALL_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> None:
+    nbInitialElementNeeded: cython.int = optInTimePeriod-1
+
+    if startIdx < nbInitialElementNeeded:
+        startIdx = nbInitialElementNeeded
+
+    if startIdx > endIdx:
+        return
+
+    outIdx: cython.int = 0
+    today: cython.int = startIdx
+    trailingIdx: cython.int = startIdx-nbInitialElementNeeded
+    highestIdx: cython.int = -1
+    highest: cython.double = 0.0
+
+    while today <= endIdx:
+        tmp: cython.double = inReal[today]
+
+        if highestIdx < trailingIdx:
+            highestIdx = trailingIdx
+            highest = inReal[highestIdx]
+            i: cython.int = highestIdx
+            while i <= today:
+                i += 1
+                tmp = inReal[i]
+                if tmp > highest:
+                    highestIdx = i
+                    highest = tmp
+        elif tmp >= highest:
+            highestIdx = today
+            highest = tmp
+        outReal[outIdx] = highest
+        outIdx += 1
+        trailingIdx+=1
+        today+=1
+
+def TA_MIN(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> None:
+    if optInTimePeriod < 100:
+        TA_MIN_SMALL_TIMEPERIOD(startIdx, endIdx, inReal, optInTimePeriod, outReal)
+    else:
+        TA_MIN_LARGE_TIMEPERIOD(startIdx, endIdx, inReal, optInTimePeriod, outReal)
 
 def MIN(real: np.ndarray, timeperiod: cython.int) -> np.ndarray:
     """ MIN(real[, timeperiod=?])
@@ -49,10 +118,10 @@ def MIN(real: np.ndarray, timeperiod: cython.int) -> np.ndarray:
         real
     """
     real = check_array(real)
-    length = real.shape[0]
-    startIdx = check_begidx1(real)
-    endIdx= length - startIdx - 1
-    lookback = startIdx + TA_MIN_Lookback(timeperiod)
+    length: cython.int = real.shape[0]
+    startIdx: cython.int = check_begidx1(real)
+    endIdx: cython.int = length - startIdx - 1
+    lookback: cython.int = startIdx + TA_MIN_Lookback(timeperiod)
     outReal = np.full_like(real, np.nan)
     TA_MIN(0, endIdx, real[startIdx:], timeperiod, outReal[lookback:])
     return outReal
