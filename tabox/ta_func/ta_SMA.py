@@ -71,9 +71,9 @@ def SMA(real: np.ndarray, timeperiod: int = 30) -> np.ndarray:
     length: cython.int = real.shape[0]
 
     startIdx: cython.int = check_begidx1(real)
-    endIdx: cython.int = length - 1
+    endIdx: cython.int = length - startIdx - 1
     lookback: cython.int = startIdx + TA_SMA_Lookback(timeperiod)
 
-    TA_SMA(startIdx, endIdx, real[startIdx:], timeperiod, outReal[lookback:])
+    TA_SMA(0, endIdx, real[startIdx:], timeperiod, outReal[lookback:])
 
     return outReal
