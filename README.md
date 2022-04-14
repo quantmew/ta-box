@@ -1,4 +1,4 @@
-# ta-lib
+# TA-Box
 
 This is a Python implementation for [TA-LIB](http://ta-lib.org) based on Cython.
 
@@ -40,15 +40,15 @@ $ python setup.py install
 
 - Math Operators
   
-  - ADD
+  - ADD✓
   
-  - DIV
+  - DIV✓
   
-  - MAX
+  - MAX✓
   
   - MAXINDEX
   
-  - MIN
+  - MIN✓
   
   - MININDEX
   
@@ -56,19 +56,19 @@ $ python setup.py install
   
   - MINMAXINDEX
   
-  - MULT
+  - MULT✓
   
-  - SUB
+  - SUB✓
   
   - SUM
 
 - Math Transform
   
-  - ACOS
+  - ACOS✓
   
-  - ASIN
+  - ASIN✓
   
-  - ATAN
+  - ATAN✓
   
   - CEIL
   
@@ -84,13 +84,13 @@ $ python setup.py install
   
   - LOG10
   
-  - SIN
+  - SIN✓
   
   - SINH
   
-  - SQRT
+  - SQRT✓
   
-  - TAN
+  - TAN✓
   
   - TANH
 
@@ -182,7 +182,7 @@ $ python setup.py install
   
   - SAREXT
   
-  - SMA
+  - SMA✓
   
   - T3
   
