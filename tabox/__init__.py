@@ -12,3 +12,5 @@ from .ta_func.ta_MAX import *
 from .ta_func.ta_MIN import *
 
 from .ta_func.ta_SMA import *
+
+from .ta_func.ta_TRANGE import *

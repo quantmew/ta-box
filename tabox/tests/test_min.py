@@ -16,6 +16,14 @@ class TestMIN(unittest.TestCase):
             that_ret = that_MIN(close, timeperiod=t)
 
             self.assertTrue(np.array_equal(this_ret, that_ret, equal_nan=True))
+        
+        for i in range(200, 500):
+            t = 200
+            close = np.random.random(i)
+            this_ret = this_MIN(close, timeperiod=t)
+            that_ret = that_MIN(close, timeperiod=t)
+
+            self.assertTrue(np.array_equal(this_ret, that_ret, equal_nan=True))
 
 if __name__ == '__main__':
     unittest.main()

@@ -9,9 +9,9 @@ def min_double(left: cython.double, right: cython.double) -> cython.double:
     Return the minimum of two doubles
     """
     if left < right:
-        return right
-    else:
         return left
+    else:
+        return right
 
 def TA_MIN_Lookback(optInTimePeriod: cython.int) -> cython.int:
     """ TA_MIN_Lookback(optInTimePeriod) -> int
@@ -56,7 +56,7 @@ def TA_MIN_LARGE_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cy
     suffix_i: cython.int = 0
     prefix_i: cython.int = optInTimePeriod - 1
     while suffix_i < n - optInTimePeriod + 1:
-        outReal[i] = min_double(suffixMin[suffix_i], prefixMin[prefix_i])
+        outReal[suffix_i] = min_double(suffixMin[suffix_i], prefixMin[prefix_i])
         suffix_i += 1
         prefix_i += 1
 
@@ -74,27 +74,27 @@ def TA_MIN_SMALL_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cy
 
     outIdx: cython.int = 0
     today: cython.int = startIdx
-    trailingIdx: cython.int = startIdx-nbInitialElementNeeded
-    highestIdx: cython.int = -1
-    highest: cython.double = 0.0
+    trailingIdx: cython.int = startIdx - nbInitialElementNeeded
+    lowestIdx: cython.int = -1
+    lowest: cython.double = 0.0
 
     while today <= endIdx:
         tmp: cython.double = inReal[today]
 
-        if highestIdx < trailingIdx:
-            highestIdx = trailingIdx
-            highest = inReal[highestIdx]
-            i: cython.int = highestIdx
-            while i <= today:
+        if lowestIdx < trailingIdx:
+            lowestIdx = trailingIdx
+            lowest = inReal[lowestIdx]
+            i: cython.int = lowestIdx
+            while i + 1 <= today:
                 i += 1
                 tmp = inReal[i]
-                if tmp > highest:
-                    highestIdx = i
-                    highest = tmp
-        elif tmp >= highest:
-            highestIdx = today
-            highest = tmp
-        outReal[outIdx] = highest
+                if tmp < lowest:
+                    lowestIdx = i
+                    lowest = tmp
+        elif tmp <= lowest:
+            lowestIdx = today
+            lowest = tmp
+        outReal[outIdx] = lowest
         outIdx += 1
         trailingIdx+=1
         today+=1

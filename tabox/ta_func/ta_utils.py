@@ -36,8 +36,31 @@ def check_begidx2(a1: cython.double[::1], a2: cython.double[::1]) -> cython.int:
         return i
     raise Exception("inputs are all NaN")
 
+def check_begidx3(a1: cython.double[::1], a2: cython.double[::1], a3: cython.double[::1]) -> cython.int:
+    length = a1.shape[0]
+    for i in range(length):
+        val = a1[i]
+        if np.isnan(val):
+            continue
+        val = a2[i]
+        if np.isnan(val):
+            continue
+        val = a3[i]
+        if np.isnan(val):
+            continue
+        return i
+    raise Exception("inputs are all NaN")
+
 def check_length2(a1: cython.double[::1], a2: cython.double[::1]):
     length = a1.shape[0]
     if length != a2.shape[0]:
+        raise Exception("input array lengths are different")
+    return length
+
+def check_length3(a1: cython.double[::1], a2: cython.double[::1], a3: cython.double[::1]):
+    length = a1.shape[0]
+    if length != a2.shape[0]:
+        raise Exception("input array lengths are different")
+    if length != a3.shape[0]:
         raise Exception("input array lengths are different")
     return length

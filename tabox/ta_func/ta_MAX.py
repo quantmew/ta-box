@@ -56,7 +56,7 @@ def TA_MAX_LARGE_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cy
     suffix_i: cython.int = 0
     prefix_i: cython.int = optInTimePeriod - 1
     while suffix_i < n - optInTimePeriod + 1:
-        outReal[i] = max_double(suffixMax[suffix_i], prefixMax[prefix_i])
+        outReal[suffix_i] = max_double(suffixMax[suffix_i], prefixMax[prefix_i])
         suffix_i += 1
         prefix_i += 1
 
@@ -85,7 +85,7 @@ def TA_MAX_SMALL_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cy
             highestIdx = trailingIdx
             highest = inReal[highestIdx]
             i: cython.int = highestIdx
-            while i <= today:
+            while i + 1 <= today:
                 i += 1
                 tmp = inReal[i]
                 if tmp > highest:

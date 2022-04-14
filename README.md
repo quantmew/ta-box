@@ -352,7 +352,7 @@ $ python setup.py install
   
   - NATR
   
-  - TRANGE
+  - TRANGE✓
 
 - Volume Indicators
   
