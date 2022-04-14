@@ -10,12 +10,16 @@ This is a Python implementation for [TA-LIB](http://ta-lib.org) based on Cython.
 > * Candlestick pattern recognition
 > * Open-source API for C/C++, Java, Perl, Python and 100% Managed .NET
 
+Because TA-Box is written in pure Python, you do not have to install the TA-Lib.
+TA-Box also supports Cython compilation.
+With the support of cython, the speed of TA-Box is comparable to TA-LIB.
+
 ## Installation
 
 You can install from PyPI:
 
 ```
-$ python3 -m pip install TA-Lib-py
+$ python3 -m pip install TA-Box
 ```
 
 Or checkout the sources and run ``setup.py`` yourself:
@@ -60,7 +64,7 @@ $ python setup.py install
   
   - SUB✓
   
-  - SUM
+  - SUM✓
 
 - Math Transform
   

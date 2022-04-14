@@ -1,7 +1,11 @@
+from typing import Any
 import numpy as np
 import cython
 
-def check_array(real: np.ndarray) -> np.ndarray:
+def check_array(real: Any) -> np.ndarray:
+    if not isinstance(real, np.ndarray):
+        real = np.array(real, dtype=np.float64)
+
     if real.dtype != np.float64:
         raise Exception("input array type is not double")
     if real.ndim != 1:

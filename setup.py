@@ -16,8 +16,8 @@ extensions = [
 ]
 
 setuptools.setup(
-    name="TA-Lib-py",
-    version="0.0.1",
+    name="TA-Box",
+    version="0.0.1a1.dev2",
     author="Jun Wang",
     author_email="jstzwj@aliyun.com",
     description="A Python implementation for TA-LIB",
@@ -32,12 +32,16 @@ setuptools.setup(
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent",
     ],
-    packages=setuptools.find_packages(),
-    python_requires='>=3.8',
+    packages=['tabox'],
+    python_requires='>=3.6',
     ext_modules=cythonize(
         extensions,
         language_level = "3",
         annotate=True,
         compiler_directives={'language_level' : "3"},   # or "2" or "3str"
     ),
+    install_requires=[
+        'numpy>=1.19.2',
+        'cython>=0.29.21',
+    ]
 )
