@@ -52,6 +52,43 @@ def TA_SMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
     
     # All done. Indicate the output limits and return.
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.cdivision(True)
+def TA_INT_SMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.int[::1], optInTimePeriod: cython.int, outReal: cython.int[::1]) -> None:
+    lookbackTotal: cython.int = optInTimePeriod - 1
+
+    if startIdx < lookbackTotal:
+        startIdx = lookbackTotal
+    
+    if startIdx > endIdx:
+        return
+    
+    periodTotal: cython.int = 0
+    trailingIdx: cython.int = startIdx - lookbackTotal
+   
+    i: cython.int = trailingIdx
+    if optInTimePeriod > 1:
+        while i < startIdx:
+            periodTotal += inReal[i]
+            i += 1
+
+    outIdx: cython.int = 0
+    while True:
+        periodTotal += inReal[i]
+        i += 1
+
+        tempReal: cython.int = periodTotal
+
+        periodTotal -= inReal[trailingIdx]
+        trailingIdx += 1
+        
+        outReal[outIdx] = tempReal / optInTimePeriod
+        outIdx += 1
+
+        if not (i <= endIdx):
+            break
+
 def SMA(real: np.ndarray, timeperiod: int = 30) -> np.ndarray:
     """ SMA(real[, timeperiod=?])
 

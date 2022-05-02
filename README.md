@@ -166,13 +166,13 @@ $ python setup.py install
   
   - DEMA
   
-  - EMA
+  - EMA✓
   
   - HT_TRENDLINE
   
   - KAMA
   
-  - MA
+  - MA✓
   
   - MAMA
   

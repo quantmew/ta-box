@@ -68,3 +68,8 @@ def check_length3(a1: cython.double[::1], a2: cython.double[::1], a3: cython.dou
     if length != a3.shape[0]:
         raise Exception("input array lengths are different")
     return length
+
+def make_double_array(length: int, lookback: int) -> np.ndarray:
+    outreal = np.empty((length,), dtype=np.float64)
+    outreal[:lookback] = np.nan
+    return outreal
