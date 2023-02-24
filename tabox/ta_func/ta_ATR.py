@@ -23,9 +23,9 @@ def TA_ATR(startIdx: cython.int, endIdx: cython.int, inHigh: cython.double[::1],
 
     TA_TRANGE(startIdx-lookbackTotal+1, endIdx, inHigh, inLow, inClose, tempBuffer)
 
-    INT_SMA(optInTimePeriod-1, optInTimePeriod-1, tempBuffer, optInTimePeriod, prevATRTemp)
+    # INT_SMA(optInTimePeriod-1, optInTimePeriod-1, tempBuffer, optInTimePeriod, prevATRTemp)
 
-    prevATR = prevATRTemp[0]
+    # prevATR = prevATRTemp[0]
 
     # Subsequent value are smoothed using the
     # previous ATR value (Wilder's approach).
@@ -33,6 +33,7 @@ def TA_ATR(startIdx: cython.int, endIdx: cython.int, inHigh: cython.double[::1],
     # 2) Add today TR value. 
     # 3) Divide by 'period'.
     #
+    '''
     today = optInTimePeriod
     outIdx = TA_GLOBALS_UNSTABLE_PERIOD(TA_FUNC_UNST_ATR,Atr)
     while outIdx != 0 :
@@ -55,6 +56,7 @@ def TA_ATR(startIdx: cython.int, endIdx: cython.int, inHigh: cython.double[::1],
         prevATR /= optInTimePeriod
         outReal[outIdx] = prevATR
         outIdx += 1
+    '''
 
 def ATR(high: np.ndarray, low: np.ndarray, close: np.ndarray, timeperiod: int) -> np.ndarray:
     """ ATR(high, low, close[, timeperiod=?])

@@ -7,6 +7,8 @@ if not cython.compiled:
 def TA_SQRT_Lookback() -> cython.int:
     return 0
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def TA_SQRT(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], outReal: cython.double[::1]) -> None:
     outIdx: cython.int = 0
     for i in range(startIdx, endIdx+1):

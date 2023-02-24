@@ -6,6 +6,8 @@ from .ta_utils import check_array, check_begidx2, check_length2
 def TA_DIV_Lookback() -> cython.int:
     return 0
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def TA_DIV(startIdx: cython.int, endIdx: cython.int, inReal0: cython.double[::1], inReal1: cython.double[::1], outReal: cython.double[::1]) -> None:
     outIdx: cython.int = 0
     for i in range(startIdx, endIdx+1):

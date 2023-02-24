@@ -2,6 +2,8 @@ from typing import Any
 import numpy as np
 import cython
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def check_array(real: Any) -> np.ndarray:
     if not isinstance(real, np.ndarray):
         real = np.array(real, dtype=np.float64)
@@ -18,6 +20,8 @@ def check_timeperiod(timeperiod: cython.int) -> None:
     if timeperiod <= 1:
         raise Exception('function failed with error code 2: Bad Parameter (TA_BAD_PARAM)')
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def check_begidx1(a1: cython.double[::1]) -> cython.int:
     length = a1.shape[0]
     for i in range(length):
@@ -25,9 +29,10 @@ def check_begidx1(a1: cython.double[::1]) -> cython.int:
         if np.isnan(val):
             continue
         return i
-    else:
-        raise Exception("inputs are all NaN")
+    raise Exception("inputs are all NaN")
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def check_begidx2(a1: cython.double[::1], a2: cython.double[::1]) -> cython.int:
     length = a1.shape[0]
     for i in range(length):
@@ -40,6 +45,8 @@ def check_begidx2(a1: cython.double[::1], a2: cython.double[::1]) -> cython.int:
         return i
     raise Exception("inputs are all NaN")
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def check_begidx3(a1: cython.double[::1], a2: cython.double[::1], a3: cython.double[::1]) -> cython.int:
     length = a1.shape[0]
     for i in range(length):
@@ -55,12 +62,16 @@ def check_begidx3(a1: cython.double[::1], a2: cython.double[::1], a3: cython.dou
         return i
     raise Exception("inputs are all NaN")
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def check_length2(a1: cython.double[::1], a2: cython.double[::1]):
     length = a1.shape[0]
     if length != a2.shape[0]:
         raise Exception("input array lengths are different")
     return length
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
 def check_length3(a1: cython.double[::1], a2: cython.double[::1], a3: cython.double[::1]):
     length = a1.shape[0]
     if length != a2.shape[0]:
