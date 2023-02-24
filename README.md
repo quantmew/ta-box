@@ -170,11 +170,11 @@ $ python setup.py install
   
   - HT_TRENDLINE
   
-  - KAMA
+  - KAMA✓
   
   - MA✓
   
-  - MAMA
+  - MAMA✓
   
   - MAVP
   
@@ -194,7 +194,7 @@ $ python setup.py install
   
   - TRIMA
   
-  - WMA
+  - WMA✓
 
 - Pattern Recognition
   
