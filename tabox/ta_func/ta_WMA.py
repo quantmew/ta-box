@@ -10,7 +10,7 @@ def TA_WMA_Lookback(optInTimePeriod: cython.int) -> cython.int:
 @cython.wraparound(False)
 @cython.cdivision(True)
 def TA_WMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int,
-           outbegidx: cython.p_int, outnbelement: cython.p_int, outReal: cython.double[::1]) -> None:
+           outBegIdx: cython.int[::1], outNBElement: cython.int[::1], outReal: cython.double[::1]) -> None:
     # Insert TA function code here.
     lookbackTotal = optInTimePeriod - 1
 
@@ -25,8 +25,8 @@ def TA_WMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
     # To make the rest more efficient, handle exception case where the user is asking for a period of '1'.
     # In that case outputs equals inputs for the requested range.
     if optInTimePeriod == 1:    
-        outBegIdx = startIdx
-        outNBElement = endIdx-startIdx + 1
+        outBegIdx[0] = startIdx
+        outNBElement[0] = endIdx-startIdx + 1
 
         #if defined( USE_SUBARRAY ) && !defined( USE_SINGLE_PRECISION_INPUT )
         # ARRAY_MEMMOVE( outReal, 0, (inReal->mDataArray), (inReal->mOffset)+startIdx, (int)VALUE_HANDLE_DEREF(outNBElement) );
@@ -40,7 +40,7 @@ def TA_WMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
     By induction: 1+2+3+4+'n' = n(n+1)/2
     '>>1' is usually faster than '/2' for unsigned.
     '''
-    divider = (optInTimePeriod*(optInTimePeriod+1))>>1;
+    divider = (optInTimePeriod*(optInTimePeriod+1)) // 2
 
     '''
     The algo used here use a very basic property of
@@ -70,7 +70,7 @@ def TA_WMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
     access and floating point operations are kept to a
     minimum with this algo.
     '''
-    outIdx      = 0
+    outIdx = 0
     trailingIdx = startIdx - lookbackTotal
 
     # Evaluate the initial periodSum/periodSub and trailingValue.
@@ -84,7 +84,7 @@ def TA_WMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
         periodSum += tempReal*i
         i+=1
     trailingValue = 0.0
-
+    
     # Tight loop for the requested range.
     while inIdx <= endIdx:
         # Add the current price bar to the sum who are carried through the iterations.
@@ -93,7 +93,7 @@ def TA_WMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
         periodSub += tempReal
         periodSub -= trailingValue
         periodSum += tempReal*optInTimePeriod
-
+    
         '''
         /* Save the trailing value for being substract at
         * the next iteration.
@@ -103,14 +103,14 @@ def TA_WMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
         '''
         trailingValue = inReal[trailingIdx]
         trailingIdx += 1
-
+    
         # Calculate the WMA for this price bar.
         outReal[outIdx] = periodSum / divider
         outIdx += 1
-
+    
         # Prepare the periodSum for the next iteration.
         periodSum -= periodSub
-
+    
     # Set output limits.
     outNBElement[0] = outIdx
     outBegIdx[0] = startIdx
@@ -138,9 +138,9 @@ def WMA(real: np.ndarray, timeperiod: int = 30 ) -> np.ndarray:
     endIdx: cython.int = length - startIdx - 1
     lookback: cython.int = startIdx + TA_WMA_Lookback(timeperiod)
 
-    outbegidx: cython.int = 0
-    outnbelement: cython.int = 0
+    outBegIdx: cython.int[::1] = np.zeros(shape=(1,), dtype=np.int32)
+    outNBElement: cython.int[::1] = np.zeros(shape=(1,), dtype=np.int32)
 
-    TA_WMA(0, endIdx, real[startIdx:], timeperiod, outbegidx, outnbelement, outReal[lookback:])
+    TA_WMA(0, endIdx, real[startIdx:], timeperiod, outBegIdx, outNBElement, outReal[lookback:])
 
     return outReal
