@@ -2,6 +2,7 @@ from sys import prefix
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1, check_timeperiod
+from ..retcode import *
 
 def min_double(left: cython.double, right: cython.double) -> cython.double:
     """ min_double(left, right) -> double
@@ -28,7 +29,7 @@ def TA_MIN_Lookback(optInTimePeriod: cython.int) -> cython.int:
 @cython.boundscheck(False)
 @cython.wraparound(False)
 @cython.cdivision(True)
-def TA_MIN_LARGE_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> None:
+def TA_MIN_LARGE_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> cython.int:
     n: cython.int = endIdx - startIdx + 1
     prefixMin: cython.double[::1] = np.empty(shape=(n,), dtype=np.float64) # [0] * n
     suffixMin: cython.double[::1] = np.empty(shape=(n,), dtype=np.float64)
@@ -60,10 +61,12 @@ def TA_MIN_LARGE_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cy
         suffix_i += 1
         prefix_i += 1
 
+    return TA_SUCCESS
+
 @cython.boundscheck(False)
 @cython.wraparound(False)
 @cython.cdivision(True)
-def TA_MIN_SMALL_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> None:
+def TA_MIN_SMALL_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> cython.int:
     nbInitialElementNeeded: cython.int = optInTimePeriod-1
 
     if startIdx < nbInitialElementNeeded:
@@ -98,12 +101,14 @@ def TA_MIN_SMALL_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cy
         outIdx += 1
         trailingIdx+=1
         today+=1
+    
+    return TA_SUCCESS
 
-def TA_MIN(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> None:
+def TA_MIN(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> cython.int:
     if optInTimePeriod < 100:
-        TA_MIN_SMALL_TIMEPERIOD(startIdx, endIdx, inReal, optInTimePeriod, outReal)
+        return TA_MIN_SMALL_TIMEPERIOD(startIdx, endIdx, inReal, optInTimePeriod, outReal)
     else:
-        TA_MIN_LARGE_TIMEPERIOD(startIdx, endIdx, inReal, optInTimePeriod, outReal)
+        return TA_MIN_LARGE_TIMEPERIOD(startIdx, endIdx, inReal, optInTimePeriod, outReal)
 
 def MIN(real: np.ndarray, timeperiod: cython.int) -> np.ndarray:
     """ MIN(real[, timeperiod=?])

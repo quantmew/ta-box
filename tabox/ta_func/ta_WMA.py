@@ -2,6 +2,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1, check_timeperiod
+from ..retcode import *
 
 def TA_WMA_Lookback(optInTimePeriod: cython.int) -> cython.int:
     return optInTimePeriod - 1
@@ -10,7 +11,7 @@ def TA_WMA_Lookback(optInTimePeriod: cython.int) -> cython.int:
 @cython.wraparound(False)
 @cython.cdivision(True)
 def TA_WMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int,
-           outBegIdx: cython.int[::1], outNBElement: cython.int[::1], outReal: cython.double[::1]) -> None:
+           outBegIdx: cython.int[::1], outNBElement: cython.int[::1], outReal: cython.double[::1]) -> cython.int:
     # Insert TA function code here.
     lookbackTotal = optInTimePeriod - 1
 
@@ -20,7 +21,7 @@ def TA_WMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
 
     # Make sure there is still something to evaluate.
     if startIdx > endIdx:
-        return
+        return TA_SUCCESS
 
     # To make the rest more efficient, handle exception case where the user is asking for a period of '1'.
     # In that case outputs equals inputs for the requested range.
@@ -33,7 +34,7 @@ def TA_WMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
         #else
         # ARRAY_MEMMOVE( outReal, 0, inReal, startIdx, (int)VALUE_HANDLE_DEREF(outNBElement) );	  	  
         #endif
-        return
+        return TA_SUCCESS
 
     '''
     Calculate the divider (always an integer value).
@@ -114,7 +115,7 @@ def TA_WMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
     # Set output limits.
     outNBElement[0] = outIdx
     outBegIdx[0] = startIdx
-    return
+    return TA_SUCCESS
 
 def WMA(real: np.ndarray, timeperiod: int = 30 ) -> np.ndarray:
     """ WMA(real[, timeperiod=?])

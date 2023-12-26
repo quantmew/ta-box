@@ -16,3 +16,5 @@ from .ta_func.ta_SMA import *
 from .ta_func.ta_TRANGE import *
 
 from .ta_func.ta_WMA import *
+
+from .ta_func.ta_RSI import *

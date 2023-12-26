@@ -2,6 +2,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1, check_timeperiod
+from ..retcode import TA_SUCCESS
 
 def TA_SUM_Lookback(optInTimePeriod: cython.int) -> cython.int:
     return optInTimePeriod - 1
@@ -9,7 +10,7 @@ def TA_SUM_Lookback(optInTimePeriod: cython.int) -> cython.int:
 @cython.boundscheck(False)
 @cython.wraparound(False)
 @cython.cdivision(True)
-def TA_SUM(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> None:
+def TA_SUM(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> cython.int:
     # Identify the minimum number of price bar needed to calculate at least one output.
     lookbackTotal: cython.int = optInTimePeriod - 1
 
@@ -19,7 +20,7 @@ def TA_SUM(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
     
     # Make sure there is still something to evaluate.
     if startIdx > endIdx:
-        return
+        return TA_SUCCESS
     
     # Do the MA calculation using tight loops.
     # Add-up the initial period, except for the last value.
@@ -51,6 +52,7 @@ def TA_SUM(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
             break
     
     # All done. Indicate the output limits and return.
+    return TA_SUCCESS
 
 def SUM(real: np.ndarray, timeperiod: int = 30) -> np.ndarray:
     """ SUM(real[, timeperiod=?])

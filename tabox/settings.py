@@ -1,0 +1,1 @@
+TA_FUNC_NO_RANGE_CHECK: bool = True

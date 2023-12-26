@@ -1,8 +1,8 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
-
 from .ta_SMA import TA_SMA_Lookback
+from ..retcode import *
 
 def TA_EMA_Lookback(optInTimePeriod: cython.int, optInMAType: cython.int) -> cython.int:
     """ TA_EMA_Lookback(optInTimePeriod) -> int
@@ -11,7 +11,7 @@ def TA_EMA_Lookback(optInTimePeriod: cython.int, optInMAType: cython.int) -> cyt
     """
     return optInTimePeriod - 1
 
-def TA_EMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> None:
+def TA_EMA(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> cython.int:
     pass
 
 def EMA(real: np.ndarray, timeperiod: int):
