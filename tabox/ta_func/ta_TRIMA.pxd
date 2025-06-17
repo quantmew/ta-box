@@ -1,0 +1,2 @@
+cpdef Py_ssize_t TA_TRIMA_Lookback(int optInTimePeriod)
+cpdef int TA_TRIMA(Py_ssize_t startIdx, Py_ssize_t endIdx, double[::1] inReal, int optInTimePeriod, Py_ssize_t[::1] outBegIdx, Py_ssize_t[::1] outNBElement, double[::1] outReal) 

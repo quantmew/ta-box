@@ -118,7 +118,7 @@ $ python setup.py install
   
   - DX
   
-  - MACD
+  - MACD✓
   
   - MACDEXT
   
@@ -164,7 +164,7 @@ $ python setup.py install
   
   - BBANDS
   
-  - DEMA
+  - DEMA✓
   
   - EMA✓
   
@@ -174,7 +174,7 @@ $ python setup.py install
   
   - MA✓
   
-  - MAMA✓
+  - MAMA✓ (not working)
   
   - MAVP
   
@@ -188,11 +188,11 @@ $ python setup.py install
   
   - SMA✓
   
-  - T3
+  - T3✓
   
-  - TEMA
+  - TEMA✓
   
-  - TRIMA
+  - TRIMA✓
   
   - WMA✓
 

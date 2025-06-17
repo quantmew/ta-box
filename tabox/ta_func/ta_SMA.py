@@ -16,6 +16,8 @@ def TA_SMA(
     endIdx: cython.Py_ssize_t,
     inReal: cython.double[::1],
     optInTimePeriod: cython.int,
+    outBegIdx: cython.Py_ssize_t[::1],
+    outNBElement: cython.Py_ssize_t[::1],
     outReal: cython.double[::1],
 ) -> cython.int:
     # Identify the minimum number of price bar needed to calculate at least one output.
@@ -27,6 +29,8 @@ def TA_SMA(
 
     # Make sure there is still something to evaluate.
     if startIdx > endIdx:
+        outBegIdx[0] = 0
+        outNBElement[0] = 0
         return TA_SUCCESS
 
     # Do the MA calculation using tight loops.
@@ -59,6 +63,8 @@ def TA_SMA(
             break
 
     # All done. Indicate the output limits and return.
+    outBegIdx[0] = startIdx
+    outNBElement[0] = outIdx
     return TA_SUCCESS
 
 
@@ -70,6 +76,8 @@ def TA_INT_SMA(
     endIdx: cython.Py_ssize_t,
     inReal: cython.int[::1],
     optInTimePeriod: cython.int,
+    outBegIdx: cython.Py_ssize_t[::1],
+    outNBElement: cython.Py_ssize_t[::1],
     outReal: cython.int[::1],
 ) -> cython.int:
     lookbackTotal: cython.int = optInTimePeriod - 1
@@ -78,6 +86,8 @@ def TA_INT_SMA(
         startIdx = lookbackTotal
 
     if startIdx > endIdx:
+        outBegIdx[0] = 0
+        outNBElement[0] = 0
         return TA_SUCCESS
 
     periodTotal: cython.int = 0
@@ -104,6 +114,9 @@ def TA_INT_SMA(
 
         if not (i <= endIdx):
             break
+
+    outBegIdx[0] = startIdx
+    outNBElement[0] = outIdx
     return TA_SUCCESS
 
 
@@ -129,6 +142,9 @@ def SMA(real: np.ndarray, timeperiod: int = 30) -> np.ndarray:
     endIdx: cython.int = length - startIdx - 1
     lookback: cython.int = startIdx + TA_SMA_Lookback(timeperiod)
 
-    TA_SMA(0, endIdx, real[startIdx:], timeperiod, outReal[lookback:])
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+
+    TA_SMA(0, endIdx, real[startIdx:], timeperiod, outBegIdx, outNBElement, outReal[lookback:])
 
     return outReal

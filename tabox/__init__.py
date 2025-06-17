@@ -27,6 +27,13 @@ from .ta_func.ta_MAX import *
 from .ta_func.ta_MIN import *
 
 # Overlap Studies
+from .ta_func.ta_MA import *
+from .ta_func.ta_DEMA import *
+from .ta_func.ta_TEMA import *
+from .ta_func.ta_TRIMA import *
+from .ta_func.ta_KAMA import *
+from .ta_func.ta_MAMA import *
+from .ta_func.ta_T3 import *
 from .ta_func.ta_SMA import *
 from .ta_func.ta_EMA import *
 from .ta_func.ta_WMA import *
@@ -34,6 +41,7 @@ from .ta_func.ta_WMA import *
 
 # Momentum Indicators
 from .ta_func.ta_MACD import *
+from .ta_func.ta_MACDEXT import *
 
 # Volatility Indicators
 from .ta_func.ta_TRANGE import *
