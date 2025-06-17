@@ -6,7 +6,7 @@ with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
 extensions = [
-    Extension("*", ["tabox/ta_func/*.py"], extra_compile_args=["-O3", "/Ox"])
+    Extension("*", ["tabox/ta_func/*.py"]) # extra_compile_args=["-O3", "/Ox"]
     # Extension("mandheling", ["mandheling/*/*.pyx"]),
     # Everything but primes.pyx is included here.
     # Extension("*", ["*.pyx"],
