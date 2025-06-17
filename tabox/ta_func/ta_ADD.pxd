@@ -1,2 +1,2 @@
-cdef int TA_ADD_Lookback()
-cdef int TA_ADD(int startIdx, int endIdx, double[::1] inReal0, double[::1] inReal1, double[::1] outReal)
+cdef Py_ssize_t TA_ADD_Lookback()
+cdef int TA_ADD(Py_ssize_t startIdx, Py_ssize_t endIdx, double[::1] inReal0, double[::1] inReal1, Py_ssize_t[::1] outBegIdx, Py_ssize_t[::1] outNBElement, double[::1] outReal)
