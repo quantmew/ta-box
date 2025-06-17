@@ -1,2 +1,2 @@
-cdef int TA_RSI_Lookback(int optInTimePeriod)
-cdef int TA_RSI(int startIdx, int endIdx, double[::1] inReal, int optInTimePeriod, int[::1] outBegIdx, int[::1] outNBElement, double[::1] outReal)
+cdef int TA_RSI_Lookback(Py_ssize_t optInTimePeriod) noexcept nogil
+cdef int TA_RSI(Py_ssize_t startIdx, Py_ssize_t endIdx, double[::1] inReal, int optInTimePeriod, Py_ssize_t[::1] outBegIdx, Py_ssize_t[::1] outNBElement, double[::1] outReal)
