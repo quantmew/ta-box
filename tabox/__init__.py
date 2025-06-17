@@ -32,6 +32,9 @@ from .ta_func.ta_EMA import *
 from .ta_func.ta_WMA import *
 
 
+# Momentum Indicators
+from .ta_func.ta_MACD import *
+
 # Volatility Indicators
 from .ta_func.ta_TRANGE import *
 from .ta_func.ta_ATR import *
