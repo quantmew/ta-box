@@ -1,6 +1,8 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_length3, check_begidx3
+from ..retcode import *
+
 if not cython.compiled:
     from math import fabs
 
@@ -9,12 +11,14 @@ def TA_TRANGE_Lookback() -> cython.int:
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def TA_TRANGE(startIdx: cython.int, endIdx: cython.int, inHigh: cython.double[::1], inLow: cython.double[::1], inClose: cython.double[::1], outReal: cython.double[::1]) -> None:
+def TA_TRANGE(startIdx: cython.int, endIdx: cython.int,
+            inHigh: cython.double[::1], inLow: cython.double[::1], inClose: cython.double[::1],
+            outReal: cython.double[::1]) -> cython.int:
     if startIdx < 1:
         startIdx = 1
     
     if startIdx > endIdx:
-        return
+        return TA_SUCCESS
     
     outIdx: cython.int = 0
     today: cython.int = startIdx
@@ -32,6 +36,7 @@ def TA_TRANGE(startIdx: cython.int, endIdx: cython.int, inHigh: cython.double[::
         outReal[outIdx] = greatest
         outIdx += 1
         today += 1
+    return TA_SUCCESS
 
 def TRANGE(high: np.ndarray, low: np.ndarray, close: np.ndarray) -> np.ndarray:
     high = check_array(high)

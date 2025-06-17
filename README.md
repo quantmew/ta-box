@@ -152,7 +152,7 @@ $ python setup.py install
   
   - ROCR100
   
-  - RSI
+  - RSI✓
   
   - STOCH
   

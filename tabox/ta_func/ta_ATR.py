@@ -2,13 +2,14 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx3, check_length3, make_double_array
 from .ta_TRANGE import TA_TRANGE
+from ..retcode import *
 
 def TA_ATR_Lookback(optInTimePeriod: int) -> int:
     return optInTimePeriod
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def TA_ATR(startIdx: cython.int, endIdx: cython.int, inHigh: cython.double[::1], inLow: cython.double[::1], inClose: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> None:
+def TA_ATR(startIdx: cython.int, endIdx: cython.int, inHigh: cython.double[::1], inLow: cython.double[::1], inClose: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> cython.int:
     lookbackTotal: cython.int = TA_ATR_Lookback(optInTimePeriod)
     if startIdx < lookbackTotal:
       startIdx = lookbackTotal
