@@ -43,6 +43,10 @@ from .ta_func.ta_WMA import *
 from .ta_func.ta_MACD import *
 from .ta_func.ta_MACDEXT import *
 
+# Statistic Functions
+from .ta_func.ta_STDDEV import *
+from .ta_func.ta_VAR import *
+
 # Volatility Indicators
 from .ta_func.ta_TRANGE import *
 from .ta_func.ta_ATR import *
@@ -50,6 +54,7 @@ from .ta_func.ta_ATR import *
 # Volume Indicators
 from .ta_func.ta_AD import *
 from .ta_func.ta_ADOSC import *
+
 
 # Other Studies
 from .ta_func.ta_RSI import *

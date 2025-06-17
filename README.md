@@ -344,11 +344,11 @@ $ python setup.py install
   
   - LINEARREG_SLOPE
   
-  - STDDEV
+  - STDDEV✓
   
   - TSF
   
-  - VAR
+  - VAR✓
 
 - Volatility Indicators
   
