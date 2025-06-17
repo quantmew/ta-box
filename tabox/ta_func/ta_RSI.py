@@ -1,4 +1,3 @@
-
 import cython
 import numpy as np
 from tabox.settings import TA_FUNC_NO_RANGE_CHECK
@@ -7,20 +6,29 @@ from tabox.ta_func.ta_utility import TA_IS_ZERO
 from .ta_utils import check_array, check_begidx1, check_timeperiod, make_double_array
 from ..retcode import *
 
+
 def TA_RSI_Lookback(optInTimePeriod: cython.int) -> cython.int:
     return optInTimePeriod
+
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
 @cython.cdivision(True)
-def TA_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int,
-           outBegIdx: cython.int[::1], outNBElement: cython.int[::1], outReal: cython.double[::1]) -> cython.int:
-    outIdx: cython.int = 0
+def TA_RSI(
+    startIdx: cython.Py_ssize_t,
+    endIdx: cython.Py_ssize_t,
+    inReal: cython.double[::1],
+    optInTimePeriod: cython.int,
+    outBegIdx: cython.Py_ssize_t[::1],
+    outNBElement: cython.Py_ssize_t[::1],
+    outReal: cython.double[::1],
+) -> cython.int:
+    outIdx: cython.Py_ssize_t = 0
 
-    today: cython.int = 0
-    lookbackTotal: cython.int = 0
-    unstablePeriod: cython.int = 0
-    i: cython.int = 0
+    today: cython.Py_ssize_t = 0
+    lookbackTotal: cython.Py_ssize_t = 0
+    unstablePeriod: cython.bint = False
+    i: cython.Py_ssize_t = 0
 
     prevGain: cython.double = 0.0
     prevLoss: cython.double = 0.0
@@ -52,7 +60,7 @@ def TA_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
     if startIdx > endIdx:
         return TA_SUCCESS
 
-    outIdx = 0 # Index into the output.
+    outIdx = 0  # Index into the output.
 
     """
     Trap special case where the period is '1'.
@@ -63,7 +71,7 @@ def TA_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
         outBegIdx[0] = startIdx
         i = (endIdx - startIdx) + 1
         outNBElement[0] = i
-        outReal[:i] = inReal[startIdx:startIdx+i]
+        outReal[:i] = inReal[startIdx : startIdx + i]
         return TA_SUCCESS
 
     """
@@ -77,7 +85,7 @@ def TA_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
     unstablePeriod = True
     if not unstablePeriod:
         """
-        Preserve prevValue because it may get 
+        Preserve prevValue because it may get
         overwritten by the output.
         (because output ptr could be the same as input ptr).
         """
@@ -93,25 +101,25 @@ def TA_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
         prevGain = 0.0
         prevLoss = 0.0
 
-        i: cython.int = optInTimePeriod
+        i: cython.Py_ssize_t = optInTimePeriod
         while i > 0:
             tempValue1 = inReal[today]
             today += 1
             tempValue2 = tempValue1 - prevValue
-            prevValue  = tempValue1
+            prevValue = tempValue1
             if tempValue2 < 0:
                 prevLoss -= tempValue2
             else:
                 prevGain += tempValue2
             i -= 1
 
-        tempValue1 = prevLoss/optInTimePeriod
-        tempValue2 = prevGain/optInTimePeriod
+        tempValue1 = prevLoss / optInTimePeriod
+        tempValue2 = prevGain / optInTimePeriod
 
         # Write the output.
-        tempValue1 = tempValue2+tempValue1
+        tempValue1 = tempValue2 + tempValue1
         if not TA_IS_ZERO(tempValue1):
-            outReal[outIdx] = 100*(tempValue2/tempValue1)
+            outReal[outIdx] = 100 * (tempValue2 / tempValue1)
             outIdx += 1
         else:
             outReal[outIdx] = 0.0
@@ -135,12 +143,12 @@ def TA_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
     prevLoss = 0.0
     today += 1
 
-    i: cython.int = optInTimePeriod
+    i: cython.Py_ssize_t = optInTimePeriod
     while i > 0:
         tempValue1 = inReal[today]
         today += 1
         tempValue2 = tempValue1 - prevValue
-        prevValue  = tempValue1
+        prevValue = tempValue1
         if tempValue2 < 0.0:
             prevLoss -= tempValue2
         else:
@@ -176,16 +184,16 @@ def TA_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
             outIdx += 1
     else:
         """
-        Skip the unstable period. Do the processing 
+        Skip the unstable period. Do the processing
         but do not write it in the output.
         """
         while today < startIdx:
             tempValue1 = inReal[today]
             tempValue2 = tempValue1 - prevValue
-            prevValue  = tempValue1
+            prevValue = tempValue1
 
-            prevLoss *= (optInTimePeriod - 1)
-            prevGain *= (optInTimePeriod - 1)
+            prevLoss *= optInTimePeriod - 1
+            prevGain *= optInTimePeriod - 1
             if tempValue2 < 0.0:
                 prevLoss -= tempValue2
             else:
@@ -204,10 +212,10 @@ def TA_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
         tempValue1 = inReal[today]
         today += 1
         tempValue2 = tempValue1 - prevValue
-        prevValue  = tempValue1
+        prevValue = tempValue1
 
-        prevLoss *= (optInTimePeriod - 1)
-        prevGain *= (optInTimePeriod - 1)
+        prevLoss *= optInTimePeriod - 1
+        prevGain *= optInTimePeriod - 1
         if tempValue2 < 0.0:
             prevLoss -= tempValue2
         else:
@@ -217,7 +225,7 @@ def TA_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
         prevGain /= optInTimePeriod
         tempValue1 = prevGain + prevLoss
         if not TA_IS_ZERO(tempValue1):
-            outReal[outIdx] = 100.0*(prevGain / tempValue1)
+            outReal[outIdx] = 100.0 * (prevGain / tempValue1)
             outIdx += 1
         else:
             outReal[outIdx] = 0.0
@@ -228,17 +236,25 @@ def TA_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
 
     return TA_SUCCESS
 
+
 @cython.boundscheck(False)
 @cython.wraparound(False)
 @cython.cdivision(True)
-def TA_S_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.float[::1], optInTimePeriod: cython.int,
-           outBegIdx: cython.int[::1], outNBElement: cython.int[::1], outReal: cython.float[::1]) -> None:
-    outIdx: cython.int = 0
+def TA_S_RSI(
+    startIdx: cython.Py_ssize_t,
+    endIdx: cython.Py_ssize_t,
+    inReal: cython.float[::1],
+    optInTimePeriod: cython.int,
+    outBegIdx: cython.Py_ssize_t[::1],
+    outNBElement: cython.Py_ssize_t[::1],
+    outReal: cython.float[::1],
+) -> cython.int:
+    outIdx: cython.Py_ssize_t = 0
 
-    today: cython.int = 0
-    lookbackTotal: cython.int = 0
-    unstablePeriod: cython.int = 0
-    i: cython.int = 0
+    today: cython.Py_ssize_t = 0
+    lookbackTotal: cython.Py_ssize_t = 0
+    unstablePeriod: cython.bint = False
+    i: cython.Py_ssize_t = 0
 
     prevGain: cython.float = 0.0
     prevLoss: cython.float = 0.0
@@ -270,7 +286,7 @@ def TA_S_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.float[::1]
     if startIdx > endIdx:
         return TA_SUCCESS
 
-    outIdx = 0 # Index into the output.
+    outIdx = 0  # Index into the output.
 
     """
     Trap special case where the period is '1'.
@@ -281,7 +297,7 @@ def TA_S_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.float[::1]
         outBegIdx[0] = startIdx
         i = (endIdx - startIdx) + 1
         outNBElement[0] = i
-        outReal[:i] = inReal[startIdx:startIdx+i]
+        outReal[:i] = inReal[startIdx : startIdx + i]
         return TA_SUCCESS
 
     """
@@ -295,7 +311,7 @@ def TA_S_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.float[::1]
     unstablePeriod = True
     if not unstablePeriod:
         """
-        Preserve prevValue because it may get 
+        Preserve prevValue because it may get
         overwritten by the output.
         (because output ptr could be the same as input ptr).
         """
@@ -316,20 +332,20 @@ def TA_S_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.float[::1]
             tempValue1 = inReal[today]
             today += 1
             tempValue2 = tempValue1 - prevValue
-            prevValue  = tempValue1
+            prevValue = tempValue1
             if tempValue2 < 0:
                 prevLoss -= tempValue2
             else:
                 prevGain += tempValue2
             i -= 1
 
-        tempValue1 = prevLoss/optInTimePeriod
-        tempValue2 = prevGain/optInTimePeriod
+        tempValue1 = prevLoss / optInTimePeriod
+        tempValue2 = prevGain / optInTimePeriod
 
         # Write the output.
-        tempValue1 = tempValue2+tempValue1
+        tempValue1 = tempValue2 + tempValue1
         if not TA_IS_ZERO(tempValue1):
-            outReal[outIdx] = 100*(tempValue2/tempValue1)
+            outReal[outIdx] = 100 * (tempValue2 / tempValue1)
             outIdx += 1
         else:
             outReal[outIdx] = 0.0
@@ -358,7 +374,7 @@ def TA_S_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.float[::1]
         tempValue1 = inReal[today]
         today += 1
         tempValue2 = tempValue1 - prevValue
-        prevValue  = tempValue1
+        prevValue = tempValue1
         if tempValue2 < 0.0:
             prevLoss -= tempValue2
         else:
@@ -394,16 +410,16 @@ def TA_S_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.float[::1]
             outIdx += 1
     else:
         """
-        Skip the unstable period. Do the processing 
+        Skip the unstable period. Do the processing
         but do not write it in the output.
         """
         while today < startIdx:
             tempValue1 = inReal[today]
             tempValue2 = tempValue1 - prevValue
-            prevValue  = tempValue1
+            prevValue = tempValue1
 
-            prevLoss *= (optInTimePeriod - 1)
-            prevGain *= (optInTimePeriod - 1)
+            prevLoss *= optInTimePeriod - 1
+            prevGain *= optInTimePeriod - 1
             if tempValue2 < 0.0:
                 prevLoss -= tempValue2
             else:
@@ -422,10 +438,10 @@ def TA_S_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.float[::1]
         tempValue1 = inReal[today]
         today += 1
         tempValue2 = tempValue1 - prevValue
-        prevValue  = tempValue1
+        prevValue = tempValue1
 
-        prevLoss *= (optInTimePeriod - 1)
-        prevGain *= (optInTimePeriod - 1)
+        prevLoss *= optInTimePeriod - 1
+        prevGain *= optInTimePeriod - 1
         if tempValue2 < 0.0:
             prevLoss -= tempValue2
         else:
@@ -435,7 +451,7 @@ def TA_S_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.float[::1]
         prevGain /= optInTimePeriod
         tempValue1 = prevGain + prevLoss
         if not TA_IS_ZERO(tempValue1):
-            outReal[outIdx] = 100.0*(prevGain / tempValue1)
+            outReal[outIdx] = 100.0 * (prevGain / tempValue1)
             outIdx += 1
         else:
             outReal[outIdx] = 0.0
@@ -446,8 +462,9 @@ def TA_S_RSI(startIdx: cython.int, endIdx: cython.int, inReal: cython.float[::1]
 
     return TA_SUCCESS
 
+
 def RSI(real: np.ndarray, timeperiod: int = 30) -> np.ndarray:
-    """ RSI(real[, timeperiod=?])
+    """RSI(real[, timeperiod=?])
 
     Relative Strength Index (Momentum Indicators)
 
@@ -460,14 +477,22 @@ def RSI(real: np.ndarray, timeperiod: int = 30) -> np.ndarray:
     """
     real = check_array(real)
     check_timeperiod(timeperiod)
-    
-    length: cython.int = real.shape[0]
-    begidx: cython.int = check_begidx1(real)
-    endidx: cython.int = length - begidx - 1
+
+    length: cython.Py_ssize_t = real.shape[0]
+    begidx: cython.Py_ssize_t = check_begidx1(real)
+    endidx: cython.Py_ssize_t = length - begidx - 1
     lookback = begidx + TA_RSI_Lookback(timeperiod)
     outReal = make_double_array(length, lookback)
-    outBegIdx: cython.int[::1] = np.zeros(shape=(1,), dtype=np.int32)
-    outNBElement: cython.int[::1] = np.zeros(shape=(1,), dtype=np.int32)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(shape=(1,), dtype=np.int64)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(shape=(1,), dtype=np.int64)
 
-    retCode = TA_RSI(0, endidx, real[begidx:], timeperiod, outBegIdx, outNBElement, outReal[lookback:])
-    return outReal 
+    retCode = TA_RSI(
+        0,
+        endidx,
+        real[begidx:],
+        timeperiod,
+        outBegIdx,
+        outNBElement,
+        outReal[lookback:],
+    )
+    return outReal

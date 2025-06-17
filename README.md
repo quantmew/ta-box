@@ -56,15 +56,15 @@ $ python setup.py install
   
   - MAX✓
   
-  - MAXINDEX
+  - MAXINDEX✓
   
   - MIN✓
   
-  - MININDEX
+  - MININDEX✓
   
-  - MINMAX
+  - MINMAX✓
   
-  - MINMAXINDEX
+  - MINMAXINDEX✓
   
   - MULT✓
   
@@ -80,29 +80,29 @@ $ python setup.py install
   
   - ATAN✓
   
-  - CEIL
+  - CEIL✓
   
-  - COS
+  - COS✓
   
-  - COSH
+  - COSH✓
   
-  - EXP
+  - EXP✓
   
-  - FLOOR
+  - FLOOR✓
   
-  - LN
+  - LN✓
   
-  - LOG10
+  - LOG10✓
   
   - SIN✓
   
-  - SINH
+  - SINH✓
   
   - SQRT✓
   
   - TAN✓
   
-  - TANH
+  - TANH✓
 
 - Momentum Indicators
   
@@ -124,7 +124,7 @@ $ python setup.py install
   
   - DX
   
-  - MACD
+  - MACD✓
   
   - MACDEXT
   
@@ -170,7 +170,7 @@ $ python setup.py install
   
   - BBANDS
   
-  - DEMA
+  - DEMA✓
   
   - EMA✓
   
@@ -180,7 +180,7 @@ $ python setup.py install
   
   - MA✓
   
-  - MAMA✓
+  - MAMA✓ (not working)
   
   - MAVP
   
@@ -194,11 +194,11 @@ $ python setup.py install
   
   - SMA✓
   
-  - T3
+  - T3✓
   
-  - TEMA
+  - TEMA✓
   
-  - TRIMA
+  - TRIMA✓
   
   - WMA✓
 
@@ -350,15 +350,15 @@ $ python setup.py install
   
   - LINEARREG_SLOPE
   
-  - STDDEV
+  - STDDEV✓
   
   - TSF
   
-  - VAR
+  - VAR✓
 
 - Volatility Indicators
   
-  - ATR
+  - ATR✓
   
   - NATR
   
@@ -366,8 +366,8 @@ $ python setup.py install
 
 - Volume Indicators
   
-  - AD
+  - AD✓
   
-  - ADOSC
+  - ADOSC✓
   
   - OBV

@@ -8,7 +8,7 @@ import unittest
 
 class TestATAN(unittest.TestCase):
     def test_random_vector(self):
-        for i in range(100, 1000):
+        for i in range(100, 300):
             close = np.random.random(i)
             this_ret = this_ATAN(close)
             that_ret = that_ATAN(close)

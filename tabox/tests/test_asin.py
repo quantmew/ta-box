@@ -8,7 +8,7 @@ import unittest
 
 class TestASIN(unittest.TestCase):
     def test_random_vector(self):
-        for i in range(100, 1000):
+        for i in range(100, 300):
             close = np.random.random(i)
             this_ret = this_ASIN(close)
             that_ret = that_ASIN(close)

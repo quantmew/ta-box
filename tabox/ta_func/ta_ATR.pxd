@@ -1,0 +1,2 @@
+cpdef Py_ssize_t TA_ATR_Lookback(Py_ssize_t optInTimePeriod)
+cpdef int TA_ATR(Py_ssize_t startIdx, Py_ssize_t endIdx, double[::1] inHigh, double[::1] inLow, double[::1] inClose, int optInTimePeriod, double[::1] outReal)

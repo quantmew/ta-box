@@ -1,0 +1,2 @@
+cdef Py_ssize_t TA_MACD_Lookback(int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod)
+cdef int TA_MACD(Py_ssize_t startIdx, Py_ssize_t endIdx, double[::1] inReal, int optInFastPeriod, int optInSlowPeriod, int optInSignalPeriod, Py_ssize_t[::1] outBegIdx, Py_ssize_t[::1] outNBElement, double[::1] outMACD, double[::1] outMACDSignal, double[::1] outMACDHist)

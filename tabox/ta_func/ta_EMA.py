@@ -12,11 +12,76 @@ def TA_EMA_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:
     return optInTimePeriod - 1
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
+def TA_INT_EMA(
+    startIdx: cython.Py_ssize_t,
+    endIdx: cython.Py_ssize_t,
+    inReal: cython.double[::1],
+    optInTimePeriod: cython.int,
+    optInK_1: cython.double,
+    outBegIdx: cython.Py_ssize_t[::1],
+    outNBElement: cython.Py_ssize_t[::1],
+    outReal: cython.double[::1],
+) -> cython.int:
+    """Internal EMA implementation without parameter checks"""
+    tempReal: cython.double
+    prevMA: cython.double
+    i: cython.Py_ssize_t
+    today: cython.Py_ssize_t
+    outIdx: cython.Py_ssize_t
+    lookbackTotal: cython.Py_ssize_t
+
+    lookbackTotal = TA_EMA_Lookback(optInTimePeriod)
+
+    if startIdx < lookbackTotal:
+        startIdx = lookbackTotal
+
+    if startIdx > endIdx:
+        outBegIdx[0] = 0
+        outNBElement[0] = 0
+        return TA_SUCCESS
+
+    outBegIdx[0] = startIdx
+
+    # Calculate the first EMA value as the seed
+    today = startIdx - lookbackTotal
+    i = optInTimePeriod
+    tempReal = 0.0
+    while i > 0:
+        tempReal += inReal[today]
+        today += 1
+        i -= 1
+
+    prevMA = tempReal / optInTimePeriod
+
+    # Skip the unstable period
+    while today <= startIdx:
+        prevMA = ((inReal[today] - prevMA) * optInK_1) + prevMA
+        today += 1
+
+    # Write the first value
+    outReal[0] = prevMA
+    outIdx = 1
+
+    # Calculate the remaining range
+    while today <= endIdx:
+        prevMA = ((inReal[today] - prevMA) * optInK_1) + prevMA
+        outReal[outIdx] = prevMA
+        outIdx += 1
+        today += 1
+
+    outNBElement[0] = outIdx
+    return TA_SUCCESS
+
+
 def TA_EMA(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
     inReal: cython.double[::1],
-    optInTimePeriod: cython.Py_ssize_t,
+    optInTimePeriod: cython.int,
+    outBegIdx: cython.Py_ssize_t[::1],
+    outNBElement: cython.Py_ssize_t[::1],
     outReal: cython.double[::1],
 ) -> cython.int:
     """TA_EMA - Exponential Moving Average
@@ -38,38 +103,14 @@ def TA_EMA(
         return TA_BAD_PARAM
 
     # calculate k
-    k = 2.0 / (optInTimePeriod + 1)
+    k: cython.double = 2.0 / (optInTimePeriod + 1)
 
-    # calculate the first EMA value as the seed
-    today = startIdx
-    tempReal = 0.0
-    for i in range(optInTimePeriod):
-        tempReal += inReal[today]
-        today += 1
-
-    prevMA = tempReal / optInTimePeriod
-
-    # skip the unstable period
-    while today <= startIdx:
-        prevMA = ((inReal[today] - prevMA) * k) + prevMA
-        today += 1
-
-    # write the first value
-    outReal[0] = prevMA
-    outIdx = 1
-
-    # calculate the remaining range
-    while today <= endIdx:
-        prevMA = ((inReal[today] - prevMA) * k) + prevMA
-        outReal[outIdx] = prevMA
-        outIdx += 1
-        today += 1
-
-    return TA_SUCCESS
+    # Call internal implementation
+    return TA_INT_EMA(startIdx, endIdx, inReal, optInTimePeriod, k, outBegIdx, outNBElement, outReal)
 
 
-def EMA(real: np.ndarray, timeperiod: int):
-    """MA(real[, timeperiod=?, matype=?])
+def EMA(real: np.ndarray, timeperiod: int = 30):
+    """EMA(real[, timeperiod=30])
 
     Exponential Moving average (Overlap Studies)
 
@@ -84,12 +125,15 @@ def EMA(real: np.ndarray, timeperiod: int):
     check_timeperiod(timeperiod)
 
     length: cython.Py_ssize_t = real.shape[0]
-
     startIdx: cython.Py_ssize_t = check_begidx1(real)
     endIdx: cython.Py_ssize_t = length - startIdx - 1
     lookback: cython.Py_ssize_t = startIdx + TA_EMA_Lookback(timeperiod)
 
     outReal = np.full_like(real, np.nan)
+    outBegIdx = np.zeros(1, dtype=np.int64)
+    outNBElement = np.zeros(1, dtype=np.int64)
 
-    retCode = TA_EMA(0, endIdx, real[startIdx:], timeperiod, outReal[lookback:])
+    retCode = TA_EMA(0, endIdx, real[startIdx:], timeperiod, outBegIdx, outNBElement, outReal[lookback:])
+    if retCode != TA_SUCCESS:
+        return outReal
     return outReal
