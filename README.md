@@ -50,15 +50,15 @@ $ python setup.py install
   
   - MAX✓
   
-  - MAXINDEX
+  - MAXINDEX✓
   
   - MIN✓
   
-  - MININDEX
+  - MININDEX✓
   
-  - MINMAX
+  - MINMAX✓
   
-  - MINMAXINDEX
+  - MINMAXINDEX✓
   
   - MULT✓
   

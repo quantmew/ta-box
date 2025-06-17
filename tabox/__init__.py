@@ -13,6 +13,10 @@ from .ta_func.ta_LN import *
 from .ta_func.ta_LOG10 import *
 from .ta_func.ta_SINH import *
 from .ta_func.ta_TANH import *
+from .ta_func.ta_MAXINDEX import *
+from .ta_func.ta_MININDEX import *
+from .ta_func.ta_MINMAX import *
+from .ta_func.ta_MINMAXINDEX import *
 
 # Math Operators
 from .ta_func.ta_ADD import *

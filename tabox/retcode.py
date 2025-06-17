@@ -20,30 +20,7 @@ TA_BAD_OBJECT: 15
 TA_NOT_SUPPORTED: 16
 TA_INTERNAL_ERROR: 5000
 TA_UNKNOWN_ERR: 0xFFFF
-"""
-import cython
-TA_SUCCESS: cython.int = 0
-TA_LIB_NOT_INITIALIZE: cython.int = 1
-TA_BAD_PARAM: cython.int = 2
-TA_ALLOC_ERR: cython.int = 3
-TA_GROUP_NOT_FOUND: cython.int = 4
-TA_FUNC_NOT_FOUND: cython.int = 5
-TA_INVALID_HANDLE: cython.int = 6
-TA_INVALID_PARAM_HOLDER: cython.int = 7
-TA_INVALID_PARAM_HOLDER_TYPE: cython.int = 8
-TA_INVALID_PARAM_FUNCTION: cython.int = 9
-TA_INPUT_NOT_ALL_INITIALIZE: cython.int = 10
-TA_OUTPUT_NOT_ALL_INITIALIZE: cython.int = 11
-TA_OUT_OF_RANGE_START_INDEX: cython.int = 12
-TA_OUT_OF_RANGE_END_INDEX: cython.int = 13
-TA_INVALID_LIST_TYPE: cython.int = 14
-TA_BAD_OBJECT: cython.int = 15
-TA_NOT_SUPPORTED: cython.int = 16
-TA_INTERNAL_ERROR: cython.int = 5000
-TA_UNKNOWN_ERR: cython.int = 0xFFFF
 
-
-"""
 MAType:
 
 TA_MAType_SMA: 0
@@ -57,15 +34,69 @@ TA_MAType_MAMA: 7
 TA_MAType_T3: 8
 """
 
-TA_MAType_SMA: cython.int = 0
-TA_MAType_EMA: cython.int = 1
-TA_MAType_WMA: cython.int = 2
-TA_MAType_DEMA: cython.int = 3
-TA_MAType_TEMA: cython.int = 4
-TA_MAType_TRIMA: cython.int = 5
-TA_MAType_KAMA: cython.int = 6
-TA_MAType_MAMA: cython.int = 7
-TA_MAType_T3: cython.int = 8
+import cython
 
+if not cython.compiled:
+    TA_SUCCESS: cython.int = 0
+    TA_LIB_NOT_INITIALIZE: cython.int = 1
+    TA_BAD_PARAM: cython.int = 2
+    TA_ALLOC_ERR: cython.int = 3
+    TA_GROUP_NOT_FOUND: cython.int = 4
+    TA_FUNC_NOT_FOUND: cython.int = 5
+    TA_INVALID_HANDLE: cython.int = 6
+    TA_INVALID_PARAM_HOLDER: cython.int = 7
+    TA_INVALID_PARAM_HOLDER_TYPE: cython.int = 8
+    TA_INVALID_PARAM_FUNCTION: cython.int = 9
+    TA_INPUT_NOT_ALL_INITIALIZE: cython.int = 10
+    TA_OUTPUT_NOT_ALL_INITIALIZE: cython.int = 11
+    TA_OUT_OF_RANGE_START_INDEX: cython.int = 12
+    TA_OUT_OF_RANGE_END_INDEX: cython.int = 13
+    TA_INVALID_LIST_TYPE: cython.int = 14
+    TA_BAD_OBJECT: cython.int = 15
+    TA_NOT_SUPPORTED: cython.int = 16
+    TA_INTERNAL_ERROR: cython.int = 5000
+    TA_UNKNOWN_ERR: cython.int = 0xFFFF
 
-TA_INTEGER_DEFAULT: cython.int = -1
+    TA_MAType_SMA: cython.int = 0
+    TA_MAType_EMA: cython.int = 1
+    TA_MAType_WMA: cython.int = 2
+    TA_MAType_DEMA: cython.int = 3
+    TA_MAType_TEMA: cython.int = 4
+    TA_MAType_TRIMA: cython.int = 5
+    TA_MAType_KAMA: cython.int = 6
+    TA_MAType_MAMA: cython.int = 7
+    TA_MAType_T3: cython.int = 8
+
+    TA_INTEGER_DEFAULT: cython.int = -1
+else:
+    TA_SUCCESS: cython.const[cython.int] = 0
+    TA_LIB_NOT_INITIALIZE: cython.const[cython.int] = 1
+    TA_BAD_PARAM: cython.const[cython.int] = 2
+    TA_ALLOC_ERR: cython.const[cython.int] = 3
+    TA_GROUP_NOT_FOUND: cython.const[cython.int] = 4
+    TA_FUNC_NOT_FOUND: cython.const[cython.int] = 5
+    TA_INVALID_HANDLE: cython.const[cython.int] = 6
+    TA_INVALID_PARAM_HOLDER: cython.const[cython.int] = 7
+    TA_INVALID_PARAM_HOLDER_TYPE: cython.const[cython.int] = 8
+    TA_INVALID_PARAM_FUNCTION: cython.const[cython.int] = 9
+    TA_INPUT_NOT_ALL_INITIALIZE: cython.const[cython.int] = 10
+    TA_OUTPUT_NOT_ALL_INITIALIZE: cython.const[cython.int] = 11
+    TA_OUT_OF_RANGE_START_INDEX: cython.const[cython.int] = 12
+    TA_OUT_OF_RANGE_END_INDEX: cython.const[cython.int] = 13
+    TA_INVALID_LIST_TYPE: cython.const[cython.int] = 14
+    TA_BAD_OBJECT: cython.const[cython.int] = 15
+    TA_NOT_SUPPORTED: cython.const[cython.int] = 16
+    TA_INTERNAL_ERROR: cython.const[cython.int] = 5000
+    TA_UNKNOWN_ERR: cython.const[cython.int] = 0xFFFF
+
+    TA_MAType_SMA: cython.const[cython.int] = 0
+    TA_MAType_EMA: cython.const[cython.int] = 1
+    TA_MAType_WMA: cython.const[cython.int] = 2
+    TA_MAType_DEMA: cython.const[cython.int] = 3
+    TA_MAType_TEMA: cython.const[cython.int] = 4
+    TA_MAType_TRIMA: cython.const[cython.int] = 5
+    TA_MAType_KAMA: cython.const[cython.int] = 6
+    TA_MAType_MAMA: cython.const[cython.int] = 7
+    TA_MAType_T3: cython.const[cython.int] = 8
+
+    TA_INTEGER_DEFAULT: cython.const[cython.int] = -1
