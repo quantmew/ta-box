@@ -32,6 +32,9 @@ jobs:
           CIBW_TEST_COMMAND: "python -m pytest {project}/tests"
           CIBW_TEST_REQUIRES: "pytest"
           CIBW_BUILD_VERBOSITY: 1
+          CIBW_BUILD_FRONTEND: build
+          CIBW_ENVIRONMENT: >
+            PIP_NO_BUILD_ISOLATION=false
 
       - uses: actions/upload-artifact@v4
         with:
