@@ -6,31 +6,38 @@ from ..retcode import *
 if not cython.compiled:
     from math import fabs
 
-def TA_TRANGE_Lookback() -> cython.int:
+
+def TA_TRANGE_Lookback() -> cython.Py_ssize_t:
     return 1
+
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def TA_TRANGE(startIdx: cython.int, endIdx: cython.int,
-            inHigh: cython.double[::1], inLow: cython.double[::1], inClose: cython.double[::1],
-            outReal: cython.double[::1]) -> cython.int:
+def TA_TRANGE(
+    startIdx: cython.Py_ssize_t,
+    endIdx: cython.Py_ssize_t,
+    inHigh: cython.double[::1],
+    inLow: cython.double[::1],
+    inClose: cython.double[::1],
+    outReal: cython.double[::1],
+) -> cython.int:
     if startIdx < 1:
         startIdx = 1
-    
+
     if startIdx > endIdx:
         return TA_SUCCESS
-    
-    outIdx: cython.int = 0
-    today: cython.int = startIdx
+
+    outIdx: cython.Py_ssize_t = 0
+    today: cython.Py_ssize_t = startIdx
     while today <= endIdx:
         tempHT: cython.double = inHigh[today]
         tempLT: cython.double = inLow[today]
-        tempCY: cython.double = inClose[today-1]
-        greatest: cython.double = tempHT - tempLT; 
+        tempCY: cython.double = inClose[today - 1]
+        greatest: cython.double = tempHT - tempLT
         val2: cython.double = fabs(tempCY - tempHT)
         if val2 > greatest:
             greatest = val2
-        val3: cython.double = fabs( tempCY - tempLT  )
+        val3: cython.double = fabs(tempCY - tempLT)
         if val3 > greatest:
             greatest = val3
         outReal[outIdx] = greatest
@@ -38,15 +45,18 @@ def TA_TRANGE(startIdx: cython.int, endIdx: cython.int,
         today += 1
     return TA_SUCCESS
 
+
 def TRANGE(high: np.ndarray, low: np.ndarray, close: np.ndarray) -> np.ndarray:
     high = check_array(high)
     low = check_array(low)
     close = check_array(close)
 
     length = check_length3(high, low, close)
-    startIdx: cython.int = check_begidx3(high, low, close)
-    endIdx: cython.int = length - startIdx - 1
+    startIdx: cython.Py_ssize_t = check_begidx3(high, low, close)
+    endIdx: cython.Py_ssize_t = length - startIdx - 1
     lookback = startIdx + TA_TRANGE_Lookback()
     outReal = np.full_like(high, np.nan)
-    TA_TRANGE(0, endIdx, high[startIdx:], low[startIdx:], close[startIdx:], outReal[lookback:])
+    TA_TRANGE(
+        0, endIdx, high[startIdx:], low[startIdx:], close[startIdx:], outReal[lookback:]
+    )
     return outReal

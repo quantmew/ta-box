@@ -74,29 +74,29 @@ $ python setup.py install
   
   - ATAN✓
   
-  - CEIL
+  - CEIL✓
   
-  - COS
+  - COS✓
   
-  - COSH
+  - COSH✓
   
-  - EXP
+  - EXP✓
   
-  - FLOOR
+  - FLOOR✓
   
-  - LN
+  - LN✓
   
-  - LOG10
+  - LOG10✓
   
   - SIN✓
   
-  - SINH
+  - SINH✓
   
   - SQRT✓
   
   - TAN✓
   
-  - TANH
+  - TANH✓
 
 - Momentum Indicators
   
@@ -352,7 +352,7 @@ $ python setup.py install
 
 - Volatility Indicators
   
-  - ATR
+  - ATR✓
   
   - NATR
   
@@ -360,8 +360,8 @@ $ python setup.py install
 
 - Volume Indicators
   
-  - AD
+  - AD✓
   
-  - ADOSC
+  - ADOSC✓
   
   - OBV

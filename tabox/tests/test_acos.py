@@ -16,4 +16,4 @@ class TestACOS(unittest.TestCase):
             self.assertTrue(np.array_equal(this_ret, that_ret, equal_nan=True), f"{close}, {this_ret}, {that_ret}")
 
 if __name__ == '__main__':
-    unittest.main() 
+    unittest.main()
