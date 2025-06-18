@@ -26,6 +26,9 @@ from .ta_func.ta_DIV import *
 from .ta_func.ta_MAX import *
 from .ta_func.ta_MIN import *
 
+# Momentum Indicators
+from .ta_func.ta_ADX import *
+
 # Overlap Studies
 from .ta_func.ta_MA import *
 from .ta_func.ta_DEMA import *
@@ -47,6 +50,8 @@ from .ta_func.ta_MACDEXT import *
 # Price Transform
 from .ta_func.ta_AVGPRICE import *
 from .ta_func.ta_MEDPRICE import *
+from .ta_func.ta_TYPPRICE import *
+from .ta_func.ta_WCLPRICE import *
 
 # Statistic Functions
 from .ta_func.ta_STDDEV import *
@@ -59,6 +64,7 @@ from .ta_func.ta_ATR import *
 # Volume Indicators
 from .ta_func.ta_AD import *
 from .ta_func.ta_ADOSC import *
+from .ta_func.ta_ADX import *
 
 
 # Other Studies

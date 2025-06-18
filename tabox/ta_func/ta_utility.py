@@ -88,7 +88,7 @@ def std_acos(x: cython.float) -> cython.float:
     return math.acos(x)
 
 
-# 辅助函数
+# Utility Functions
 def round_pos(x: cython.float) -> cython.float:
     return std_floor(x + 0.5)
 
@@ -109,7 +109,7 @@ def PER_TO_K(per: cython.int) -> cython.float:
     return 2.0 / (per + 1)
 
 
-# K线图相关函数
+# K-Line Related Functions
 def TA_REALBODY(inClose: cython.float, inOpen: cython.float) -> cython.float:
     return std_fabs(inClose - inOpen)
 

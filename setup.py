@@ -17,7 +17,7 @@ extensions = [
 
 setuptools.setup(
     name="TA-Box",
-    version="0.0.1a1.dev3",
+    version="0.0.1a1.dev4",
     author="Jun Wang",
     author_email="jstzwj@aliyun.com",
     description="A Python implementation for TA-LIB",
