@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 if not cython.compiled:
     from math import asin
@@ -23,9 +23,9 @@ def TA_ASIN(
 ) -> cython.int:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
     
     outIdx: cython.Py_ssize_t = 0
     for i in range(startIdx, endIdx + 1):
@@ -35,7 +35,7 @@ def TA_ASIN(
     outBegIdx[0] = startIdx
     outNBElement[0] = outIdx
     
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 def ASIN(real: np.ndarray):

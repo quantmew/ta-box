@@ -1,25 +1,33 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 if not cython.compiled:
     from math import sqrt
 
-def TA_SQRT_Lookback() -> cython.int:
+
+def TA_SQRT_Lookback() -> cython.Py_ssize_t:
     return 0
+
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def TA_SQRT(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], outReal: cython.double[::1]) -> cython.int:
-    outIdx: cython.int = 0
-    for i in range(startIdx, endIdx+1):
+def TA_SQRT(
+    startIdx: cython.Py_ssize_t,
+    endIdx: cython.Py_ssize_t,
+    inReal: cython.double[::1],
+    outReal: cython.double[::1],
+) -> cython.int:
+    outIdx: cython.Py_ssize_t = 0
+    for i in range(startIdx, endIdx + 1):
         outReal[outIdx] = sqrt(inReal[i])
         outIdx += 1
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
+
 
 def SQRT(real: np.ndarray) -> np.ndarray:
-    """ SQRT(real)
+    """SQRT(real)
 
     Vector Square Root (Math Transform)
 

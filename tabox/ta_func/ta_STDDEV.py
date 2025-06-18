@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1, check_timeperiod
-from ..retcode import *
+from ..retcode import TA_RetCode
 from .ta_VAR import TA_INT_VAR
 
 if not cython.compiled:
@@ -33,23 +33,23 @@ def TA_STDDEV(
 ) -> cython.int:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
 
     if optInTimePeriod == 0:
         optInTimePeriod = 5
     elif optInTimePeriod < 2 or optInTimePeriod > 100000:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     if optInNbDev == 0:
         optInNbDev = 1.0
     elif optInNbDev < -3.0e37 or optInNbDev > 3.0e37:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     # Calculate the variance
     retCode = TA_INT_VAR(startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal)
-    if retCode != TA_SUCCESS:
+    if retCode != TA_RetCode.TA_SUCCESS:
         return retCode
 
     # Calculate the square root of each variance, this is the standard deviation
@@ -68,7 +68,7 @@ def TA_STDDEV(
             else:
                 outReal[i] = 0.0
 
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 def STDDEV(real: np.ndarray, timeperiod: int = 5, nbdev: float = 1.0):
     """STDDEV(real[, timeperiod=5, nbdev=1.0])

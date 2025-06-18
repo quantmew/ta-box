@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import *
+from ..retcode import TA_RetCode
 from .ta_MA import TA_MA, TA_MA_Lookback
 
 def TA_MACDEXT_Lookback(optInFastPeriod: cython.int, optInFastMAType: cython.int,
@@ -60,39 +60,39 @@ def TA_MACDEXT(
 ) -> cython.int:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
 
     if optInFastPeriod == 0:
         optInFastPeriod = 12
     elif optInFastPeriod < 2 or optInFastPeriod > 100000:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     if optInSlowPeriod == 0:
         optInSlowPeriod = 26
     elif optInSlowPeriod < 2 or optInSlowPeriod > 100000:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     if optInSignalPeriod == 0:
         optInSignalPeriod = 9
     elif optInSignalPeriod < 1 or optInSignalPeriod > 100000:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     if optInFastMAType == 0:
         optInFastMAType = 0
     elif optInFastMAType < 0 or optInFastMAType > 8:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     if optInSlowMAType == 0:
         optInSlowMAType = 0
     elif optInSlowMAType < 0 or optInSlowMAType > 8:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     if optInSignalMAType == 0:
         optInSignalMAType = 0
     elif optInSignalMAType < 0 or optInSignalMAType > 8:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     # Make sure slow is really slower than the fast period
     if optInSlowPeriod < optInFastPeriod:
@@ -117,7 +117,7 @@ def TA_MACDEXT(
     if startIdx > endIdx:
         outBegIdx[0] = 0
         outNBElement[0] = 0
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     tempInteger = (endIdx - startIdx) + 1 + lookbackSignal
     fastMABuffer: cython.double[::1] = np.zeros(tempInteger, dtype=np.float64)
@@ -132,13 +132,13 @@ def TA_MACDEXT(
     # Calculate slow MA
     retCode = TA_MA(tempInteger, endIdx, inReal, optInSlowPeriod, optInSlowMAType,
                    outBegIdx1, outNbElement1, slowMABuffer)
-    if retCode != TA_SUCCESS:
+    if retCode != TA_RetCode.TA_SUCCESS:
         return retCode
 
     # Calculate fast MA
     retCode = TA_MA(tempInteger, endIdx, inReal, optInFastPeriod, optInFastMAType,
                    outBegIdx2, outNbElement2, fastMABuffer)
-    if retCode != TA_SUCCESS:
+    if retCode != TA_RetCode.TA_SUCCESS:
         return retCode
 
     # Calculate MACD line
@@ -151,7 +151,7 @@ def TA_MACDEXT(
     # Calculate signal line
     retCode = TA_MA(0, outNbElement1[0] - 1, fastMABuffer, optInSignalPeriod, optInSignalMAType,
                    outBegIdx2, outNbElement2, outMACDSignal)
-    if retCode != TA_SUCCESS:
+    if retCode != TA_RetCode.TA_SUCCESS:
         return retCode
 
     # Calculate histogram
@@ -161,7 +161,7 @@ def TA_MACDEXT(
     outBegIdx[0] = startIdx
     outNBElement[0] = outNbElement2[0]
 
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 def MACDEXT(real: np.ndarray, fastperiod: int = 12, fastmatype: int = 0,
            slowperiod: int = 26, slowmatype: int = 0,

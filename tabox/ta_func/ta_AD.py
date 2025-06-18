@@ -2,7 +2,7 @@ import cython
 from cython.parallel import prange
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 
 def TA_AD_Lookback() -> cython.Py_ssize_t:
@@ -24,9 +24,9 @@ def TA_AD(
 ) -> cython.Py_ssize_t:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
 
     nbBar: cython.Py_ssize_t = endIdx - startIdx + 1
     currentBar: cython.Py_ssize_t = startIdx
@@ -55,7 +55,7 @@ def TA_AD(
     outBegIdx[0] = startIdx
     outNBElement[0] = outIdx
 
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 def AD(high: np.ndarray, low: np.ndarray, close: np.ndarray, volume: np.ndarray):

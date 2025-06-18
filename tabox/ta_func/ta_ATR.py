@@ -3,11 +3,13 @@ import numpy as np
 from .ta_utils import check_array, check_begidx3, check_length3, make_double_array
 from .ta_TRANGE import TA_TRANGE
 from .ta_SMA import TA_INT_SMA
-from ..retcode import *
+from ..retcode import TA_RetCode
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId
 
 
 def TA_ATR_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:
-    return optInTimePeriod
+    unstable_period = TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_ATR)
+    return optInTimePeriod + unstable_period
 
 
 @cython.boundscheck(False)
@@ -23,28 +25,35 @@ def TA_ATR(
     outNBElement: cython.Py_ssize_t[::1],
     outReal: cython.double[::1],
 ) -> cython.int:
+    # 计算总lookback周期
     lookbackTotal: cython.Py_ssize_t = TA_ATR_Lookback(optInTimePeriod)
+    
+    # 调整起始索引
     if startIdx < lookbackTotal:
         startIdx = lookbackTotal
 
     if startIdx > endIdx:
         outBegIdx[0] = 0
         outNBElement[0] = 0
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     if optInTimePeriod <= 1:
         return TA_TRANGE(startIdx, endIdx, inHigh, inLow, inClose, outReal)
 
-    tempBuffer = np.zeros((lookbackTotal + (endIdx - startIdx) + 1,), dtype=float)
-    prevATRTemp = np.zeros((1,), dtype=float)
+    # 计算临时缓冲区大小，与C语言一致
+    buffer_size = lookbackTotal + (endIdx - startIdx) + 1
+    tempBuffer = np.zeros(buffer_size, dtype=float)
+    prevATRTemp = np.zeros(1, dtype=float)
     outBegIdx1 = np.zeros(1, dtype=np.int64)
     outNBElement1 = np.zeros(1, dtype=np.int64)
 
-    retCode = TA_TRANGE(startIdx - lookbackTotal + 1, endIdx, inHigh, inLow, inClose, tempBuffer)
-    if retCode != TA_SUCCESS:
+    # 计算真实范围(TRANGE)
+    tr_start = startIdx - lookbackTotal + 1
+    retCode = TA_TRANGE(tr_start, endIdx, inHigh, inLow, inClose, tempBuffer)
+    if retCode != TA_RetCode.TA_SUCCESS:
         return retCode
 
-    # Calculate first ATR value using SMA
+    # 计算第一个ATR值，使用SMA
     retCode = TA_INT_SMA(
         optInTimePeriod - 1,
         optInTimePeriod - 1,
@@ -54,17 +63,17 @@ def TA_ATR(
         outNBElement1,
         prevATRTemp,
     )
-    if retCode != TA_SUCCESS:
+    if retCode != TA_RetCode.TA_SUCCESS:
         return retCode
 
     prevATR = prevATRTemp[0]
 
-    # Handle unstable period
+    # 获取不稳定周期，修正之前的硬编码问题
+    unstablePeriod = TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_ATR)
+    
+    # 处理不稳定周期
     today = optInTimePeriod
     outIdx = 0
-    unstablePeriod = 1  # TA_GLOBALS_UNSTABLE_PERIOD(TA_FUNC_UNST_ATR,Atr)
-    
-    # Skip the unstable period
     while unstablePeriod != 0:
         prevATR *= optInTimePeriod - 1
         prevATR += tempBuffer[today]
@@ -72,11 +81,11 @@ def TA_ATR(
         prevATR /= optInTimePeriod
         unstablePeriod -= 1
 
-    # Write the first ATR value
-    outReal[0] = prevATR
-    outIdx = 1
+    # 写入第一个ATR值
+    outReal[outIdx] = prevATR
+    outIdx += 1
 
-    # Calculate remaining ATR values
+    # 计算剩余的ATR值
     nbATR = (endIdx - startIdx) + 1
     while nbATR - 1 != 0:
         nbATR -= 1
@@ -89,7 +98,7 @@ def TA_ATR(
 
     outBegIdx[0] = startIdx
     outNBElement[0] = outIdx
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 def ATR(

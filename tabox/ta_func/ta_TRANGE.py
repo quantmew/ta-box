@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_length3, check_begidx3
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 if not cython.compiled:
     from math import fabs
@@ -25,7 +25,7 @@ def TA_TRANGE(
         startIdx = 1
 
     if startIdx > endIdx:
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     outIdx: cython.Py_ssize_t = 0
     today: cython.Py_ssize_t = startIdx
@@ -43,7 +43,7 @@ def TA_TRANGE(
         outReal[outIdx] = greatest
         outIdx += 1
         today += 1
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 def TRANGE(high: np.ndarray, low: np.ndarray, close: np.ndarray) -> np.ndarray:

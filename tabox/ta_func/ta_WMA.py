@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1, check_timeperiod
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 
 def TA_WMA_Lookback(optInTimePeriod: cython.int) -> cython.int:
@@ -31,7 +31,7 @@ def TA_WMA(
     if startIdx > endIdx:
         outBegIdx[0] = 0
         outNBElement[0] = 0
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     # To make the rest more efficient, handle exception case where the user is asking for a period of '1'.
     # In that case outputs equals inputs for the requested range.
@@ -40,7 +40,7 @@ def TA_WMA(
         outNBElement[0] = endIdx - startIdx + 1
 
         outReal[: outNBElement[0]] = inReal[startIdx : endIdx + 1]
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     """
     Calculate the divider (always an integer value).
@@ -121,7 +121,7 @@ def TA_WMA(
     # Set output limits.
     outNBElement[0] = outIdx
     outBegIdx[0] = startIdx
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 def WMA(real: np.ndarray, timeperiod: int = 30) -> np.ndarray:

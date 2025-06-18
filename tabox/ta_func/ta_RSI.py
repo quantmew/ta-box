@@ -4,7 +4,7 @@ from tabox.settings import TA_FUNC_NO_RANGE_CHECK
 
 from tabox.ta_func.ta_utility import TA_IS_ZERO
 from .ta_utils import check_array, check_begidx1, check_timeperiod, make_double_array
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 
 def TA_RSI_Lookback(optInTimePeriod: cython.int) -> cython.int:
@@ -39,14 +39,14 @@ def TA_RSI(
 
     if not TA_FUNC_NO_RANGE_CHECK:
         if startIdx < 0:
-            return TA_OUT_OF_RANGE_START_INDEX
+            return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
         if (endIdx < 0) or (endIdx < startIdx):
-            return TA_OUT_OF_RANGE_END_INDEX
+            return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
         # min/max are checked for optInTimePeriod.
-        if optInTimePeriod == TA_INTEGER_DEFAULT:
+        if optInTimePeriod == TA_RetCode.TA_INTEGER_DEFAULT:
             optInTimePeriod = 14
         elif (optInTimePeriod < 2) or (optInTimePeriod > 100000):
-            return TA_BAD_PARAM
+            return TA_RetCode.TA_BAD_PARAM
 
     outBegIdx[0] = 0
     outNBElement[0] = 0
@@ -58,7 +58,7 @@ def TA_RSI(
 
     # Make sure there is still something to evaluate.
     if startIdx > endIdx:
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     outIdx = 0  # Index into the output.
 
@@ -72,7 +72,7 @@ def TA_RSI(
         i = (endIdx - startIdx) + 1
         outNBElement[0] = i
         outReal[:i] = inReal[startIdx : startIdx + i]
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     """
     Accumulate Wilder's "Average Gain" and "Average Loss" 
@@ -129,7 +129,7 @@ def TA_RSI(
         if today > endIdx:
             outBegIdx[0] = startIdx
             outNBElement[0] = outIdx
-            return TA_SUCCESS
+            return TA_RetCode.TA_SUCCESS
 
         # Start over for the next price bar.
         today -= optInTimePeriod
@@ -234,7 +234,7 @@ def TA_RSI(
     outBegIdx[0] = startIdx
     outNBElement[0] = outIdx
 
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 @cython.boundscheck(False)
@@ -265,14 +265,14 @@ def TA_S_RSI(
 
     if not TA_FUNC_NO_RANGE_CHECK:
         if startIdx < 0:
-            return TA_OUT_OF_RANGE_START_INDEX
+            return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
         if (endIdx < 0) or (endIdx < startIdx):
-            return TA_OUT_OF_RANGE_END_INDEX
+            return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
         # min/max are checked for optInTimePeriod.
-        if optInTimePeriod == TA_INTEGER_DEFAULT:
+        if optInTimePeriod == TA_RetCode.TA_INTEGER_DEFAULT:
             optInTimePeriod = 14
         elif (optInTimePeriod < 2) or (optInTimePeriod > 100000):
-            return TA_BAD_PARAM
+            return TA_RetCode.TA_BAD_PARAM
 
     outBegIdx[0] = 0
     outNBElement[0] = 0
@@ -284,7 +284,7 @@ def TA_S_RSI(
 
     # Make sure there is still something to evaluate.
     if startIdx > endIdx:
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     outIdx = 0  # Index into the output.
 
@@ -298,7 +298,7 @@ def TA_S_RSI(
         i = (endIdx - startIdx) + 1
         outNBElement[0] = i
         outReal[:i] = inReal[startIdx : startIdx + i]
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     """
     Accumulate Wilder's "Average Gain" and "Average Loss" 
@@ -355,7 +355,7 @@ def TA_S_RSI(
         if today > endIdx:
             outBegIdx[0] = startIdx
             outNBElement[0] = outIdx
-            return TA_SUCCESS
+            return TA_RetCode.TA_SUCCESS
 
         # Start over for the next price bar.
         today -= optInTimePeriod
@@ -460,7 +460,7 @@ def TA_S_RSI(
     outBegIdx[0] = startIdx
     outNBElement[0] = outIdx
 
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 def RSI(real: np.ndarray, timeperiod: int = 30) -> np.ndarray:

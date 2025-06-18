@@ -2,7 +2,7 @@ import cython
 from cython.parallel import prange
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 
 def TA_MINMAX_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:
@@ -51,7 +51,7 @@ def TA_MINMAX(
     outBegIdx[0] = startIdx + optInTimePeriod - 1
     outNBElement[0] = outIdx
     
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 def MINMAX(real: np.ndarray, timeperiod: cython.Py_ssize_t = 30):

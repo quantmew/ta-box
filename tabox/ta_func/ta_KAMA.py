@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 def TA_KAMA_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     """TA_KAMA_Lookback(optInTimePeriod) -> Py_ssize_t
@@ -28,14 +28,14 @@ def TA_KAMA(
 ) -> cython.int:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
 
     if optInTimePeriod == 0:
         optInTimePeriod = 30
     elif optInTimePeriod < 2 or optInTimePeriod > 100000:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     constMax = 2.0 / (30.0 + 1.0)
     constDiff = 2.0 / (2.0 + 1.0) - constMax
@@ -48,7 +48,7 @@ def TA_KAMA(
     if startIdx > endIdx:
         outBegIdx[0] = 0
         outNBElement[0] = 0
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     sumROC1 = 0.0
     today = startIdx - lookbackTotal
@@ -133,7 +133,7 @@ def TA_KAMA(
 
     outNBElement[0] = outIdx
 
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 def KAMA(real: np.ndarray, timeperiod: int = 30):
     """KAMA(real, timeperiod=30)

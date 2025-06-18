@@ -2,7 +2,7 @@ import cython
 from cython.parallel import prange
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import TA_OUT_OF_RANGE_START_INDEX, TA_OUT_OF_RANGE_END_INDEX, TA_BAD_PARAM, TA_SUCCESS
+from ..retcode import TA_RetCode
 
 
 def TA_MAXINDEX_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:
@@ -22,11 +22,11 @@ def TA_MAXINDEX(
 ) -> cython.int:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
     if optInTimePeriod < 2:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
     
     outIdx: cython.Py_ssize_t = 0
     i: cython.Py_ssize_t
@@ -48,7 +48,7 @@ def TA_MAXINDEX(
     outBegIdx[0] = startIdx + optInTimePeriod - 1
     outNBElement[0] = outIdx
     
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 def MAXINDEX(real: np.ndarray, timeperiod: cython.Py_ssize_t = 30):

@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import *
+from ..retcode import TA_RetCode
 from .ta_EMA import TA_EMA, TA_EMA_Lookback, TA_INT_EMA
 
 def TA_DEMA_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
@@ -29,14 +29,14 @@ def TA_DEMA(
 ) -> cython.int:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
 
     if optInTimePeriod == 0:
         optInTimePeriod = 30
     elif optInTimePeriod < 2 or optInTimePeriod > 100000:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     lookbackEMA = TA_EMA_Lookback(optInTimePeriod)
     lookbackTotal = lookbackEMA * 2
@@ -47,7 +47,7 @@ def TA_DEMA(
     if startIdx > endIdx:
         outBegIdx[0] = 0
         outNBElement[0] = 0
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     tempInteger = lookbackTotal + (endIdx - startIdx) + 1
     firstEMA = np.zeros(tempInteger, dtype=np.float64)
@@ -59,7 +59,7 @@ def TA_DEMA(
     # Calculate the first EMA
     retCode = TA_INT_EMA(startIdx - lookbackEMA, endIdx, inReal, optInTimePeriod, k,
                          outBegIdx1, outNbElement1, firstEMA)
-    if retCode != TA_SUCCESS or outNbElement1[0] == 0:
+    if retCode != TA_RetCode.TA_SUCCESS or outNbElement1[0] == 0:
         return retCode
 
     # Calculate the second EMA
@@ -69,7 +69,7 @@ def TA_DEMA(
 
     retCode = TA_INT_EMA(0, outNbElement1[0] - 1, firstEMA, optInTimePeriod, k,
                          outBegIdx2, outNbElement2, secondEMA)
-    if retCode != TA_SUCCESS or outNbElement2[0] == 0:
+    if retCode != TA_RetCode.TA_SUCCESS or outNbElement2[0] == 0:
         return retCode
 
     # Calculate DEMA
@@ -80,7 +80,7 @@ def TA_DEMA(
     outBegIdx[0] = outBegIdx1[0] + outBegIdx2[0]
     outNBElement[0] = outNbElement2[0]
 
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 def DEMA(real: np.ndarray, timeperiod: int = 30):
     """DEMA(real, timeperiod=30)

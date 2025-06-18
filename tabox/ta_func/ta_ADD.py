@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx2, check_length2
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 
 def TA_ADD_Lookback() -> cython.Py_ssize_t:
@@ -21,9 +21,9 @@ def TA_ADD(
 ) -> cython.Py_ssize_t:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
     
     outIdx: cython.Py_ssize_t = 0
     for i in range(startIdx, endIdx + 1):
@@ -33,7 +33,7 @@ def TA_ADD(
     outBegIdx[0] = startIdx
     outNBElement[0] = outIdx
     
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 def ADD(real0: np.ndarray, real1: np.ndarray) -> np.ndarray:

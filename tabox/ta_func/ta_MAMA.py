@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import *
+from ..retcode import TA_RetCode
 import math
 
 def TA_MAMA_Lookback(optInFastLimit: cython.double, optInSlowLimit: cython.double) -> cython.Py_ssize_t:
@@ -36,19 +36,19 @@ def TA_MAMA(
 ) -> cython.int:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
 
     if optInFastLimit == 0:
         optInFastLimit = 0.5
     elif optInFastLimit < 0.01 or optInFastLimit > 0.99:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     if optInSlowLimit == 0:
         optInSlowLimit = 0.05
     elif optInSlowLimit < 0.01 or optInSlowLimit > 0.99:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     rad2Deg = 180.0 / (4.0 * math.atan(1))
     lookbackTotal = 32 + 2  # TA_GLOBALS_UNSTABLE_PERIOD(TA_FUNC_UNST_MAMA,Mama)
@@ -59,7 +59,7 @@ def TA_MAMA(
     if startIdx > endIdx:
         outBegIdx[0] = 0
         outNBElement[0] = 0
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     outBegIdx[0] = startIdx
 
@@ -202,7 +202,7 @@ def TA_MAMA(
 
     outNBElement[0] = outIdx
 
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 def MAMA(real: np.ndarray, fastlimit: float = 0.5, slowlimit: float = 0.05):
     """MAMA(real, fastlimit=0.5, slowlimit=0.05)

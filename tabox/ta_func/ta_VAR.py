@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1, check_timeperiod
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 def TA_VAR_Lookback(optInTimePeriod: cython.int, optInNbDev: cython.double) -> cython.Py_ssize_t:
     """TA_VAR_Lookback(optInTimePeriod, optInNbDev) -> Py_ssize_t
@@ -40,7 +40,7 @@ def TA_INT_VAR(
     if startIdx > endIdx:
         outBegIdx[0] = 0
         outNBElement[0] = 0
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     periodTotal1: cython.double = 0.0
     periodTotal2: cython.double = 0.0
@@ -78,7 +78,7 @@ def TA_INT_VAR(
     outNBElement[0] = outIdx
     outBegIdx[0] = startIdx
 
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
@@ -94,19 +94,19 @@ def TA_VAR(
 ) -> cython.int:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
 
     if optInTimePeriod == 0:
         optInTimePeriod = 5
     elif optInTimePeriod < 1 or optInTimePeriod > 100000:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     if optInNbDev == 0:
         optInNbDev = 1.0
     elif optInNbDev < -3.0e37 or optInNbDev > 3.0e37:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     return TA_INT_VAR(startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal)
 

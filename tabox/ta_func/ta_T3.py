@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 def TA_T3_Lookback(optInTimePeriod: cython.int, optInVFactor: cython.double) -> cython.Py_ssize_t:
     """TA_T3_Lookback(optInTimePeriod, optInVFactor) -> Py_ssize_t
@@ -34,19 +34,19 @@ def TA_T3(
 ) -> cython.int:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
 
     if optInTimePeriod == 0:
         optInTimePeriod = 5
     elif optInTimePeriod < 2 or optInTimePeriod > 100000:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     if optInVFactor == 0:
         optInVFactor = 0.7
     elif optInVFactor < 0 or optInVFactor > 1:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     lookbackTotal = 6 * (optInTimePeriod - 1)
     if startIdx <= lookbackTotal:
@@ -55,7 +55,7 @@ def TA_T3(
     if startIdx > endIdx:
         outBegIdx[0] = 0
         outNBElement[0] = 0
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     outBegIdx[0] = startIdx
     today = startIdx - lookbackTotal
@@ -156,7 +156,7 @@ def TA_T3(
         today += 1
 
     outNBElement[0] = outIdx
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 def T3(real: np.ndarray, timeperiod: int = 5, vfactor: float = 0.7):
     """T3(real, timeperiod=5, vfactor=0.7)

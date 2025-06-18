@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 
 def TA_EMA_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:
@@ -40,7 +40,7 @@ def TA_INT_EMA(
     if startIdx > endIdx:
         outBegIdx[0] = 0
         outNBElement[0] = 0
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     outBegIdx[0] = startIdx
 
@@ -72,7 +72,7 @@ def TA_INT_EMA(
         today += 1
 
     outNBElement[0] = outIdx
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 def TA_EMA(
@@ -96,11 +96,11 @@ def TA_EMA(
     """
     # parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
     if optInTimePeriod < 2 or optInTimePeriod > 100000:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     # calculate k
     k: cython.double = 2.0 / (optInTimePeriod + 1)
@@ -134,6 +134,6 @@ def EMA(real: np.ndarray, timeperiod: int = 30):
     outNBElement = np.zeros(1, dtype=np.int64)
 
     retCode = TA_EMA(0, endIdx, real[startIdx:], timeperiod, outBegIdx, outNBElement, outReal[lookback:])
-    if retCode != TA_SUCCESS:
+    if retCode != TA_RetCode.TA_SUCCESS:
         return outReal
     return outReal

@@ -34,6 +34,20 @@ Or checkout the sources and run ``setup.py`` yourself:
 $ python setup.py install
 ```
 
+## How to use
+
+```python
+import tabox as ta
+import numpy as np
+
+close = np.array([23.42, 23.11, 23.01, 23.15, 23.33, 23.10, 23.21, 23.00, 23.04, 22.85, 22.90, 22.77, 22.80, 22.69, 22.73, 22.80, 22.99])
+
+ema = ta.EMA(close, timeperiod=14)
+
+print(ema)
+
+```
+
 ## Function List
 
 - Cycle Indicators

@@ -2,7 +2,7 @@ from sys import prefix
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1, check_timeperiod
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 def min_double(left: cython.double, right: cython.double) -> cython.double:
     """ min_double(left, right) -> double
@@ -61,7 +61,7 @@ def TA_MIN_LARGE_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cy
         suffix_i += 1
         prefix_i += 1
 
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
@@ -102,7 +102,7 @@ def TA_MIN_SMALL_TIMEPERIOD(startIdx: cython.int, endIdx: cython.int, inReal: cy
         trailingIdx+=1
         today+=1
     
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 def TA_MIN(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1], optInTimePeriod: cython.int, outReal: cython.double[::1]) -> cython.int:
     if optInTimePeriod < 100:

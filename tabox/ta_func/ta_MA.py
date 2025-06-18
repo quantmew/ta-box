@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import *
+from ..retcode import TA_RetCode
 from .ta_SMA import TA_SMA, TA_SMA_Lookback
 from .ta_EMA import TA_EMA, TA_EMA_Lookback
 from .ta_WMA import TA_WMA, TA_WMA_Lookback
@@ -65,19 +65,19 @@ def TA_MA(
 ) -> cython.int:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
 
     if optInTimePeriod == 0:
         optInTimePeriod = 30
     elif optInTimePeriod < 1 or optInTimePeriod > 100000:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     if optInMAType == 0:
         optInMAType = 0
     elif optInMAType < 0 or optInMAType > 8:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
     if optInTimePeriod == 1:
         nbElement = endIdx - startIdx + 1
@@ -85,7 +85,7 @@ def TA_MA(
         for i in range(nbElement):
             outReal[i] = inReal[startIdx + i]
         outBegIdx[0] = startIdx
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     if optInMAType == 0:  # SMA
         return TA_SMA(startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal)
@@ -107,7 +107,7 @@ def TA_MA(
     elif optInMAType == 8:  # T3
         return TA_T3(startIdx, endIdx, inReal, optInTimePeriod, 0.7, outBegIdx, outNBElement, outReal)
     else:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
 
 def MA(real: np.ndarray, timeperiod: int = 30, matype: int = 0):
     """MA(real, timeperiod=30, matype=0)

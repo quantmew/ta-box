@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1, check_timeperiod
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 
 def TA_SMA_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:
@@ -31,7 +31,7 @@ def TA_SMA(
     if startIdx > endIdx:
         outBegIdx[0] = 0
         outNBElement[0] = 0
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     # Do the MA calculation using tight loops.
     # Add-up the initial period, except for the last value.
@@ -65,7 +65,7 @@ def TA_SMA(
     # All done. Indicate the output limits and return.
     outBegIdx[0] = startIdx
     outNBElement[0] = outIdx
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 @cython.boundscheck(False)
@@ -88,7 +88,7 @@ def TA_INT_SMA(
     if startIdx > endIdx:
         outBegIdx[0] = 0
         outNBElement[0] = 0
-        return TA_SUCCESS
+        return TA_RetCode.TA_SUCCESS
 
     periodTotal: cython.int = 0
     trailingIdx: cython.int = startIdx - lookbackTotal
@@ -117,7 +117,7 @@ def TA_INT_SMA(
 
     outBegIdx[0] = startIdx
     outNBElement[0] = outIdx
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 
 def SMA(real: np.ndarray, timeperiod: int = 30) -> np.ndarray:

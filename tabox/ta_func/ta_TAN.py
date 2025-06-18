@@ -1,7 +1,7 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import *
+from ..retcode import TA_RetCode
 
 if not cython.compiled:
     from math import tan
@@ -16,7 +16,7 @@ def TA_TAN(startIdx: cython.int, endIdx: cython.int, inReal: cython.double[::1],
     for i in range(startIdx, endIdx+1):
         outReal[outIdx] = tan(inReal[i])
         outIdx += 1
-    return TA_SUCCESS
+    return TA_RetCode.TA_SUCCESS
 
 def TAN(real: np.ndarray) -> np.ndarray:
     """ TAN(real)
