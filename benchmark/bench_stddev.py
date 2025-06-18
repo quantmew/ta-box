@@ -20,4 +20,4 @@ def bench_that_stddev():
 
 if __name__ == '__main__':
     bench_this_stddev()
-    bench_that_stddev() 
+    bench_that_stddev()

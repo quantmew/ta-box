@@ -1,16 +1,27 @@
 import cython
-from cython.parallel import prange
 import numpy as np
-from .ta_utils import check_array, check_begidx1
-from ..retcode import TA_RetCode
-
+from .ta_utils import check_array, check_begidx1, check_timeperiod
+from ..retcode import TA_RetCode, TA_INTEGER_DEFAULT
+from ..settings import TA_FUNC_NO_RANGE_CHECK
 
 def TA_MINMAXINDEX_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:
-    return optInTimePeriod - 1
+    """TA_MINMAXINDEX_Lookback - Lookback for Indexes of lowest and highest values over a specified period
 
+    Inputs:
+        optInTimePeriod: (int) Number of period (From 2 to 100000)
+    Outputs:
+        int
+    """
+    if not TA_FUNC_NO_RANGE_CHECK:
+        if optInTimePeriod == TA_INTEGER_DEFAULT:
+            optInTimePeriod = 30
+        elif optInTimePeriod < 2 or optInTimePeriod > 100000:
+            return -1
+    return optInTimePeriod - 1
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_MINMAXINDEX(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -19,71 +30,143 @@ def TA_MINMAXINDEX(
     outBegIdx: cython.Py_ssize_t[::1],
     outNBElement: cython.Py_ssize_t[::1],
     outMinIdx: cython.Py_ssize_t[::1],
-    outMaxIdx: cython.Py_ssize_t[::1],
+    outMaxIdx: cython.Py_ssize_t[::1]
 ) -> cython.int:
-    # Parameters check
+    """TA_MINMAXINDEX - Indexes of lowest and highest values over a specified period
+
+    Input  = double
+    Output = int, int
+
+    Optional Parameters:
+    -------------------
+    optInTimePeriod:(From 2 to 100000)
+        Number of period
+
+    Parameters:
+    -----------
+    startIdx: Starting index for calculation
+    endIdx: Ending index for calculation
+    inReal: Input array of real numbers
+    optInTimePeriod: Number of periods to look back
+    outBegIdx: Output begin index
+    outNBElement: Number of output elements
+    outMinIdx: Output array of minimum value indices
+    outMaxIdx: Output array of maximum value indices
+
+    Returns:
+    --------
+    TA_RetCode: Return code indicating success or failure
+    """
+    # Validate the requested output range
     if startIdx < 0:
         return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
         return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
-    if optInTimePeriod < 2:
+    
+    # Check if input array is valid
+    if inReal is None:
         return TA_RetCode.TA_BAD_PARAM
     
-    outIdx: cython.Py_ssize_t = 0
-    i: cython.Py_ssize_t
-    j: cython.Py_ssize_t
-    minIdx: cython.Py_ssize_t
-    maxIdx: cython.Py_ssize_t
-    minValue: cython.double
-    maxValue: cython.double
-
-    # Calculate the minimum and maximum value indices
-    for i in range(startIdx + optInTimePeriod - 1, endIdx + 1):
-        minIdx = i - optInTimePeriod + 1
-        maxIdx = minIdx
-        minValue = inReal[minIdx]
-        maxValue = minValue
-        for j in range(minIdx + 1, i + 1):
-            if inReal[j] < minValue:
-                minValue = inReal[j]
-                minIdx = j
-            if inReal[j] > maxValue:
-                maxValue = inReal[j]
-                maxIdx = j
-        outMinIdx[outIdx] = minIdx
-        outMaxIdx[outIdx] = maxIdx
-        outIdx += 1
-
-    outBegIdx[0] = startIdx + optInTimePeriod - 1
-    outNBElement[0] = outIdx
+    # Min/max are checked for optInTimePeriod
+    if optInTimePeriod == -1:  # TA_INTEGER_DEFAULT
+        optInTimePeriod = 30
+    elif optInTimePeriod < 2 or optInTimePeriod > 100000:
+        return TA_RetCode.TA_BAD_PARAM
     
+    # Check if output arrays are valid
+    if outMinIdx is None or outMaxIdx is None:
+        return TA_RetCode.TA_BAD_PARAM
+
+    # Identify the minimum number of price bar needed
+    # to identify at least one output over the specified period
+    nbInitialElementNeeded: cython.int = optInTimePeriod - 1
+
+    # Move up the start index if there is not enough initial data
+    if startIdx < nbInitialElementNeeded:
+        startIdx = nbInitialElementNeeded
+
+    # Make sure there is still something to evaluate
+    if startIdx > endIdx:
+        outBegIdx[0] = 0
+        outNBElement[0] = 0
+        return TA_RetCode.TA_SUCCESS
+
+    # Proceed with the calculation for the requested range
+    outIdx: cython.Py_ssize_t = 0
+    today: cython.Py_ssize_t = startIdx
+    trailingIdx: cython.Py_ssize_t = startIdx - nbInitialElementNeeded
+    highestIdx: cython.Py_ssize_t = -1
+    highest: cython.double = 0.0
+    lowestIdx: cython.Py_ssize_t = -1
+    lowest: cython.double = 0.0
+
+    while today <= endIdx:
+        tmpHigh = tmpLow = inReal[today]
+
+        if highestIdx < trailingIdx:
+            highestIdx = trailingIdx
+            highest = inReal[highestIdx]
+            i: cython.Py_ssize_t = highestIdx
+            while i + 1 <= today:
+                i += 1
+                tmpHigh = inReal[i]
+                if tmpHigh > highest:
+                    highestIdx = i
+                    highest = tmpHigh
+        elif tmpHigh >= highest:
+            highestIdx = today
+            highest = tmpHigh
+
+        if lowestIdx < trailingIdx:
+            lowestIdx = trailingIdx
+            lowest = inReal[lowestIdx]
+            i = lowestIdx
+            while i + 1 <= today:
+                i += 1
+                tmpLow = inReal[i]
+                if tmpLow < lowest:
+                    lowestIdx = i
+                    lowest = tmpLow
+        elif tmpLow <= lowest:
+            lowestIdx = today
+            lowest = tmpLow
+
+        outMaxIdx[outIdx] = highestIdx
+        outMinIdx[outIdx] = lowestIdx
+        outIdx += 1
+        trailingIdx += 1
+        today += 1
+
+    # Keep the outBegIdx relative to the caller input before returning
+    outBegIdx[0] = startIdx
+    outNBElement[0] = outIdx
+
     return TA_RetCode.TA_SUCCESS
 
-
-def MINMAXINDEX(real: np.ndarray, timeperiod: cython.Py_ssize_t = 30):
+def MINMAXINDEX(real: np.ndarray, timeperiod: int = 30) -> tuple[np.ndarray, np.ndarray]:
     """MINMAXINDEX(real[, timeperiod=30])
 
-    Indexes of lowest and highest values over a specified period (Math Transform)
+    Indexes of lowest and highest values over a specified period
 
     Inputs:
-        real: (any ndarray)
-        timeperiod: (int) Number of period
+        real: (any ndarray) Input array of real numbers
+        timeperiod: (int) Number of period (default: 30)
     Outputs:
-        minidx
-        maxidx
+        minidx: Array of indices of lowest values
+        maxidx: Array of indices of highest values
     """
     real = check_array(real)
-
-    outMinIdx = np.full_like(real, np.nan, dtype=np.int64)
-    outMaxIdx = np.full_like(real, np.nan, dtype=np.int64)
+    check_timeperiod(timeperiod)
+    
     length: cython.Py_ssize_t = real.shape[0]
-
     startIdx: cython.Py_ssize_t = check_begidx1(real)
     endIdx: cython.Py_ssize_t = length - startIdx - 1
-    lookback = startIdx + TA_MINMAXINDEX_Lookback(timeperiod)
-
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-
+    lookback: cython.Py_ssize_t = startIdx + TA_MINMAXINDEX_Lookback(timeperiod)
+    
+    outMinIdx = np.full_like(real, 0, dtype=np.int64)
+    outMaxIdx = np.full_like(real, 0, dtype=np.int64)
+    outBegIdx = np.zeros(1, dtype=np.int64)
+    outNBElement = np.zeros(1, dtype=np.int64)
+    
     TA_MINMAXINDEX(0, endIdx, real[startIdx:], timeperiod, outBegIdx, outNBElement, outMinIdx[lookback:], outMaxIdx[lookback:])
-    return outMinIdx, outMaxIdx 
+    return outMinIdx, outMaxIdx

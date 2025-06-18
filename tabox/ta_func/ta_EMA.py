@@ -1,15 +1,29 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
-from ..retcode import TA_RetCode
+from ..retcode import TA_RetCode, TA_INTEGER_DEFAULT
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId
+from ..settings import TA_FUNC_NO_RANGE_CHECK
 
 
 def TA_EMA_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:
-    """TA_EMA_Lookback(optInTimePeriod) -> Py_ssize_t
-
-    EMA Lookback
     """
-    return optInTimePeriod - 1
+    TA_EMA_Lookback - Exponential Moving Average Lookback
+
+    Input:
+        optInTimePeriod: (int) Number of period (From 2 to 100000)
+
+    Output:
+        (int) Number of lookback periods
+    """
+    if not TA_FUNC_NO_RANGE_CHECK:
+        if optInTimePeriod == TA_INTEGER_DEFAULT:
+            optInTimePeriod = 30
+        elif optInTimePeriod < 2 or optInTimePeriod > 100000:
+            return -1
+    return (
+        optInTimePeriod - 1 + TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_EMA)
+    )
 
 
 @cython.boundscheck(False)
@@ -95,18 +109,25 @@ def TA_EMA(
        Number of period
     """
     # parameters check
-    if startIdx < 0:
-        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
-    if endIdx < 0 or endIdx < startIdx:
-        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
-    if optInTimePeriod < 2 or optInTimePeriod > 100000:
-        return TA_RetCode.TA_BAD_PARAM
+    if not TA_FUNC_NO_RANGE_CHECK:
+        if startIdx < 0:
+            return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
+        if endIdx < 0 or endIdx < startIdx:
+            return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
+        if optInTimePeriod == 0:  # 默认值处理
+            optInTimePeriod = 30
+        elif optInTimePeriod < 2 or optInTimePeriod > 100000:
+            return TA_RetCode.TA_BAD_PARAM
+        if inReal is None or outReal is None:
+            return TA_RetCode.TA_BAD_PARAM
 
     # calculate k
     k: cython.double = 2.0 / (optInTimePeriod + 1)
 
     # Call internal implementation
-    return TA_INT_EMA(startIdx, endIdx, inReal, optInTimePeriod, k, outBegIdx, outNBElement, outReal)
+    return TA_INT_EMA(
+        startIdx, endIdx, inReal, optInTimePeriod, k, outBegIdx, outNBElement, outReal
+    )
 
 
 def EMA(real: np.ndarray, timeperiod: int = 30):
@@ -133,7 +154,15 @@ def EMA(real: np.ndarray, timeperiod: int = 30):
     outBegIdx = np.zeros(1, dtype=np.int64)
     outNBElement = np.zeros(1, dtype=np.int64)
 
-    retCode = TA_EMA(0, endIdx, real[startIdx:], timeperiod, outBegIdx, outNBElement, outReal[lookback:])
+    retCode = TA_EMA(
+        0,
+        endIdx,
+        real[startIdx:],
+        timeperiod,
+        outBegIdx,
+        outNBElement,
+        outReal[lookback:],
+    )
     if retCode != TA_RetCode.TA_SUCCESS:
         return outReal
     return outReal

@@ -23,11 +23,11 @@ def TA_MINMAX(
 ) -> cython.int:
     # Parameters check
     if startIdx < 0:
-        return TA_OUT_OF_RANGE_START_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
     if endIdx < 0 or endIdx < startIdx:
-        return TA_OUT_OF_RANGE_END_INDEX
+        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
     if optInTimePeriod < 2:
-        return TA_BAD_PARAM
+        return TA_RetCode.TA_BAD_PARAM
     
     outIdx: cython.Py_ssize_t = 0
     i: cython.Py_ssize_t

@@ -1,6 +1,4 @@
-import cython
-
-cpdef Py_ssize_t TA_MINMAXINDEX_Lookback(Py_ssize_t optInTimePeriod) noexcept nogil
+cpdef Py_ssize_t TA_MINMAXINDEX_Lookback(Py_ssize_t optInTimePeriod)
 
 cpdef int TA_MINMAXINDEX(
     Py_ssize_t startIdx,

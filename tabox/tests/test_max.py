@@ -7,7 +7,6 @@ from talib import MAX as that_MAX
 import unittest
 
 class TestMAX(unittest.TestCase):
-
     def test_random_vector(self):
         for i in range(100, 1000):
             t = 3

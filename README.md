@@ -182,7 +182,7 @@ print(ema)
 
 - Overlap Studies
   
-  - BBANDS
+  - BBANDS✓
   
   - DEMA✓
   
@@ -194,7 +194,7 @@ print(ema)
   
   - MA✓
   
-  - MAMA✓ (not working)
+  - MAMA✓
   
   - MAVP
   
@@ -342,9 +342,9 @@ print(ema)
 
 - Price Transform
   
-  - AVGPRICE
+  - AVGPRICE✓
   
-  - MEDPRICE
+  - MEDPRICE✓
   
   - TYPPRICE
   

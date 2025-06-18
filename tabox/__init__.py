@@ -37,11 +37,16 @@ from .ta_func.ta_T3 import *
 from .ta_func.ta_SMA import *
 from .ta_func.ta_EMA import *
 from .ta_func.ta_WMA import *
+from .ta_func.ta_BBANDS import *
 
 
 # Momentum Indicators
 from .ta_func.ta_MACD import *
 from .ta_func.ta_MACDEXT import *
+
+# Price Transform
+from .ta_func.ta_AVGPRICE import *
+from .ta_func.ta_MEDPRICE import *
 
 # Statistic Functions
 from .ta_func.ta_STDDEV import *
