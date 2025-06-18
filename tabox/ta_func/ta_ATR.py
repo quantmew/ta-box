@@ -2,7 +2,7 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx3, check_length3, make_double_array
 from .ta_TRANGE import TA_TRANGE
-from .ta_SMA import TA_SMA
+from .ta_SMA import TA_INT_SMA
 from ..retcode import *
 
 
@@ -19,6 +19,8 @@ def TA_ATR(
     inLow: cython.double[::1],
     inClose: cython.double[::1],
     optInTimePeriod: cython.int,
+    outBegIdx: cython.Py_ssize_t[::1],
+    outNBElement: cython.Py_ssize_t[::1],
     outReal: cython.double[::1],
 ) -> cython.int:
     lookbackTotal: cython.Py_ssize_t = TA_ATR_Lookback(optInTimePeriod)
@@ -26,6 +28,8 @@ def TA_ATR(
         startIdx = lookbackTotal
 
     if startIdx > endIdx:
+        outBegIdx[0] = 0
+        outNBElement[0] = 0
         return TA_SUCCESS
 
     if optInTimePeriod <= 1:
@@ -33,15 +37,21 @@ def TA_ATR(
 
     tempBuffer = np.zeros((lookbackTotal + (endIdx - startIdx) + 1,), dtype=float)
     prevATRTemp = np.zeros((1,), dtype=float)
+    outBegIdx1 = np.zeros(1, dtype=np.int64)
+    outNBElement1 = np.zeros(1, dtype=np.int64)
 
-    TA_TRANGE(startIdx - lookbackTotal + 1, endIdx, inHigh, inLow, inClose, tempBuffer)
+    retCode = TA_TRANGE(startIdx - lookbackTotal + 1, endIdx, inHigh, inLow, inClose, tempBuffer)
+    if retCode != TA_SUCCESS:
+        return retCode
 
     # Calculate first ATR value using SMA
-    retCode = TA_SMA(
+    retCode = TA_INT_SMA(
         optInTimePeriod - 1,
         optInTimePeriod - 1,
         tempBuffer,
         optInTimePeriod,
+        outBegIdx1,
+        outNBElement1,
         prevATRTemp,
     )
     if retCode != TA_SUCCESS:
@@ -49,12 +59,24 @@ def TA_ATR(
 
     prevATR = prevATRTemp[0]
 
-    # Subsequent values are smoothed using Wilder's approach
+    # Handle unstable period
     today = optInTimePeriod
     outIdx = 0
-    outReal[outIdx] = prevATR
-    outIdx += 1
+    unstablePeriod = 1  # TA_GLOBALS_UNSTABLE_PERIOD(TA_FUNC_UNST_ATR,Atr)
+    
+    # Skip the unstable period
+    while unstablePeriod != 0:
+        prevATR *= optInTimePeriod - 1
+        prevATR += tempBuffer[today]
+        today += 1
+        prevATR /= optInTimePeriod
+        unstablePeriod -= 1
 
+    # Write the first ATR value
+    outReal[0] = prevATR
+    outIdx = 1
+
+    # Calculate remaining ATR values
     nbATR = (endIdx - startIdx) + 1
     while nbATR - 1 != 0:
         nbATR -= 1
@@ -65,6 +87,8 @@ def TA_ATR(
         outReal[outIdx] = prevATR
         outIdx += 1
 
+    outBegIdx[0] = startIdx
+    outNBElement[0] = outIdx
     return TA_SUCCESS
 
 
@@ -91,6 +115,10 @@ def ATR(
     endIdx = length - startIdx - 1
     lookback = startIdx + TA_ATR_Lookback(timeperiod)
     outreal = make_double_array(length, lookback)
+    
+    outBegIdx = np.zeros(1, dtype=np.int64)
+    outNBElement = np.zeros(1, dtype=np.int64)
+    
     TA_ATR(
         0,
         endIdx,
@@ -98,6 +126,8 @@ def ATR(
         low[startIdx:],
         close[startIdx:],
         timeperiod,
+        outBegIdx,
+        outNBElement,
         outreal[lookback:],
     )
     return outreal

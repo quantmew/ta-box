@@ -4,6 +4,9 @@ from .ta_utils import check_array, check_begidx1, check_timeperiod
 from ..retcode import *
 from .ta_VAR import TA_INT_VAR
 
+if not cython.compiled:
+    from math import sqrt
+
 def TA_STDDEV_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     """TA_STDDEV_Lookback(optInTimePeriod) -> Py_ssize_t
 
