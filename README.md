@@ -120,7 +120,7 @@ print(ema)
 
 - Momentum Indicators
   
-  - ADX
+  - ADX✓
   
   - ADXR
   
@@ -346,9 +346,9 @@ print(ema)
   
   - MEDPRICE✓
   
-  - TYPPRICE
+  - TYPPRICE✓
   
-  - WCLPRICE
+  - WCLPRICE✓
 
 - Statistic Functions
   
