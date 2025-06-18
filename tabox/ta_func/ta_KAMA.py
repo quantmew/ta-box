@@ -1,22 +1,33 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1
-from ..retcode import TA_RetCode
+from ..retcode import TA_RetCode, TA_INTEGER_DEFAULT
+from ..settings import TA_FUNC_NO_RANGE_CHECK
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO
 
+if not cython.compiled:
+    from math import fabs
+
+@cython.cdivision(True)
 def TA_KAMA_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     """TA_KAMA_Lookback(optInTimePeriod) -> Py_ssize_t
 
     KAMA Lookback
     """
-    if optInTimePeriod == 0:
-        optInTimePeriod = 30
-    elif optInTimePeriod < 2 or optInTimePeriod > 100000:
-        return -1
+    period: cython.int = optInTimePeriod
+    
+    # Range check
+    if not TA_FUNC_NO_RANGE_CHECK:
+        if period == TA_INTEGER_DEFAULT:
+            period = 30
+        elif period < 2 or period > 100000:
+            return -1
 
-    return optInTimePeriod + 2  # TA_GLOBALS_UNSTABLE_PERIOD(TA_FUNC_UNST_KAMA,Kama)
+    return period + TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_KAMA)
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_KAMA(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -26,41 +37,66 @@ def TA_KAMA(
     outNBElement: cython.Py_ssize_t[::1],
     outReal: cython.double[::1],
 ) -> cython.int:
-    # Parameters check
-    if startIdx < 0:
-        return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
-    if endIdx < 0 or endIdx < startIdx:
-        return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
+    # Local variables
+    constMax: cython.double = 2.0/(30.0+1.0)
+    constDiff: cython.double = 2.0/(2.0+1.0) - constMax
+    tempReal: cython.double
+    tempReal2: cython.double
+    sumROC1: cython.double
+    periodROC: cython.double
+    prevKAMA: cython.double
+    i: cython.int
+    today: cython.int
+    outIdx: cython.int
+    lookbackTotal: cython.int
+    trailingIdx: cython.int
+    trailingValue: cython.double
+    period: cython.int = optInTimePeriod
 
-    if optInTimePeriod == 0:
-        optInTimePeriod = 30
-    elif optInTimePeriod < 2 or optInTimePeriod > 100000:
-        return TA_RetCode.TA_BAD_PARAM
+    # Parameter validation
+    if not TA_FUNC_NO_RANGE_CHECK:
+        # Validate start and end indices
+        if startIdx < 0:
+            return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
+        if endIdx < 0 or endIdx < startIdx:
+            return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
 
-    constMax = 2.0 / (30.0 + 1.0)
-    constDiff = 2.0 / (2.0 + 1.0) - constMax
+        # Validate time period parameter
+        if period == TA_INTEGER_DEFAULT:
+            period = 30
+        elif period < 2 or period > 100000:
+            return TA_RetCode.TA_BAD_PARAM
 
-    lookbackTotal = optInTimePeriod + 2  # TA_GLOBALS_UNSTABLE_PERIOD(TA_FUNC_UNST_KAMA,Kama)
+    # Set default return value
+    outBegIdx[0] = 0
+    outNBElement[0] = 0
 
+    # Calculate the minimum required data
+    lookbackTotal = period + TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_KAMA)
+
+    # Adjust the start index to ensure there is enough historical data
     if startIdx < lookbackTotal:
         startIdx = lookbackTotal
 
+    # Check if there is data to process
     if startIdx > endIdx:
-        outBegIdx[0] = 0
-        outNBElement[0] = 0
         return TA_RetCode.TA_SUCCESS
 
+    # Initialize variables and process lookback period
     sumROC1 = 0.0
     today = startIdx - lookbackTotal
     trailingIdx = today
-    i = optInTimePeriod
+    i = period
+    
+    # Calculate the initial price change total
     while i > 0:
         tempReal = inReal[today]
         today += 1
         tempReal -= inReal[today]
-        sumROC1 += abs(tempReal)
+        sumROC1 += fabs(tempReal)
         i -= 1
 
+    # Calculate the first KAMA value
     prevKAMA = inReal[today - 1]
 
     tempReal = inReal[today]
@@ -70,67 +106,82 @@ def TA_KAMA(
 
     trailingValue = tempReal2
 
-    if sumROC1 <= periodROC or sumROC1 == 0:
+    # Calculate the efficiency ratio
+    if sumROC1 <= fabs(periodROC) or TA_IS_ZERO(sumROC1):
         tempReal = 1.0
     else:
-        tempReal = abs(periodROC / sumROC1)
+        tempReal = fabs(periodROC / sumROC1)
 
+    # Calculate the smoothing constant
     tempReal = (tempReal * constDiff) + constMax
     tempReal *= tempReal
 
+    # Calculate the first KAMA value
     prevKAMA = ((inReal[today] - prevKAMA) * tempReal) + prevKAMA
     today += 1
 
+    # Process unstable period
     while today <= startIdx:
         tempReal = inReal[today]
         tempReal2 = inReal[trailingIdx]
         trailingIdx += 1
         periodROC = tempReal - tempReal2
 
-        sumROC1 -= abs(trailingValue - tempReal2)
-        sumROC1 += abs(tempReal - inReal[today - 1])
+        # Adjust the price change total
+        sumROC1 -= fabs(trailingValue - tempReal2)
+        sumROC1 += fabs(tempReal - inReal[today - 1])
 
         trailingValue = tempReal2
 
-        if sumROC1 <= periodROC or sumROC1 == 0:
+        # Calculate the efficiency ratio
+        if sumROC1 <= fabs(periodROC) or TA_IS_ZERO(sumROC1):
             tempReal = 1.0
         else:
-            tempReal = abs(periodROC / sumROC1)
+            tempReal = fabs(periodROC / sumROC1)
 
+        # Calculate the smoothing constant
         tempReal = (tempReal * constDiff) + constMax
         tempReal *= tempReal
 
+        # Calculate the KAMA value
         prevKAMA = ((inReal[today] - prevKAMA) * tempReal) + prevKAMA
         today += 1
 
+    # Write the first output value
     outReal[0] = prevKAMA
     outIdx = 1
     outBegIdx[0] = today - 1
 
+    # Calculate the remaining KAMA values
     while today <= endIdx:
         tempReal = inReal[today]
         tempReal2 = inReal[trailingIdx]
         trailingIdx += 1
         periodROC = tempReal - tempReal2
 
-        sumROC1 -= abs(trailingValue - tempReal2)
-        sumROC1 += abs(tempReal - inReal[today - 1])
+        # Adjust the price change total
+        sumROC1 -= fabs(trailingValue - tempReal2)
+        sumROC1 += fabs(tempReal - inReal[today - 1])
 
         trailingValue = tempReal2
 
-        if sumROC1 <= periodROC or sumROC1 == 0:
+        # Calculate the efficiency ratio
+        if sumROC1 <= fabs(periodROC) or TA_IS_ZERO(sumROC1):
             tempReal = 1.0
         else:
-            tempReal = abs(periodROC / sumROC1)
+            tempReal = fabs(periodROC / sumROC1)
 
+        # Calculate the smoothing constant
         tempReal = (tempReal * constDiff) + constMax
         tempReal *= tempReal
 
+        # Calculate the KAMA value
         prevKAMA = ((inReal[today] - prevKAMA) * tempReal) + prevKAMA
         today += 1
         outReal[outIdx] = prevKAMA
         outIdx += 1
 
+    # Set the output element count
     outNBElement[0] = outIdx
 
     return TA_RetCode.TA_SUCCESS
