@@ -8,6 +8,7 @@ from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO
 if not cython.compiled:
     from math import fabs
 
+
 @cython.cdivision(True)
 def TA_KAMA_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     """TA_KAMA_Lookback(optInTimePeriod) -> Py_ssize_t
@@ -15,7 +16,7 @@ def TA_KAMA_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     KAMA Lookback
     """
     period: cython.int = optInTimePeriod
-    
+
     # Range check
     if not TA_FUNC_NO_RANGE_CHECK:
         if period == TA_INTEGER_DEFAULT:
@@ -24,6 +25,7 @@ def TA_KAMA_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
             return -1
 
     return period + TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_KAMA)
+
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
@@ -38,8 +40,8 @@ def TA_KAMA(
     outReal: cython.double[::1],
 ) -> cython.int:
     # Local variables
-    constMax: cython.double = 2.0/(30.0+1.0)
-    constDiff: cython.double = 2.0/(2.0+1.0) - constMax
+    constMax: cython.double = 2.0 / (30.0 + 1.0)
+    constDiff: cython.double = 2.0 / (2.0 + 1.0) - constMax
     tempReal: cython.double
     tempReal2: cython.double
     sumROC1: cython.double
@@ -87,7 +89,7 @@ def TA_KAMA(
     today = startIdx - lookbackTotal
     trailingIdx = today
     i = period
-    
+
     # Calculate the initial price change total
     while i > 0:
         tempReal = inReal[today]
@@ -186,6 +188,7 @@ def TA_KAMA(
 
     return TA_RetCode.TA_SUCCESS
 
+
 def KAMA(real: np.ndarray, timeperiod: int = 30):
     """KAMA(real, timeperiod=30)
 
@@ -206,9 +209,16 @@ def KAMA(real: np.ndarray, timeperiod: int = 30):
     endIdx: cython.Py_ssize_t = length - startIdx - 1
     lookback = startIdx + TA_KAMA_Lookback(timeperiod)
 
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
-    TA_KAMA(0, endIdx, real[startIdx:], timeperiod,
-            outBegIdx, outNBElement, outReal[lookback:])
+    TA_KAMA(
+        0,
+        endIdx,
+        real[startIdx:],
+        timeperiod,
+        outBegIdx,
+        outNBElement,
+        outReal[lookback:],
+    )
     return outReal

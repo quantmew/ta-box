@@ -4,7 +4,6 @@ import numpy as np
 from .ta_utils import check_array, check_begidx1
 from ..retcode import TA_RetCode
 
-
 def TA_AD_Lookback() -> cython.Py_ssize_t:
     return 0
 
@@ -83,8 +82,8 @@ def AD(high: np.ndarray, low: np.ndarray, close: np.ndarray, volume: np.ndarray)
     endIdx: cython.Py_ssize_t = length - startIdx - 1
     lookback = startIdx + TA_AD_Lookback()
 
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     TA_AD(0, endIdx, high[startIdx:], low[startIdx:], close[startIdx:], volume[startIdx:],
           outBegIdx, outNBElement, outReal[lookback:])

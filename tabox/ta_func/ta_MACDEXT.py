@@ -124,10 +124,10 @@ def TA_MACDEXT(
     slowMABuffer: cython.double[::1] = np.zeros(tempInteger, dtype=np.float64)
 
     tempInteger = startIdx - lookbackSignal
-    outBegIdx1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNbElement1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outBegIdx2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNbElement2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outBegIdx1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNbElement1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outBegIdx2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNbElement2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     # Calculate slow MA
     retCode = TA_MA(tempInteger, endIdx, inReal, optInSlowPeriod, optInSlowMAType,
@@ -195,8 +195,8 @@ def MACDEXT(real: np.ndarray, fastperiod: int = 12, fastmatype: int = 0,
     lookback = startIdx + TA_MACDEXT_Lookback(fastperiod, fastmatype, slowperiod, slowmatype,
                                             signalperiod, signalmatype)
 
-    outBegIdx = np.zeros(1, dtype=np.int64)
-    outNBElement = np.zeros(1, dtype=np.int64)
+    outBegIdx = np.zeros(1, dtype=np.intp)
+    outNBElement = np.zeros(1, dtype=np.intp)
 
     TA_MACDEXT(0, endIdx, real[startIdx:], fastperiod, fastmatype, slowperiod, slowmatype,
               signalperiod, signalmatype, outBegIdx, outNBElement,

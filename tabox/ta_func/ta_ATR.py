@@ -6,7 +6,6 @@ from .ta_SMA import TA_INT_SMA
 from ..retcode import TA_RetCode
 from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId
 
-
 def TA_ATR_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:
     unstable_period = TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_ATR)
     return optInTimePeriod + unstable_period
@@ -44,8 +43,8 @@ def TA_ATR(
     buffer_size = lookbackTotal + (endIdx - startIdx) + 1
     tempBuffer = np.zeros(buffer_size, dtype=float)
     prevATRTemp = np.zeros(1, dtype=float)
-    outBegIdx1 = np.zeros(1, dtype=np.int64)
-    outNBElement1 = np.zeros(1, dtype=np.int64)
+    outBegIdx1 = np.zeros(1, dtype=np.intp)
+    outNBElement1 = np.zeros(1, dtype=np.intp)
 
     # 计算真实范围(TRANGE)
     tr_start = startIdx - lookbackTotal + 1
@@ -125,8 +124,8 @@ def ATR(
     lookback = startIdx + TA_ATR_Lookback(timeperiod)
     outreal = make_double_array(length, lookback)
     
-    outBegIdx = np.zeros(1, dtype=np.int64)
-    outNBElement = np.zeros(1, dtype=np.int64)
+    outBegIdx = np.zeros(1, dtype=np.intp)
+    outNBElement = np.zeros(1, dtype=np.intp)
     
     TA_ATR(
         0,

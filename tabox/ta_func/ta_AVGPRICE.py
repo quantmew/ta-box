@@ -11,7 +11,6 @@ def TA_AVGPRICE_Lookback() -> cython.Py_ssize_t:
     Output:
         (int) Number of lookback periods (0, as no lookback is needed)
     """
-    # 这个函数不需要回溯期
     return 0
 
 def TA_AVGPRICE(
@@ -108,8 +107,8 @@ def AVGPRICE(
     lookback: cython.Py_ssize_t = startIdx + TA_AVGPRICE_Lookback()
 
     outReal = np.full_like(inOpen, np.nan)
-    outBegIdx = np.zeros(1, dtype=np.int64)
-    outNBElement = np.zeros(1, dtype=np.int64)
+    outBegIdx = np.zeros(1, dtype=np.intp)
+    outNBElement = np.zeros(1, dtype=np.intp)
 
     retCode = TA_AVGPRICE(
         0,

@@ -53,8 +53,8 @@ def TA_DEMA(
     firstEMA = np.zeros(tempInteger, dtype=np.float64)
 
     k = 2.0 / (optInTimePeriod + 1)
-    outBegIdx1 = np.zeros(1, dtype=np.int64)
-    outNbElement1 = np.zeros(1, dtype=np.int64)
+    outBegIdx1 = np.zeros(1, dtype=np.intp)
+    outNbElement1 = np.zeros(1, dtype=np.intp)
 
     # Calculate the first EMA
     retCode = TA_INT_EMA(startIdx - lookbackEMA, endIdx, inReal, optInTimePeriod, k,
@@ -64,8 +64,8 @@ def TA_DEMA(
 
     # Calculate the second EMA
     secondEMA = np.zeros(outNbElement1[0], dtype=np.float64)
-    outBegIdx2 = np.zeros(1, dtype=np.int64)
-    outNbElement2 = np.zeros(1, dtype=np.int64)
+    outBegIdx2 = np.zeros(1, dtype=np.intp)
+    outNbElement2 = np.zeros(1, dtype=np.intp)
 
     retCode = TA_INT_EMA(0, outNbElement1[0] - 1, firstEMA, optInTimePeriod, k,
                          outBegIdx2, outNbElement2, secondEMA)
@@ -102,8 +102,8 @@ def DEMA(real: np.ndarray, timeperiod: int = 30):
     endIdx: cython.Py_ssize_t = length - startIdx - 1
     lookback = startIdx + TA_DEMA_Lookback(timeperiod)
 
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     TA_DEMA(0, endIdx, real[startIdx:], timeperiod,
             outBegIdx, outNBElement, outReal[lookback:])

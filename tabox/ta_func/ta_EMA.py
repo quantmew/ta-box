@@ -151,8 +151,8 @@ def EMA(real: np.ndarray, timeperiod: int = 30):
     lookback: cython.Py_ssize_t = startIdx + TA_EMA_Lookback(timeperiod)
 
     outReal = np.full_like(real, np.nan)
-    outBegIdx = np.zeros(1, dtype=np.int64)
-    outNBElement = np.zeros(1, dtype=np.int64)
+    outBegIdx = np.zeros(1, dtype=np.intp)
+    outNBElement = np.zeros(1, dtype=np.intp)
 
     retCode = TA_EMA(
         0,

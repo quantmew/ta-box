@@ -139,8 +139,8 @@ def MA(real: np.ndarray, timeperiod: int = 30, matype: int = 0):
     endIdx: cython.Py_ssize_t = length - startIdx - 1
     lookback = startIdx + TA_MA_Lookback(timeperiod, matype)
 
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     TA_MA(0, endIdx, real[startIdx:], timeperiod, matype,
           outBegIdx, outNBElement, outReal[lookback:])

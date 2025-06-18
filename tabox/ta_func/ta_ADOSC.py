@@ -156,8 +156,8 @@ def ADOSC(high, low, close, volume, fast_period=3, slow_period=10):
     
     # Prepare output array
     out = np.full(length, np.nan, dtype=np.float64)
-    out_beg_idx = np.array([0], dtype=np.int64)
-    out_nb_element = np.array([0], dtype=np.int64)
+    out_beg_idx = np.array([0], dtype=np.intp)
+    out_nb_element = np.array([0], dtype=np.intp)
     
     # Call C function
     ret = TA_ADOSC(0, endidx, 

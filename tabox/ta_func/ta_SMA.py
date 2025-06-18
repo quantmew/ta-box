@@ -244,8 +244,8 @@ def SMA(real: np.ndarray, timeperiod: int = 30) -> np.ndarray:
         raise ValueError("Invalid timeperiod")
     
     # Initialize output parameters
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
     
     # Call core calculation function
     retcode = TA_SMA(0, endIdx, real[startIdx:], timeperiod, outBegIdx, outNBElement, outReal[lookback:])

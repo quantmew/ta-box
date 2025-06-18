@@ -163,10 +163,10 @@ def MINMAXINDEX(real: np.ndarray, timeperiod: int = 30) -> tuple[np.ndarray, np.
     endIdx: cython.Py_ssize_t = length - startIdx - 1
     lookback: cython.Py_ssize_t = startIdx + TA_MINMAXINDEX_Lookback(timeperiod)
     
-    outMinIdx = np.full_like(real, 0, dtype=np.int64)
-    outMaxIdx = np.full_like(real, 0, dtype=np.int64)
-    outBegIdx = np.zeros(1, dtype=np.int64)
-    outNBElement = np.zeros(1, dtype=np.int64)
+    outMinIdx = np.full_like(real, 0, dtype=np.intp)
+    outMaxIdx = np.full_like(real, 0, dtype=np.intp)
+    outBegIdx = np.zeros(1, dtype=np.intp)
+    outNBElement = np.zeros(1, dtype=np.intp)
     
     TA_MINMAXINDEX(0, endIdx, real[startIdx:], timeperiod, outBegIdx, outNBElement, outMinIdx[lookback:], outMaxIdx[lookback:])
     return outMinIdx, outMaxIdx

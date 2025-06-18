@@ -146,8 +146,8 @@ def WMA(real: np.ndarray, timeperiod: int = 30) -> np.ndarray:
     endIdx: cython.Py_ssize_t = length - startIdx - 1
     lookback: cython.Py_ssize_t = startIdx + TA_WMA_Lookback(timeperiod)
 
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(shape=(1,), dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(shape=(1,), dtype=np.int64)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(shape=(1,), dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(shape=(1,), dtype=np.intp)
 
     TA_WMA(
         0,

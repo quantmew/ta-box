@@ -63,8 +63,8 @@ def SINH(real: np.ndarray):
     endIdx: cython.Py_ssize_t = length - startIdx - 1
     lookback = startIdx + TA_SINH_Lookback()
 
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     TA_SINH(0, endIdx, real[startIdx:], outBegIdx, outNBElement, outReal[lookback:])
     return outReal 

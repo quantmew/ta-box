@@ -168,8 +168,8 @@ def STDDEV(real: np.ndarray, timeperiod: int = 5, nbdev: float = 1.0):
     endIdx: cython.Py_ssize_t = length - startIdx - 1
     lookback = startIdx + TA_STDDEV_Lookback(timeperiod)
 
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     TA_STDDEV(
         0,

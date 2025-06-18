@@ -88,8 +88,8 @@ def MEDPRICE(inHigh: np.ndarray, inLow: np.ndarray, timeperiod: int = 30) -> np.
     lookback: cython.Py_ssize_t = startIdx + TA_MEDPRICE_Lookback()
 
     outReal = np.full_like(inHigh, np.nan)
-    outBegIdx = np.zeros(1, dtype=np.int64)
-    outNBElement = np.zeros(1, dtype=np.int64)
+    outBegIdx = np.zeros(1, dtype=np.intp)
+    outNBElement = np.zeros(1, dtype=np.intp)
 
     retCode = TA_MEDPRICE(
         0,

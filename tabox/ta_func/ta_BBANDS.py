@@ -101,8 +101,8 @@ def TA_INT_BBANDS(
         stddev_optInTimePeriod = optInTimePeriod
         stddev_optInNbDev = 1.0
         
-        stddev_outBegIdx = np.zeros(1, dtype=np.int64)
-        stddev_outNBElement = np.zeros(1, dtype=np.int64)
+        stddev_outBegIdx = np.zeros(1, dtype=np.intp)
+        stddev_outNBElement = np.zeros(1, dtype=np.intp)
         stddev_outReal = np.full_like(inReal, 0.0)
         
         retCode = TA_STDDEV(
@@ -200,14 +200,14 @@ def TA_BBANDS(
         elif optInTimePeriod < 2 or optInTimePeriod > 100000:
             return TA_RetCode.TA_BAD_PARAM
             
-        if optInNbDevUp == -3.4028234663852886e+38:  # TA_REAL_DEFAULT
+        if optInNbDevUp == TA_REAL_DEFAULT:
             optInNbDevUp = 2.0
-        elif optInNbDevUp < -3.4028234663852886e+38 or optInNbDevUp > 3.4028234663852886e+38:
+        elif optInNbDevUp < TA_REAL_MIN or optInNbDevUp > TA_REAL_MAX:
             return TA_RetCode.TA_BAD_PARAM
             
-        if optInNbDevDn == -3.4028234663852886e+38:  # TA_REAL_DEFAULT
+        if optInNbDevDn == TA_REAL_DEFAULT:
             optInNbDevDn = 2.0
-        elif optInNbDevDn < -3.4028234663852886e+38 or optInNbDevDn > 3.4028234663852886e+38:
+        elif optInNbDevDn < TA_REAL_MIN or optInNbDevDn > TA_REAL_MAX:
             return TA_RetCode.TA_BAD_PARAM
             
         if optInMAType == TA_INTEGER_DEFAULT:
@@ -255,8 +255,8 @@ def BBANDS(
     outMiddleBand = np.full_like(real, np.nan)
     outLowerBand = np.full_like(real, np.nan)
     
-    outBegIdx = np.zeros(1, dtype=np.int64)
-    outNBElement = np.zeros(1, dtype=np.int64)
+    outBegIdx = np.zeros(1, dtype=np.intp)
+    outNBElement = np.zeros(1, dtype=np.intp)
     
     retCode = TA_BBANDS(
         0,

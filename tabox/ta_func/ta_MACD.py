@@ -81,10 +81,10 @@ def TA_MACD(
     slowEMABuffer: cython.double[::1] = np.zeros(tempInteger, dtype=np.float64)
 
     tempInteger: cython.Py_ssize_t = startIdx - lookbackSignal
-    outBegIdx1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNbElement1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outBegIdx2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNbElement2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outBegIdx1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNbElement1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outBegIdx2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNbElement2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     # Calculate slow EMA
     retCode = TA_INT_EMA(tempInteger, endIdx, inReal, optInSlowPeriod, 2.0 / (optInSlowPeriod + 1),
@@ -148,8 +148,8 @@ def MACD(real: np.ndarray, fastperiod: int = 12, slowperiod: int = 26, signalper
     endIdx: cython.Py_ssize_t = length - startIdx - 1
     lookback = startIdx + TA_MACD_Lookback(fastperiod, slowperiod, signalperiod)
 
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     TA_MACD(0, endIdx, real[startIdx:], fastperiod, slowperiod, signalperiod,
             outBegIdx, outNBElement, outMACD[lookback:], outMACDSignal[lookback:], outMACDHist[lookback:])

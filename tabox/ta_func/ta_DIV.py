@@ -35,5 +35,5 @@ def DIV(real0: np.ndarray, real1: np.ndarray) -> np.ndarray:
     endIdx = length - startIdx - 1
     lookback = startIdx + TA_DIV_Lookback()
     outreal = np.full_like(real0, np.nan)
-    retCode = TA_DIV( 0, endIdx, real0[startIdx:], real1[startIdx:], outreal[lookback:])
+    retCode = TA_DIV(0, endIdx, real0[startIdx:], real1[startIdx:], outreal[lookback:])
     return outreal 

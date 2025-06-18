@@ -483,8 +483,8 @@ def RSI(real: np.ndarray, timeperiod: int = 30) -> np.ndarray:
     endidx: cython.Py_ssize_t = length - begidx - 1
     lookback = begidx + TA_RSI_Lookback(timeperiod)
     outReal = make_double_array(length, lookback)
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(shape=(1,), dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(shape=(1,), dtype=np.int64)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(shape=(1,), dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(shape=(1,), dtype=np.intp)
 
     retCode = TA_RSI(
         0,

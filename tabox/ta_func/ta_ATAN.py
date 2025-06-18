@@ -57,8 +57,8 @@ def ATAN(real: np.ndarray):
     endIdx: cython.int = length - startIdx - 1
     lookback = startIdx + TA_ATAN_Lookback()
 
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     TA_ATAN(0, endIdx, real[startIdx:], outBegIdx, outNBElement, outReal[lookback:])
     return outReal

@@ -179,8 +179,8 @@ def T3(real: np.ndarray, timeperiod: int = 5, vfactor: float = 0.7):
     endIdx: cython.Py_ssize_t = length - startIdx - 1
     lookback = startIdx + TA_T3_Lookback(timeperiod, vfactor)
 
-    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
-    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.int64)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     TA_T3(0, endIdx, real[startIdx:], timeperiod, vfactor,
           outBegIdx, outNBElement, outReal[lookback:])
