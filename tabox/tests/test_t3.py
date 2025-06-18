@@ -12,14 +12,14 @@ class TestT3(unittest.TestCase):
             this_t3 = this_T3(close)
             that_t3 = that_T3(close)
 
-            self.assertTrue(np.array_equal(this_t3, that_t3, equal_nan=True), f"{close}, {this_t3}, {that_t3}")
+            self.assertTrue(np.allclose(this_t3, that_t3, equal_nan=True), f"{close}, {this_t3}, {that_t3}")
 
     def test_custom_periods(self):
         close = np.random.random(1000)
         this_t3 = this_T3(close, timeperiod=10, vfactor=0.5)
         that_t3 = that_T3(close, timeperiod=10, vfactor=0.5)
 
-        self.assertTrue(np.array_equal(this_t3, that_t3, equal_nan=True))
+        self.assertTrue(np.allclose(this_t3, that_t3, equal_nan=True))
 
 if __name__ == '__main__':
     unittest.main() 

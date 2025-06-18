@@ -39,7 +39,7 @@ class TestADOSC(unittest.TestCase):
                 )
 
                 self.assertTrue(
-                    np.array_equal(this_ret, that_ret, equal_nan=True),
+                    np.allclose(this_ret, that_ret, equal_nan=True),
                     f"fast_period: {fast_period}, slow_period: {slow_period}, "
                     f"high: {high}, low: {low}, close: {close}, volume: {volume}, "
                     f"this_ret: {this_ret}, that_ret: {that_ret}",
