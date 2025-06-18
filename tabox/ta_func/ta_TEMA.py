@@ -53,8 +53,8 @@ def TA_TEMA(
     firstEMA = np.zeros(tempInteger, dtype=np.float64)
 
     k = 2.0 / (optInTimePeriod + 1)
-    outBegIdx1 = np.zeros(1, dtype=np.int64)
-    outNbElement1 = np.zeros(1, dtype=np.int64)
+    outBegIdx1 = np.zeros(1, dtype=np.intp)
+    outNbElement1 = np.zeros(1, dtype=np.intp)
 
     # Calculate the first EMA
     retCode = TA_INT_EMA(startIdx - (lookbackEMA * 2), endIdx, inReal, optInTimePeriod, k,
@@ -64,8 +64,8 @@ def TA_TEMA(
 
     # Calculate the second EMA
     secondEMA = np.zeros(outNbElement1[0], dtype=np.float64)
-    outBegIdx2 = np.zeros(1, dtype=np.int64)
-    outNbElement2 = np.zeros(1, dtype=np.int64)
+    outBegIdx2 = np.zeros(1, dtype=np.intp)
+    outNbElement2 = np.zeros(1, dtype=np.intp)
 
     retCode = TA_INT_EMA(0, outNbElement1[0] - 1, firstEMA, optInTimePeriod, k,
                          outBegIdx2, outNbElement2, secondEMA)
@@ -73,8 +73,8 @@ def TA_TEMA(
         return retCode
 
     # Calculate the third EMA
-    outBegIdx3 = np.zeros(1, dtype=np.int64)
-    outNbElement3 = np.zeros(1, dtype=np.int64)
+    outBegIdx3 = np.zeros(1, dtype=np.intp)
+    outNbElement3 = np.zeros(1, dtype=np.intp)
 
     retCode = TA_INT_EMA(0, outNbElement2[0] - 1, secondEMA, optInTimePeriod, k,
                          outBegIdx3, outNbElement3, outReal)
