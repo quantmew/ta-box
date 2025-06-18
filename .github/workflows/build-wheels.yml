@@ -29,6 +29,8 @@ jobs:
           CIBW_BUILD: "cp38-* cp39-* cp310-* cp311-* cp312-* cp313-*"
           CIBW_SKIP: "pp* *-musllinux*"
           CIBW_ARCHS: "auto"
+          CIBW_BEFORE_TEST: >
+            python scripts/install_talib.py
           CIBW_TEST_COMMAND: "python -m unittest discover {project}/tabox/tests"
           CIBW_TEST_REQUIRES: "pytest"
           CIBW_BUILD_VERBOSITY: 1
