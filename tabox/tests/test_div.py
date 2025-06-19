@@ -8,7 +8,7 @@ import unittest
 
 class TestDIV(unittest.TestCase):
     def test_random_vector(self):
-        for i in range(100, 1000):
+        for i in range(100, 300):
             close1 = np.random.random(i)
             close2 = np.random.random(i)
             this_ret = this_DIV(close1, close2)

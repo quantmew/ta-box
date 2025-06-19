@@ -1,5 +1,5 @@
-cpdef Py_ssize_t TA_DIV_Lookback()
-cpdef int TA_DIV(
+cpdef Py_ssize_t TA_MULT_Lookback()
+cpdef int TA_MULT(
     Py_ssize_t startIdx,
     Py_ssize_t endIdx,
     const double[::1] inReal0,

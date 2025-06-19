@@ -122,17 +122,17 @@ print(ema)
   
   - ADX✓
   
-  - ADXR
+  - ADXR✓
   
-  - APO
+  - APO✓
   
-  - AROON
+  - AROON✓
   
-  - AROONOSC
+  - AROONOSC✓
   
-  - BOP
+  - BOP✓
   
-  - CCI
+  - CCI✓
   
   - CMO
   

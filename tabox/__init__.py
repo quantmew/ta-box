@@ -28,6 +28,12 @@ from .ta_func.ta_MIN import *
 
 # Momentum Indicators
 from .ta_func.ta_ADX import *
+from .ta_func.ta_ADXR import *
+from .ta_func.ta_APO import *
+from .ta_func.ta_AROON import *
+from .ta_func.ta_AROONOSC import *
+from .ta_func.ta_BOP import *
+from .ta_func.ta_CCI import *
 
 # Overlap Studies
 from .ta_func.ta_MA import *
