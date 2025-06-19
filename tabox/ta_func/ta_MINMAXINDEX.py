@@ -1,7 +1,8 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx1, check_timeperiod
-from ..retcode import TA_RetCode, TA_INTEGER_DEFAULT
+from ..retcode import TA_RetCode
+from .ta_utility import TA_INTEGER_DEFAULT
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 
 def TA_MINMAXINDEX_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:

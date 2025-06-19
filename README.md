@@ -134,7 +134,7 @@ print(ema)
   
   - CCI✓
   
-  - CMO
+  - CMO✓
   
   - DX
   

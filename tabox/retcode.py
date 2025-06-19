@@ -20,18 +20,6 @@ TA_BAD_OBJECT: 15
 TA_NOT_SUPPORTED: 16
 TA_INTERNAL_ERROR: 5000
 TA_UNKNOWN_ERR: 0xFFFF
-
-MAType:
-
-TA_MAType_SMA: 0
-TA_MAType_EMA: 1
-TA_MAType_WMA: 2
-TA_MAType_DEMA: 3
-TA_MAType_TEMA: 4
-TA_MAType_TRIMA: 5
-TA_MAType_KAMA: 6
-TA_MAType_MAMA: 7
-TA_MAType_T3: 8
 """
 
 import cython
@@ -58,16 +46,3 @@ class TA_RetCode(IntEnum):
     TA_NOT_SUPPORTED: cython.int = 16
     TA_INTERNAL_ERROR: cython.int = 5000
     TA_UNKNOWN_ERR: cython.int = 0xFFFF
-
-class TA_MAType(IntEnum):
-    TA_MAType_SMA: cython.int = 0
-    TA_MAType_EMA: cython.int = 1
-    TA_MAType_WMA: cython.int = 2
-    TA_MAType_DEMA: cython.int = 3
-    TA_MAType_TEMA: cython.int = 4
-    TA_MAType_TRIMA: cython.int = 5
-    TA_MAType_KAMA: cython.int = 6
-    TA_MAType_MAMA: cython.int = 7
-    TA_MAType_T3: cython.int = 8
-
-TA_INTEGER_DEFAULT: cython.int = -1

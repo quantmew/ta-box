@@ -7,7 +7,7 @@ from .ta_utils import check_array, check_begidx1, check_timeperiod, make_double_
 from ..retcode import TA_RetCode
 
 
-def TA_RSI_Lookback(optInTimePeriod: cython.int) -> cython.int:
+def TA_RSI_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     return optInTimePeriod
 
 

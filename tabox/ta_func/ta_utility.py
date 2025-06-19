@@ -136,53 +136,74 @@ def TA_CANDLECOLOR(inClose: cython.float, inOpen: cython.float) -> cython.int:
 
 from enum import Enum, IntEnum
 
+class TA_MAType(IntEnum):
+    TA_MAType_SMA: cython.int = 0
+    TA_MAType_EMA: cython.int = 1
+    TA_MAType_WMA: cython.int = 2
+    TA_MAType_DEMA: cython.int = 3
+    TA_MAType_TEMA: cython.int = 4
+    TA_MAType_TRIMA: cython.int = 5
+    TA_MAType_KAMA: cython.int = 6
+    TA_MAType_MAMA: cython.int = 7
+    TA_MAType_T3: cython.int = 8
 
+TA_INTEGER_DEFAULT: cython.int = -1
+
+
+"""
+/* Generated */ ENUM_BEGIN( FuncUnstId )
+/* Generated */     /* 000 */  ENUM_DEFINE( TA_FUNC_UNST_ADX, Adx),
+/* Generated */     /* 001 */  ENUM_DEFINE( TA_FUNC_UNST_ADXR, Adxr),
+/* Generated */     /* 002 */  ENUM_DEFINE( TA_FUNC_UNST_ATR, Atr),
+/* Generated */     /* 003 */  ENUM_DEFINE( TA_FUNC_UNST_CMO, Cmo),
+/* Generated */     /* 004 */  ENUM_DEFINE( TA_FUNC_UNST_DX, Dx),
+/* Generated */     /* 005 */  ENUM_DEFINE( TA_FUNC_UNST_EMA, Ema),
+/* Generated */     /* 006 */  ENUM_DEFINE( TA_FUNC_UNST_HT_DCPERIOD, HtDcPeriod),
+/* Generated */     /* 007 */  ENUM_DEFINE( TA_FUNC_UNST_HT_DCPHASE, HtDcPhase),
+/* Generated */     /* 008 */  ENUM_DEFINE( TA_FUNC_UNST_HT_PHASOR, HtPhasor),
+/* Generated */     /* 009 */  ENUM_DEFINE( TA_FUNC_UNST_HT_SINE, HtSine),
+/* Generated */     /* 010 */  ENUM_DEFINE( TA_FUNC_UNST_HT_TRENDLINE, HtTrendline),
+/* Generated */     /* 011 */  ENUM_DEFINE( TA_FUNC_UNST_HT_TRENDMODE, HtTrendMode),
+/* Generated */     /* 012 */  ENUM_DEFINE( TA_FUNC_UNST_KAMA, Kama),
+/* Generated */     /* 013 */  ENUM_DEFINE( TA_FUNC_UNST_MAMA, Mama),
+/* Generated */     /* 014 */  ENUM_DEFINE( TA_FUNC_UNST_MFI, Mfi),
+/* Generated */     /* 015 */  ENUM_DEFINE( TA_FUNC_UNST_MINUS_DI, MinusDI),
+/* Generated */     /* 016 */  ENUM_DEFINE( TA_FUNC_UNST_MINUS_DM, MinusDM),
+/* Generated */     /* 017 */  ENUM_DEFINE( TA_FUNC_UNST_NATR, Natr),
+/* Generated */     /* 018 */  ENUM_DEFINE( TA_FUNC_UNST_PLUS_DI, PlusDI),
+/* Generated */     /* 019 */  ENUM_DEFINE( TA_FUNC_UNST_PLUS_DM, PlusDM),
+/* Generated */     /* 020 */  ENUM_DEFINE( TA_FUNC_UNST_RSI, Rsi),
+/* Generated */     /* 021 */  ENUM_DEFINE( TA_FUNC_UNST_STOCHRSI, StochRsi),
+/* Generated */     /* 022 */  ENUM_DEFINE( TA_FUNC_UNST_T3, T3),
+/* Generated */                ENUM_DEFINE( TA_FUNC_UNST_ALL, FuncUnstAll),
+/* Generated */                ENUM_DEFINE( TA_FUNC_UNST_NONE, FuncUnstNone) = -1
+"""
 class TA_FuncUnstId(IntEnum):
-    TA_FUNC_UNST_SMA = 0
-    TA_FUNC_UNST_EMA = 1
-    TA_FUNC_UNST_WMA = 2
-    TA_FUNC_UNST_DEMA = 3
-    TA_FUNC_UNST_TEMA = 4
-    TA_FUNC_UNST_TRIMA = 5
-    TA_FUNC_UNST_KAMA = 6
-    TA_FUNC_UNST_MAMA = 7
-    TA_FUNC_UNST_T3 = 8
-    TA_FUNC_UNST_MA = 9
-    TA_FUNC_UNST_MACD = 10
-    TA_FUNC_UNST_MACD_SIGNAL = 11
-    TA_FUNC_UNST_MACD_HIST = 12
-    TA_FUNC_UNST_STOCH = 13
-    TA_FUNC_UNST_STOCHF = 14
-    TA_FUNC_UNST_ROC = 15
-    TA_FUNC_UNST_ROCP = 16
-    TA_FUNC_UNST_ROCR = 17
-    TA_FUNC_UNST_ROCR100 = 18
-    TA_FUNC_UNST_TRIX = 19
-    TA_FUNC_UNST_ULTOSC = 20
-    TA_FUNC_UNST_RSI = 21
-    TA_FUNC_UNST_STOCHRSI = 22
-    TA_FUNC_UNST_WILLR = 23
-    TA_FUNC_UNST_ADX = 24
-    TA_FUNC_UNST_ADXR = 25
-    TA_FUNC_UNST_APO = 26
-    TA_FUNC_UNST_PPO = 27
-    TA_FUNC_UNST_MOM = 28
-    TA_FUNC_UNST_BBANDS_UPPER = 29
-    TA_FUNC_UNST_BBANDS_MIDDLE = 30
-    TA_FUNC_UNST_BBANDS_LOWER = 31
-    TA_FUNC_UNST_ATR = 32
-    TA_FUNC_UNST_NATR = 33
-    TA_FUNC_UNST_TRANGE = 34
-    TA_FUNC_UNST_AROON_UP = 35
-    TA_FUNC_UNST_AROON_DOWN = 36
-    TA_FUNC_UNST_AROON_OSC = 37
-    TA_FUNC_UNST_MFI = 38
-    TA_FUNC_UNST_OBV = 39
-    TA_FUNC_UNST_CCI = 40
-    TA_FUNC_UNST_AD = 41
-    TA_FUNC_UNST_ADOSC = 42
-    TA_FUNC_UNST_ONVOLO = 43
-    TA_FUNC_UNST_ALL = 44
+    TA_FUNC_UNST_ADX = 0
+    TA_FUNC_UNST_ADXR = 1
+    TA_FUNC_UNST_ATR = 2
+    TA_FUNC_UNST_CMO = 3
+    TA_FUNC_UNST_DX = 4
+    TA_FUNC_UNST_EMA = 5
+    TA_FUNC_UNST_HT_DCPERIOD = 6
+    TA_FUNC_UNST_HT_DCPHASE = 7
+    TA_FUNC_UNST_HT_PHASOR = 8
+    TA_FUNC_UNST_HT_SINE = 9
+    TA_FUNC_UNST_HT_TRENDLINE = 10
+    TA_FUNC_UNST_HT_TRENDMODE = 11
+    TA_FUNC_UNST_KAMA = 12
+    TA_FUNC_UNST_MAMA = 13
+    TA_FUNC_UNST_MFI = 14
+    TA_FUNC_UNST_MINUS_DI = 15
+    TA_FUNC_UNST_MINUS_DM = 16
+    TA_FUNC_UNST_NATR = 17
+    TA_FUNC_UNST_PLUS_DI = 18
+    TA_FUNC_UNST_PLUS_DM = 19
+    TA_FUNC_UNST_RSI = 20
+    TA_FUNC_UNST_STOCHRSI = 21
+    TA_FUNC_UNST_T3 = 22
+    TA_FUNC_UNST_ALL = 23
+    TA_FUNC_UNST_NONE = -1
 
 
 class TA_Compatibility(IntEnum):

@@ -1,8 +1,8 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
-from ..retcode import TA_RetCode, TA_INTEGER_DEFAULT
-from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO
+from ..retcode import TA_RetCode
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO, TA_INTEGER_DEFAULT, TA_MAType
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 from .ta_MA import TA_MA, MA
 
@@ -37,8 +37,7 @@ def TA_APO_Lookback(optInFastPeriod: cython.int,
             return -1
     
     # 慢周期是决定回溯期的关键因素
-    return max(optInSlowPeriod, optInFastPeriod) - 1 + \
-           TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_MA)
+    return max(optInSlowPeriod, optInFastPeriod) - 1 + TA_GLOBALS_UNSTABLE_PERIOD(TA_MAType(optInMAType))
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
