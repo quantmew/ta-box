@@ -54,6 +54,7 @@ from .ta_func.ta_BBANDS import TA_BBANDS, BBANDS
 # Momentum Indicators
 from .ta_func.ta_MACD import TA_MACD, MACD
 from .ta_func.ta_MACDEXT import TA_MACDEXT, MACDEXT
+from .ta_func.ta_MACDFIX import TA_MACDFIX, MACDFIX
 
 # Price Transform
 from .ta_func.ta_AVGPRICE import TA_AVGPRICE, AVGPRICE

@@ -136,13 +136,13 @@ print(ema)
   
   - CMO✓
   
-  - DX
+  - DX✓
   
   - MACD✓
   
-  - MACDEXT
+  - MACDEXT✓
   
-  - MACDFIX
+  - MACDFIX✓
   
   - MFI
   
