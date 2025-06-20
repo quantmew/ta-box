@@ -1,7 +1,7 @@
 cdef extern from "math.h":
     cpdef double fabs(double x)
 
-cdef double TRUE_RANGE(
+cpdef double TRUE_RANGE(
     double th,
     double tl,
     double yc

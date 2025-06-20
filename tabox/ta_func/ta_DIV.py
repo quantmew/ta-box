@@ -1,24 +1,47 @@
-
 import cython
 import numpy as np
 from .ta_utils import check_array, check_begidx2, check_length2
 from ..retcode import TA_RetCode
+from ..settings import TA_FUNC_NO_RANGE_CHECK
 
-def TA_DIV_Lookback() -> cython.int:
+
+
+def TA_DIV_Lookback() -> cython.Py_ssize_t:
     return 0
+
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
-def TA_DIV(startIdx: cython.int, endIdx: cython.int, inReal0: cython.double[::1], inReal1: cython.double[::1], outReal: cython.double[::1]) -> cython.int:
+def TA_DIV(
+    startIdx: cython.Py_ssize_t,
+    endIdx: cython.Py_ssize_t,
+    inReal0: cython.double[::1],
+    inReal1: cython.double[::1],
+    outBegIdx: cython.Py_ssize_t[::1],
+    outNBElement: cython.Py_ssize_t[::1],
+    outReal: cython.double[::1],
+) -> cython.int:
+    # Parameters check
+    if not TA_FUNC_NO_RANGE_CHECK:
+        if startIdx < 0:
+            return TA_RetCode.TA_OUT_OF_RANGE_START_INDEX
+        if endIdx < 0 or endIdx < startIdx:
+            return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
+
     outIdx: cython.int = 0
-    for i in range(startIdx, endIdx+1):
+
+    for i in range(startIdx, endIdx + 1):
         outReal[outIdx] = inReal0[i] / inReal1[i]
         outIdx += 1
-    
+
+    outBegIdx[0] = startIdx
+    outNBElement[0] = outIdx
+
     return TA_RetCode.TA_SUCCESS
 
+
 def DIV(real0: np.ndarray, real1: np.ndarray) -> np.ndarray:
-    """ DIV(real0, real1)
+    """DIV(real0, real1)
 
     Vector Arithmetic Div (Math Operators)
 
@@ -34,6 +57,16 @@ def DIV(real0: np.ndarray, real1: np.ndarray) -> np.ndarray:
     startIdx = check_begidx2(real0, real1)
     endIdx = length - startIdx - 1
     lookback = startIdx + TA_DIV_Lookback()
-    outreal = np.full_like(real0, np.nan)
-    retCode = TA_DIV(0, endIdx, real0[startIdx:], real1[startIdx:], outreal[lookback:])
-    return outreal 
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outReal = np.full_like(real0, np.nan)
+    retCode = TA_DIV(
+        0,
+        endIdx,
+        real0[startIdx:],
+        real1[startIdx:],
+        outBegIdx,
+        outNBElement,
+        outReal[lookback:],
+    )
+    return outReal

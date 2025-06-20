@@ -122,33 +122,33 @@ print(ema)
   
   - ADX✓
   
-  - ADXR
+  - ADXR✓
   
-  - APO
+  - APO✓
   
-  - AROON
+  - AROON✓
   
-  - AROONOSC
+  - AROONOSC✓
   
-  - BOP
+  - BOP✓
   
-  - CCI
+  - CCI✓
   
-  - CMO
+  - CMO✓
   
-  - DX
+  - DX✓
   
   - MACD✓
   
-  - MACDEXT
+  - MACDEXT✓
   
-  - MACDFIX
+  - MACDFIX✓
   
-  - MFI
+  - MFI✓
   
-  - MINUS_DI
+  - MINUS_DI✓
   
-  - MINUS_DM
+  - MINUS_DM✓
   
   - MOM
   
@@ -196,15 +196,15 @@ print(ema)
   
   - MAMA✓
   
-  - MAVP
+  - MAVP✓
   
-  - MIDPOINT
+  - MIDPOINT✓
   
-  - MIDPRICE
+  - MIDPRICE✓
   
-  - SAR
+  - SAR✓
   
-  - SAREXT
+  - SAREXT✓
   
   - SMA✓
   
