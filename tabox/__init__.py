@@ -49,12 +49,14 @@ from .ta_func.ta_SMA import TA_SMA, SMA
 from .ta_func.ta_EMA import TA_EMA, EMA
 from .ta_func.ta_WMA import TA_WMA, WMA
 from .ta_func.ta_BBANDS import TA_BBANDS, BBANDS
-
+from .ta_func.ta_MIDPOINT import TA_MIDPOINT, MIDPOINT
+from .ta_func.ta_MIDPRICE import TA_MIDPRICE, MIDPRICE
 
 # Momentum Indicators
 from .ta_func.ta_MACD import TA_MACD, MACD
 from .ta_func.ta_MACDEXT import TA_MACDEXT, MACDEXT
 from .ta_func.ta_MACDFIX import TA_MACDFIX, MACDFIX
+from .ta_func.ta_MFI import TA_MFI, MFI
 
 # Price Transform
 from .ta_func.ta_AVGPRICE import TA_AVGPRICE, AVGPRICE

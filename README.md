@@ -144,7 +144,7 @@ print(ema)
   
   - MACDFIX✓
   
-  - MFI
+  - MFI✓
   
   - MINUS_DI
   
@@ -198,9 +198,9 @@ print(ema)
   
   - MAVP
   
-  - MIDPOINT
+  - MIDPOINT✓
   
-  - MIDPRICE
+  - MIDPRICE✓
   
   - SAR
   
