@@ -146,9 +146,9 @@ print(ema)
   
   - MFI✓
   
-  - MINUS_DI
+  - MINUS_DI✓
   
-  - MINUS_DM
+  - MINUS_DM✓
   
   - MOM
   
@@ -196,15 +196,15 @@ print(ema)
   
   - MAMA✓
   
-  - MAVP
+  - MAVP✓
   
   - MIDPOINT✓
   
   - MIDPRICE✓
   
-  - SAR
+  - SAR✓
   
-  - SAREXT
+  - SAREXT✓
   
   - SMA✓
   

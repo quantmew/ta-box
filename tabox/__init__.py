@@ -36,6 +36,8 @@ from .ta_func.ta_BOP import TA_BOP, BOP
 from .ta_func.ta_CCI import TA_CCI, CCI
 from .ta_func.ta_CMO import TA_CMO, CMO
 from .ta_func.ta_DX import TA_DX, DX
+from .ta_func.ta_MINUS_DM import TA_MINUS_DM, MINUS_DM
+from .ta_func.ta_MINUS_DI import TA_MINUS_DI, MINUS_DI
 
 # Overlap Studies
 from .ta_func.ta_MA import TA_MA, MA
@@ -51,6 +53,9 @@ from .ta_func.ta_WMA import TA_WMA, WMA
 from .ta_func.ta_BBANDS import TA_BBANDS, BBANDS
 from .ta_func.ta_MIDPOINT import TA_MIDPOINT, MIDPOINT
 from .ta_func.ta_MIDPRICE import TA_MIDPRICE, MIDPRICE
+from .ta_func.ta_MAVP import TA_MAVP, MAVP
+from .ta_func.ta_SAR import TA_SAR, SAR
+from .ta_func.ta_SAREXT import TA_SAREXT, SAREXT
 
 # Momentum Indicators
 from .ta_func.ta_MACD import TA_MACD, MACD

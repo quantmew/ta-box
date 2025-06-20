@@ -7,13 +7,13 @@ cpdef double TRUE_RANGE(
     double yc
 )
 
-cpdef Py_ssize_t TA_ADX_Lookback(int optInTimePeriod)
-cpdef int TA_ADX(
+cpdef Py_ssize_t TA_MINUS_DI_Lookback(int optInTimePeriod)
+cpdef int TA_MINUS_DI(
     Py_ssize_t startIdx,
     Py_ssize_t endIdx,
-    const double[::1] inHigh,
-    const double[::1] inLow,
-    const double[::1] inClose,
+    double[::1] inHigh,
+    double[::1] inLow,
+    double[::1] inClose,
     int optInTimePeriod,
     Py_ssize_t[::1] outBegIdx,
     Py_ssize_t[::1] outNBElement,

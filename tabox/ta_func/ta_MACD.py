@@ -3,19 +3,24 @@ import numpy as np
 from .ta_utils import check_array, check_begidx1
 from ..retcode import TA_RetCode
 from .ta_EMA import TA_EMA, TA_EMA_Lookback, TA_INT_EMA
-from .ta_utility import PER_TO_K
+from .ta_utility import PER_TO_K, TA_INTEGER_DEFAULT
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 
-def TA_MACD_Lookback(optInFastPeriod: cython.int, optInSlowPeriod: cython.int, optInSignalPeriod: cython.int) -> cython.Py_ssize_t:
+
+def TA_MACD_Lookback(
+    optInFastPeriod: cython.int,
+    optInSlowPeriod: cython.int,
+    optInSignalPeriod: cython.int,
+) -> cython.Py_ssize_t:
     """TA_MACD_Lookback(optInFastPeriod, optInSlowPeriod, optInSignalPeriod) -> Py_ssize_t
 
     MACD Lookback
     """
-    if optInFastPeriod == 0:
+    if optInFastPeriod == TA_INTEGER_DEFAULT:
         optInFastPeriod = 12
-    if optInSlowPeriod == 0:
+    if optInSlowPeriod == TA_INTEGER_DEFAULT:
         optInSlowPeriod = 26
-    if optInSignalPeriod == 0:
+    if optInSignalPeriod == TA_INTEGER_DEFAULT:
         optInSignalPeriod = 9
 
     if optInSlowPeriod < optInFastPeriod:
@@ -24,6 +29,7 @@ def TA_MACD_Lookback(optInFastPeriod: cython.int, optInSlowPeriod: cython.int, o
         optInFastPeriod = tempInteger
 
     return TA_EMA_Lookback(optInSlowPeriod) + TA_EMA_Lookback(optInSignalPeriod)
+
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
@@ -45,21 +51,21 @@ def TA_INT_MACD(
         tempInteger = optInSlowPeriod
         optInSlowPeriod = optInFastPeriod
         optInFastPeriod = tempInteger
-    
+
     k1: cython.double = 0.0
     k2: cython.double = 0.0
-    
+
     if optInSlowPeriod != 0:
         k1 = PER_TO_K(optInSlowPeriod)
     else:
         optInSlowPeriod = 26
-        k1 = 0.075 # fix 26
-    
+        k1 = 0.075  # fix 26
+
     if optInFastPeriod != 0:
         k2 = PER_TO_K(optInFastPeriod)
     else:
         optInFastPeriod = 12
-        k2 = 0.15 # fix 12
+        k2 = 0.15  # fix 12
 
     lookbackSignal = TA_EMA_Lookback(optInSignalPeriod_2)
     lookbackTotal = lookbackSignal + TA_EMA_Lookback(optInSlowPeriod)
@@ -83,16 +89,47 @@ def TA_INT_MACD(
     outNbElement2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     # Calculate slow EMA
-    retCode = TA_INT_EMA(tempInteger, endIdx, inReal, optInSlowPeriod, k1,
-                     outBegIdx1, outNbElement1, slowEMABuffer)
+    retCode = TA_INT_EMA(
+        tempInteger,
+        endIdx,
+        inReal,
+        optInSlowPeriod,
+        k1,
+        outBegIdx1,
+        outNbElement1,
+        slowEMABuffer,
+    )
     if retCode != TA_RetCode.TA_SUCCESS:
+        outBegIdx[0] = 0
+        outNBElement[0] = 0
         return retCode
 
     # Calculate fast EMA
-    retCode = TA_INT_EMA(tempInteger, endIdx, inReal, optInFastPeriod, k2,
-                     outBegIdx2, outNbElement2, fastEMABuffer)
+    retCode = TA_INT_EMA(
+        tempInteger,
+        endIdx,
+        inReal,
+        optInFastPeriod,
+        k2,
+        outBegIdx2,
+        outNbElement2,
+        fastEMABuffer,
+    )
     if retCode != TA_RetCode.TA_SUCCESS:
+        outBegIdx[0] = 0
+        outNBElement[0] = 0
         return retCode
+
+    # Parano tests. Will be removed eventually.
+    if (
+        outBegIdx1[0] != tempInteger
+        or outBegIdx2[0] != tempInteger
+        or outNbElement1[0] != outNbElement2[0]
+        or outNbElement1[0] != (endIdx - startIdx) + 1 + lookbackSignal
+    ):
+        outBegIdx[0] = 0
+        outNBElement[0] = 0
+        return TA_RetCode.TA_INTERNAL_ERROR
 
     # Calculate MACD line
     for i in range(outNbElement1[0]):
@@ -101,12 +138,24 @@ def TA_INT_MACD(
     # Copy MACD line to output
     # for i in range(outNbElement1[0] - lookbackSignal):
     #     outMACD[i] = fastEMABuffer[i + lookbackSignal]
-    outMACD[:outNbElement1[0] - lookbackSignal] = fastEMABuffer[lookbackSignal:outNbElement1[0]]
+    outMACD[: outNbElement1[0] - lookbackSignal] = fastEMABuffer[
+        lookbackSignal : outNbElement1[0]
+    ]
 
     # Calculate signal line
-    retCode = TA_INT_EMA(0, outNbElement1[0] - 1, fastEMABuffer, optInSignalPeriod_2, PER_TO_K(optInSignalPeriod_2),
-                     outBegIdx2, outNbElement2, outMACDSignal)
+    retCode = TA_INT_EMA(
+        0,
+        outNbElement1[0] - 1,
+        fastEMABuffer,
+        optInSignalPeriod_2,
+        PER_TO_K(optInSignalPeriod_2),
+        outBegIdx2,
+        outNbElement2,
+        outMACDSignal,
+    )
     if retCode != TA_RetCode.TA_SUCCESS:
+        outBegIdx[0] = 0
+        outNBElement[0] = 0
         return retCode
 
     # Calculate histogram
@@ -166,11 +215,14 @@ def TA_MACD(
         outNBElement,
         outMACD,
         outMACDSignal,
-        outMACDHist
+        outMACDHist,
     )
     return retCode
 
-def MACD(real: np.ndarray, fastperiod: int = 12, slowperiod: int = 26, signalperiod: int = 9):
+
+def MACD(
+    real: np.ndarray, fastperiod: int = 12, slowperiod: int = 26, signalperiod: int = 9
+):
     """MACD(real, fastperiod=12, slowperiod=26, signalperiod=9)
 
     Moving Average Convergence/Divergence
@@ -199,6 +251,17 @@ def MACD(real: np.ndarray, fastperiod: int = 12, slowperiod: int = 26, signalper
     outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
     outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
-    TA_MACD(0, endIdx, real[startIdx:], fastperiod, slowperiod, signalperiod,
-            outBegIdx, outNBElement, outMACD[lookback:], outMACDSignal[lookback:], outMACDHist[lookback:])
+    TA_MACD(
+        0,
+        endIdx,
+        real[startIdx:],
+        fastperiod,
+        slowperiod,
+        signalperiod,
+        outBegIdx,
+        outNBElement,
+        outMACD[lookback:],
+        outMACDSignal[lookback:],
+        outMACDHist[lookback:],
+    )
     return outMACD, outMACDSignal, outMACDHist
