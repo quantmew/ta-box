@@ -38,6 +38,9 @@ from .ta_func.ta_CMO import TA_CMO, CMO
 from .ta_func.ta_DX import TA_DX, DX
 from .ta_func.ta_MINUS_DM import TA_MINUS_DM, MINUS_DM
 from .ta_func.ta_MINUS_DI import TA_MINUS_DI, MINUS_DI
+from .ta_func.ta_MOM import TA_MOM, MOM
+from .ta_func.ta_PLUS_DI import TA_PLUS_DI, PLUS_DI
+from .ta_func.ta_PLUS_DM import TA_PLUS_DM, PLUS_DM
 
 # Overlap Studies
 from .ta_func.ta_MA import TA_MA, MA
@@ -76,12 +79,12 @@ from .ta_func.ta_VAR import TA_VAR, VAR
 # Volatility Indicators
 from .ta_func.ta_TRANGE import TA_TRANGE, TRANGE
 from .ta_func.ta_ATR import TA_ATR, ATR
+from .ta_func.ta_NATR import TA_NATR, NATR
 
 # Volume Indicators
 from .ta_func.ta_AD import TA_AD, AD
 from .ta_func.ta_ADOSC import TA_ADOSC, ADOSC
-from .ta_func.ta_ADX import TA_ADX, ADX
-
+from .ta_func.ta_OBV import TA_OBV, OBV
 
 # Other Studies
 from .ta_func.ta_RSI import TA_RSI, RSI
