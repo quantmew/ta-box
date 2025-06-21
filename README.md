@@ -150,11 +150,11 @@ print(ema)
   
   - MINUS_DM✓
   
-  - MOM
+  - MOM✓
   
-  - PLUS_DI
+  - PLUS_DI✓
   
-  - PLUS_DM
+  - PLUS_DM✓
   
   - PPO
   
@@ -374,7 +374,7 @@ print(ema)
   
   - ATR✓
   
-  - NATR
+  - NATR✓
   
   - TRANGE✓
 
@@ -384,4 +384,4 @@ print(ema)
   
   - ADOSC✓
   
-  - OBV
+  - OBV✓

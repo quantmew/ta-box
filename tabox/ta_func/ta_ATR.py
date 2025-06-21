@@ -37,7 +37,7 @@ def TA_ATR(
         return TA_RetCode.TA_SUCCESS
 
     if optInTimePeriod <= 1:
-        return TA_TRANGE(startIdx, endIdx, inHigh, inLow, inClose, outReal)
+        return TA_TRANGE(startIdx, endIdx, inHigh, inLow, inClose, outBegIdx, outNBElement, outReal)
 
     # 计算临时缓冲区大小，与C语言一致
     buffer_size = lookbackTotal + (endIdx - startIdx) + 1
@@ -48,7 +48,7 @@ def TA_ATR(
 
     # 计算真实范围(TRANGE)
     tr_start = startIdx - lookbackTotal + 1
-    retCode = TA_TRANGE(tr_start, endIdx, inHigh, inLow, inClose, tempBuffer)
+    retCode = TA_TRANGE(tr_start, endIdx, inHigh, inLow, inClose, outBegIdx1, outNBElement1, tempBuffer)
     if retCode != TA_RetCode.TA_SUCCESS:
         return retCode
 
