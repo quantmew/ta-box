@@ -352,7 +352,7 @@ print(ema)
 
 - Statistic Functions
   
-  - BETA
+  - BETA✓
   
   - CORREL
   

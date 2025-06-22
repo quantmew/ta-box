@@ -73,6 +73,7 @@ from .ta_func.ta_TYPPRICE import TA_TYPPRICE, TYPPRICE
 from .ta_func.ta_WCLPRICE import TA_WCLPRICE, WCLPRICE
 
 # Statistic Functions
+from .ta_func.ta_BETA import TA_BETA, BETA
 from .ta_func.ta_STDDEV import TA_STDDEV, STDDEV
 from .ta_func.ta_VAR import TA_VAR, VAR
 
