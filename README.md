@@ -354,9 +354,9 @@ print(ema)
   
   - BETA✓
   
-  - CORREL
+  - CORREL✓
   
-  - LINEARREG
+  - LINEARREG✓
   
   - LINEARREG_ANGLE
   
@@ -366,7 +366,7 @@ print(ema)
   
   - STDDEV✓
   
-  - TSF
+  - TSF✓
   
   - VAR✓
 

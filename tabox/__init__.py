@@ -74,7 +74,10 @@ from .ta_func.ta_WCLPRICE import TA_WCLPRICE, WCLPRICE
 
 # Statistic Functions
 from .ta_func.ta_BETA import TA_BETA, BETA
+from .ta_func.ta_CORREL import TA_CORREL, CORREL
+from .ta_func.ta_LINEARREG import TA_LINEARREG, LINEARREG
 from .ta_func.ta_STDDEV import TA_STDDEV, STDDEV
+from .ta_func.ta_TSF import TA_TSF, TSF
 from .ta_func.ta_VAR import TA_VAR, VAR
 
 # Volatility Indicators
