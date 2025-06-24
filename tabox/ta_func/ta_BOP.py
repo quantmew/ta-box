@@ -3,7 +3,7 @@ import numpy as np
 from .ta_utils import check_array, check_begidx1
 from ..retcode import TA_RetCode
 from ..settings import TA_FUNC_NO_RANGE_CHECK
-from .ta_utility import TA_IS_ZERO
+from .ta_utility import TA_IS_ZERO_OR_NEG
 
 def TA_BOP_Lookback() -> cython.Py_ssize_t:
     """
@@ -56,7 +56,7 @@ def TA_BOP(
     i: cython.Py_ssize_t
     for i in range(startIdx, endIdx + 1):
         tempReal = inHigh[i] - inLow[i]
-        if TA_IS_ZERO(tempReal) or tempReal < 0:  # Fix: Check for zero or negative denominator
+        if TA_IS_ZERO_OR_NEG(tempReal):  # Fix: Check for zero or negative denominator
             outReal[outIdx] = 0.0
         else:
             outReal[outIdx] = (inClose[i] - inOpen[i]) / tempReal

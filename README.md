@@ -168,7 +168,7 @@ print(ema)
   
   - RSI✓
   
-  - STOCH
+  - STOCH✓
   
   - STOCHF
   
@@ -358,11 +358,11 @@ print(ema)
   
   - LINEARREG✓
   
-  - LINEARREG_ANGLE
+  - LINEARREG_ANGLE✓
   
-  - LINEARREG_INTERCEPT
+  - LINEARREG_INTERCEPT✓
   
-  - LINEARREG_SLOPE
+  - LINEARREG_SLOPE✓
   
   - STDDEV✓
   
