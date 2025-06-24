@@ -1,0 +1,2 @@
+cpdef Py_ssize_t TA_STOCH_Lookback(int optInFastK_Period, int optInSlowK_Period, int optInSlowK_MAType, int optInSlowD_Period, int optInSlowD_MAType)
+cpdef int TA_STOCH(Py_ssize_t startIdx, Py_ssize_t endIdx, double[::1] inHigh, double[::1] inLow, double[::1] inClose, int optInFastK_Period, int optInSlowK_Period, int optInSlowK_MAType, int optInSlowD_Period, int optInSlowD_MAType, Py_ssize_t[::1] outBegIdx, Py_ssize_t[::1] outNBElement, double[::1] outSlowK, double[::1] outSlowD)

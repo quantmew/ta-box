@@ -65,6 +65,8 @@ from .ta_func.ta_MACD import TA_MACD, MACD
 from .ta_func.ta_MACDEXT import TA_MACDEXT, MACDEXT
 from .ta_func.ta_MACDFIX import TA_MACDFIX, MACDFIX
 from .ta_func.ta_MFI import TA_MFI, MFI
+from .ta_func.ta_RSI import TA_RSI, RSI
+from .ta_func.ta_STOCH import TA_STOCH, STOCH
 
 # Price Transform
 from .ta_func.ta_AVGPRICE import TA_AVGPRICE, AVGPRICE
@@ -76,6 +78,9 @@ from .ta_func.ta_WCLPRICE import TA_WCLPRICE, WCLPRICE
 from .ta_func.ta_BETA import TA_BETA, BETA
 from .ta_func.ta_CORREL import TA_CORREL, CORREL
 from .ta_func.ta_LINEARREG import TA_LINEARREG, LINEARREG
+from .ta_func.ta_LINEARREG_ANGLE import TA_LINEARREG_ANGLE, LINEARREG_ANGLE
+from .ta_func.ta_LINEARREG_INTERCEPT import TA_LINEARREG_INTERCEPT, LINEARREG_INTERCEPT
+from .ta_func.ta_LINEARREG_SLOPE import TA_LINEARREG_SLOPE, LINEARREG_SLOPE
 from .ta_func.ta_STDDEV import TA_STDDEV, STDDEV
 from .ta_func.ta_TSF import TA_TSF, TSF
 from .ta_func.ta_VAR import TA_VAR, VAR
@@ -89,11 +94,6 @@ from .ta_func.ta_NATR import TA_NATR, NATR
 from .ta_func.ta_AD import TA_AD, AD
 from .ta_func.ta_ADOSC import TA_ADOSC, ADOSC
 from .ta_func.ta_OBV import TA_OBV, OBV
-
-# Other Studies
-from .ta_func.ta_RSI import TA_RSI, RSI
-
-
 
 
 
