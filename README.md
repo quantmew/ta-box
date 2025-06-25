@@ -158,7 +158,7 @@ print(ema)
   
   - PPO
   
-  - ROC
+  - ROC✓
   
   - ROCP
   
@@ -170,11 +170,11 @@ print(ema)
   
   - STOCH✓
   
-  - STOCHF
+  - STOCHF✓
   
-  - STOCHRSI
+  - STOCHRSI✓
   
-  - TRIX
+  - TRIX✓
   
   - ULTOSC
   
