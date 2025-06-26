@@ -160,11 +160,11 @@ print(ema)
   
   - ROC✓
   
-  - ROCP
+  - ROCP✓
   
-  - ROCR
+  - ROCR✓
   
-  - ROCR100
+  - ROCR100✓
   
   - RSI✓
   

@@ -71,6 +71,9 @@ from .ta_func.ta_STOCHF import TA_STOCHF, STOCHF
 from .ta_func.ta_STOCHRSI import TA_STOCHRSI, STOCHRSI
 from .ta_func.ta_TRIX import TA_TRIX, TRIX
 from .ta_func.ta_ROC import TA_ROC, ROC
+from .ta_func.ta_ROCP import TA_ROCP, ROCP
+from .ta_func.ta_ROCR import TA_ROCR, ROCR
+from .ta_func.ta_ROCR100 import TA_ROCR100, ROCR100
 
 # Price Transform
 from .ta_func.ta_AVGPRICE import TA_AVGPRICE, AVGPRICE
