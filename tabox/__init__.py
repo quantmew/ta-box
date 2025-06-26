@@ -74,6 +74,9 @@ from .ta_func.ta_ROC import TA_ROC, ROC
 from .ta_func.ta_ROCP import TA_ROCP, ROCP
 from .ta_func.ta_ROCR import TA_ROCR, ROCR
 from .ta_func.ta_ROCR100 import TA_ROCR100, ROCR100
+from .ta_func.ta_PPO import TA_PPO, PPO
+from .ta_func.ta_ULTOSC import TA_ULTOSC, ULTOSC
+from .ta_func.ta_WILLR import TA_WILLR, WILLR
 
 # Price Transform
 from .ta_func.ta_AVGPRICE import TA_AVGPRICE, AVGPRICE

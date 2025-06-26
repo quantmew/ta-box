@@ -156,7 +156,7 @@ print(ema)
   
   - PLUS_DM✓
   
-  - PPO
+  - PPO✓
   
   - ROC✓
   
@@ -176,9 +176,9 @@ print(ema)
   
   - TRIX✓
   
-  - ULTOSC
+  - ULTOSC✓
   
-  - WILLR
+  - WILLR✓
 
 - Overlap Studies
   
