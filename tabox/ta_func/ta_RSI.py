@@ -2,12 +2,24 @@ import cython
 import numpy as np
 from tabox.settings import TA_FUNC_NO_RANGE_CHECK
 
-from tabox.ta_func.ta_utility import TA_IS_ZERO
+from tabox.ta_func.ta_utility import (
+    TA_Compatibility,
+    TA_GLOBALS_COMPATIBILITY,
+    TA_GLOBALS_UNSTABLE_PERIOD,
+    TA_IS_ZERO,
+    TA_INTEGER_DEFAULT,
+    TA_FuncUnstId,
+)
 from .ta_utils import check_array, check_begidx1, check_timeperiod, make_double_array
 from ..retcode import TA_RetCode
 
 
 def TA_RSI_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
+    if not TA_FUNC_NO_RANGE_CHECK:
+        if optInTimePeriod == TA_INTEGER_DEFAULT:
+            optInTimePeriod = 14
+        elif (optInTimePeriod < 2) or (optInTimePeriod > 100000):
+            return -1
     return optInTimePeriod
 
 
@@ -27,7 +39,7 @@ def TA_RSI(
 
     today: cython.Py_ssize_t = 0
     lookbackTotal: cython.Py_ssize_t = 0
-    unstablePeriod: cython.bint = False
+    unstablePeriod: cython.int = 0
     i: cython.Py_ssize_t = 0
 
     prevGain: cython.double = 0.0
@@ -43,7 +55,7 @@ def TA_RSI(
         if (endIdx < 0) or (endIdx < startIdx):
             return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
         # min/max are checked for optInTimePeriod.
-        if optInTimePeriod == TA_RetCode.TA_INTEGER_DEFAULT:
+        if optInTimePeriod == TA_INTEGER_DEFAULT:
             optInTimePeriod = 14
         elif (optInTimePeriod < 2) or (optInTimePeriod > 100000):
             return TA_RetCode.TA_BAD_PARAM
@@ -82,8 +94,11 @@ def TA_RSI(
     today = startIdx - lookbackTotal
     prevValue = inReal[today]
 
-    unstablePeriod = True
-    if not unstablePeriod:
+    unstablePeriod = TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_RSI)
+    if (
+        unstablePeriod == 0
+        and TA_GLOBALS_COMPATIBILITY() == TA_Compatibility.TA_COMPATIBILITY_METASTOCK
+    ):
         """
         Preserve prevValue because it may get
         overwritten by the output.
@@ -143,7 +158,7 @@ def TA_RSI(
     prevLoss = 0.0
     today += 1
 
-    i: cython.Py_ssize_t = optInTimePeriod
+    i = optInTimePeriod
     while i > 0:
         tempValue1 = inReal[today]
         today += 1
@@ -224,7 +239,10 @@ def TA_RSI(
         prevLoss /= optInTimePeriod
         prevGain /= optInTimePeriod
         tempValue1 = prevGain + prevLoss
-        if not TA_IS_ZERO(tempValue1):
+        """
+        Here is the optimization of 'if not TA_IS_ZERO(tempValue1):'
+        """
+        if not(((-0.00000001) < tempValue1) and (tempValue1 < 0.00000001)):
             outReal[outIdx] = 100.0 * (prevGain / tempValue1)
             outIdx += 1
         else:
@@ -253,7 +271,7 @@ def TA_S_RSI(
 
     today: cython.Py_ssize_t = 0
     lookbackTotal: cython.Py_ssize_t = 0
-    unstablePeriod: cython.bint = False
+    unstablePeriod: cython.int = 0
     i: cython.Py_ssize_t = 0
 
     prevGain: cython.float = 0.0
@@ -269,7 +287,7 @@ def TA_S_RSI(
         if (endIdx < 0) or (endIdx < startIdx):
             return TA_RetCode.TA_OUT_OF_RANGE_END_INDEX
         # min/max are checked for optInTimePeriod.
-        if optInTimePeriod == TA_RetCode.TA_INTEGER_DEFAULT:
+        if optInTimePeriod == TA_INTEGER_DEFAULT:
             optInTimePeriod = 14
         elif (optInTimePeriod < 2) or (optInTimePeriod > 100000):
             return TA_RetCode.TA_BAD_PARAM
@@ -308,8 +326,11 @@ def TA_S_RSI(
     today = startIdx - lookbackTotal
     prevValue = inReal[today]
 
-    unstablePeriod = True
-    if not unstablePeriod:
+    unstablePeriod = TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_RSI)
+    if (
+        unstablePeriod == 0
+        and TA_GLOBALS_COMPATIBILITY() == TA_Compatibility.TA_COMPATIBILITY_METASTOCK
+    ):
         """
         Preserve prevValue because it may get
         overwritten by the output.
@@ -327,7 +348,7 @@ def TA_S_RSI(
         prevGain = 0.0
         prevLoss = 0.0
 
-        i: cython.int = optInTimePeriod
+        i = optInTimePeriod
         while i > 0:
             tempValue1 = inReal[today]
             today += 1

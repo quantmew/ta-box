@@ -1,0 +1,2 @@
+cpdef Py_ssize_t TA_ULTOSC_Lookback(int optInTimePeriod1, int optInTimePeriod2, int optInTimePeriod3)
+cpdef int TA_ULTOSC(Py_ssize_t startIdx, Py_ssize_t endIdx, double[::1] inHigh, double[::1] inLow, double[::1] inClose, int optInTimePeriod1, int optInTimePeriod2, int optInTimePeriod3, Py_ssize_t[::1] outBegIdx, Py_ssize_t[::1] outNBElement, double[::1] outReal)

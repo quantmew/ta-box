@@ -156,29 +156,29 @@ print(ema)
   
   - PLUS_DM✓
   
-  - PPO
+  - PPO✓
   
-  - ROC
+  - ROC✓
   
-  - ROCP
+  - ROCP✓
   
-  - ROCR
+  - ROCR✓
   
-  - ROCR100
+  - ROCR100✓
   
   - RSI✓
   
   - STOCH✓
   
-  - STOCHF
+  - STOCHF✓
   
-  - STOCHRSI
+  - STOCHRSI✓
   
-  - TRIX
+  - TRIX✓
   
-  - ULTOSC
+  - ULTOSC✓
   
-  - WILLR
+  - WILLR✓
 
 - Overlap Studies
   

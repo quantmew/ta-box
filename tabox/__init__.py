@@ -67,6 +67,16 @@ from .ta_func.ta_MACDFIX import TA_MACDFIX, MACDFIX
 from .ta_func.ta_MFI import TA_MFI, MFI
 from .ta_func.ta_RSI import TA_RSI, RSI
 from .ta_func.ta_STOCH import TA_STOCH, STOCH
+from .ta_func.ta_STOCHF import TA_STOCHF, STOCHF
+from .ta_func.ta_STOCHRSI import TA_STOCHRSI, STOCHRSI
+from .ta_func.ta_TRIX import TA_TRIX, TRIX
+from .ta_func.ta_ROC import TA_ROC, ROC
+from .ta_func.ta_ROCP import TA_ROCP, ROCP
+from .ta_func.ta_ROCR import TA_ROCR, ROCR
+from .ta_func.ta_ROCR100 import TA_ROCR100, ROCR100
+from .ta_func.ta_PPO import TA_PPO, PPO
+from .ta_func.ta_ULTOSC import TA_ULTOSC, ULTOSC
+from .ta_func.ta_WILLR import TA_WILLR, WILLR
 
 # Price Transform
 from .ta_func.ta_AVGPRICE import TA_AVGPRICE, AVGPRICE
