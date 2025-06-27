@@ -1,6 +1,6 @@
-cpdef inline bint TA_REAL_EQ(double x, double v, double ep) nogil
-cpdef inline bint TA_IS_ZERO(double v) nogil
-cpdef inline bint TA_IS_ZERO_OR_NEG(double v) nogil
+cpdef bint TA_REAL_EQ(double x, double v, double ep) noexcept nogil
+cpdef bint TA_IS_ZERO(double v) noexcept nogil
+cpdef bint TA_IS_ZERO_OR_NEG(double v) noexcept nogil
 
 # Math Constants
 cdef double PI
@@ -36,3 +36,6 @@ cpdef double TA_UPPERSHADOW(double inHigh, double inClose, double inOpen)
 cpdef double TA_LOWERSHADOW(double inClose, double inOpen, double inLow)
 cpdef double TA_HIGHLOWRANGE(double inHigh, double inLow)
 cpdef int TA_CANDLECOLOR(double inClose, double inOpen)
+
+
+cdef int TA_INTEGER_DEFAULT = -1

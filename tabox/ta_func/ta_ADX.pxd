@@ -1,10 +1,11 @@
+from .ta_utility cimport TA_INTEGER_DEFAULT
 cdef extern from "math.h":
     cpdef double fabs(double x)
 
-cdef inline bint TA_IS_ZERO(double v) noexcept nogil
-cdef inline double round_pos(double x) noexcept nogil
+cdef bint TA_IS_ZERO(double v) noexcept nogil
+cdef double round_pos(double x) noexcept nogil
 
-cdef inline double TRUE_RANGE(
+cdef double TRUE_RANGE(
     double th,
     double tl,
     double yc

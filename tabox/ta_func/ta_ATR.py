@@ -5,6 +5,8 @@ from .ta_TRANGE import TA_TRANGE
 from .ta_SMA import TA_INT_SMA
 from ..retcode import TA_RetCode
 from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId
+if not cython.compiled:
+    from .ta_utility import TA_INTEGER_DEFAULT
 
 def TA_ATR_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:
     unstable_period = TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_ATR)

@@ -1,3 +1,4 @@
+from .ta_utility cimport TA_INTEGER_DEFAULT
 import cython
 
 cpdef Py_ssize_t TA_MINMAX_Lookback(Py_ssize_t optInTimePeriod) noexcept nogil

@@ -3,12 +3,13 @@ import numpy as np
 from .ta_utils import check_array, check_begidx1
 from ..retcode import TA_RetCode
 from ..settings import TA_FUNC_NO_RANGE_CHECK
-from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO, TA_INTEGER_DEFAULT
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO
 from .hilbert_transform import HilbertVariable
 
 if not cython.compiled:
     from math import atan
     from .hilbert_transform import do_odd, do_even
+    from .ta_utility import TA_INTEGER_DEFAULT
 
 @cython.boundscheck(False)
 @cython.wraparound(False)

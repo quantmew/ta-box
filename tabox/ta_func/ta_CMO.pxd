@@ -1,3 +1,4 @@
+from .ta_utility cimport TA_INTEGER_DEFAULT
 cpdef Py_ssize_t TA_CMO_Lookback(int optInTimePeriod)
 cpdef int TA_CMO(
     Py_ssize_t startIdx,

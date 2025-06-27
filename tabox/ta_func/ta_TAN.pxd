@@ -1,3 +1,4 @@
+from .ta_utility cimport TA_INTEGER_DEFAULT
 
 cdef extern from "math.h":
     cpdef double tan(double x)

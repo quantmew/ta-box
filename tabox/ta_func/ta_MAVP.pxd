@@ -1,3 +1,4 @@
+from .ta_utility cimport TA_INTEGER_DEFAULT
 cpdef Py_ssize_t TA_MAVP_Lookback(int optInMinPeriod, int optInMaxPeriod, int optInMAType)
 cpdef int TA_MAVP(
     Py_ssize_t startIdx,

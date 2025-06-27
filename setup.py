@@ -1,19 +1,28 @@
 import setuptools
 from setuptools import Extension
 from Cython.Build import cythonize
+from setuptools.command.build_ext import build_ext
 
 with open("README.md", "r", encoding="utf-8") as fh:
     long_description = fh.read()
 
+class CustomBuildExt(build_ext):
+    def build_extensions(self):
+        compiler_type = self.compiler.compiler_type
+        for ext in self.extensions:
+            if compiler_type == 'msvc':
+                ext.extra_compile_args = ['/Ox']
+            elif compiler_type in {'unix', 'mingw32'}:
+                ext.extra_compile_args = ['-O3']
+            else:
+                print(f"Warning: Unknown compiler {compiler_type}, using default flags")
+        super().build_extensions()
+
 extensions = [
-    Extension("*", ["tabox/ta_func/*.py"]) # extra_compile_args=["-O3", "/Ox"]
-    # Extension("mandheling", ["mandheling/*/*.pyx"]),
-    # Everything but primes.pyx is included here.
-    # Extension("*", ["*.pyx"],
-    #     include_dirs=[],
-    #     libraries=[],
-    #     library_dirs=[]),
+    Extension("*", ["tabox/ta_func/*.py"])
 ]
+
+
 
 setuptools.setup(
     name="TA-Box",
@@ -39,6 +48,7 @@ setuptools.setup(
         annotate=True,
         compiler_directives={'language_level' : "3"},   # or "2" or "3str"
     ),
+    cmdclass={'build_ext': CustomBuildExt},
     install_requires=[
         'numpy>=1.19.2',
         'cython>=0.29.21',

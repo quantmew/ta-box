@@ -2,11 +2,12 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
-from .ta_utility import TA_INTEGER_DEFAULT
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 from .ta_RSI import TA_RSI, TA_RSI_Lookback
 from .ta_STOCHF import TA_STOCHF, TA_STOCHF_Lookback
 
+if not cython.compiled:
+    from .ta_utility import TA_INTEGER_DEFAULT
 
 def TA_STOCHRSI_Lookback(
     optInTimePeriod: cython.int,
@@ -122,10 +123,10 @@ def TA_STOCHRSI(
     outNBElement[0] = 0
 
     # 计算回溯期
-    lookback_stochf = TA_STOCHF_Lookback(
+    lookback_stochf: cython.Py_ssize_t = TA_STOCHF_Lookback(
         optInFastK_Period, optInFastD_Period, optInFastD_MAType
     )
-    lookback_total = TA_RSI_Lookback(optInTimePeriod) + lookback_stochf
+    lookback_total: cython.Py_ssize_t = TA_RSI_Lookback(optInTimePeriod) + lookback_stochf
 
     # 调整起始索引以考虑回溯期
     if startIdx < lookback_total:
@@ -138,12 +139,12 @@ def TA_STOCHRSI(
     outBegIdx[0] = startIdx
 
     # 计算临时数组大小
-    temp_array_size = (endIdx - startIdx) + 1 + lookback_stochf
-    temp_rsi_buffer = np.full(temp_array_size, np.nan, dtype=np.double)
+    temp_array_size: cython.Py_ssize_t = (endIdx - startIdx) + 1 + lookback_stochf
+    temp_rsi_buffer: cython.double[::1] = np.full(temp_array_size, np.nan, dtype=np.double)
 
     # 计算RSI值并存入临时缓冲区
-    out_beg_idx1 = np.zeros(1, dtype=np.intp)
-    out_nb_element1 = np.zeros(1, dtype=np.intp)
+    out_beg_idx1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    out_nb_element1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
     ret_code = TA_RSI(
         startIdx - lookback_stochf,
         endIdx,

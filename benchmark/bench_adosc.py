@@ -14,7 +14,7 @@ from talib import ADOSC as that_ADOSC
 
 @bench
 def bench_this_adosc():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         for fast in [3, 5, 10]:
             for slow in [10, 20, 30]:
                 high = np.random.random(i)
@@ -25,7 +25,7 @@ def bench_this_adosc():
 
 @bench
 def bench_that_adosc():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         for fast in [3, 5, 10]:
             for slow in [10, 20, 30]:
                 high = np.random.random(i)

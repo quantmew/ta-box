@@ -5,13 +5,16 @@ from ..retcode import TA_RetCode
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD
 
-def TA_SMA_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:
+if not cython.compiled:
+    from .ta_utility import TA_INTEGER_DEFAULT
+
+def TA_SMA_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     """
     Calculate the lookback period required for SMA
     """
     # Check parameter range
     if not TA_FUNC_NO_RANGE_CHECK:
-        if optInTimePeriod == -1:  # TA_INTEGER_DEFAULT in C is usually -1
+        if optInTimePeriod == TA_INTEGER_DEFAULT:
             optInTimePeriod = 30
         elif optInTimePeriod < 2 or optInTimePeriod > 100000:
             return -1

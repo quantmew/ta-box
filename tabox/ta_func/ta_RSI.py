@@ -6,12 +6,14 @@ from tabox.ta_func.ta_utility import (
     TA_Compatibility,
     TA_GLOBALS_COMPATIBILITY,
     TA_GLOBALS_UNSTABLE_PERIOD,
-    TA_INTEGER_DEFAULT,
     TA_FuncUnstId,
 )
+
 from .ta_utils import check_array, check_begidx1, check_timeperiod, make_double_array
 from ..retcode import TA_RetCode
 
+if not cython.compiled:
+    from .ta_utility import TA_INTEGER_DEFAULT
 
 def TA_IS_ZERO(v: cython.double) -> cython.bint:
     return ((-0.00000001) < v) and (v < 0.00000001)

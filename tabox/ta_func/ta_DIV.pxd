@@ -1,3 +1,4 @@
+from .ta_utility cimport TA_INTEGER_DEFAULT
 cpdef Py_ssize_t TA_DIV_Lookback()
 cpdef int TA_DIV(
     Py_ssize_t startIdx,

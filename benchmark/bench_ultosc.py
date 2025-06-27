@@ -14,7 +14,7 @@ from talib import ULTOSC as that_ULTOSC
 
 @bench
 def bench_this_ultosc():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         close = np.random.random(i)
@@ -22,7 +22,7 @@ def bench_this_ultosc():
 
 @bench
 def bench_that_ultosc():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         close = np.random.random(i)

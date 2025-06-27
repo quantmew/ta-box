@@ -2,10 +2,13 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
-from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO, TA_INTEGER_DEFAULT
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 from .ta_TRANGE import TA_TRANGE, TRANGE
 from .ta_SMA import TA_SMA, SMA
+
+if not cython.compiled:
+    from .ta_utility import TA_INTEGER_DEFAULT
 
 def TA_NATR_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     """

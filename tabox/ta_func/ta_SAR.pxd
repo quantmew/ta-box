@@ -1,3 +1,4 @@
+from .ta_utility cimport TA_INTEGER_DEFAULT
 cpdef Py_ssize_t TA_SAR_Lookback(double optInAcceleration, double optInMaximum)
 cpdef int TA_SAR(
     Py_ssize_t startIdx,

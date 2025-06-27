@@ -2,10 +2,11 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
-from .ta_utility import TA_INTEGER_DEFAULT
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 from .ta_MA import TA_MA, TA_MA_Lookback
 
+if not cython.compiled:
+    from .ta_utility import TA_INTEGER_DEFAULT
 
 def TA_STOCHF_Lookback(
     optInFastK_Period: cython.int,
@@ -102,8 +103,6 @@ def TA_STOCHF(
             return TA_RetCode.TA_BAD_PARAM
 
     # Local variables
-    lowest: cython.double
-    highest: cython.double
     tmp: cython.double
     diff: cython.double
     outIdx: cython.Py_ssize_t
@@ -132,15 +131,18 @@ def TA_STOCHF(
         return TA_RetCode.TA_SUCCESS
 
     # Prepare temporary buffer for FastK calculation
-    length = endIdx - (startIdx - lookbackTotal) + 1
-    tempBuffer = np.full(length, np.nan, dtype=np.double)
+    length: cython.Py_ssize_t = endIdx - (startIdx - lookbackTotal) + 1
+    tempBuffer: cython.double[::1] = np.full(length, np.nan, dtype=np.double)
 
     # Calculate FastK values
-    outIdx = 0
-    trailingIdx = startIdx - lookbackTotal
-    today = trailingIdx + lookbackK
-    lowestIdx = highestIdx = -1
-    diff = highest = lowest = 0.0
+    outIdx: cython.Py_ssize_t = 0
+    trailingIdx: cython.Py_ssize_t = startIdx - lookbackTotal
+    today: cython.Py_ssize_t = trailingIdx + lookbackK
+    lowestIdx: cython.Py_ssize_t = -1
+    highestIdx: cython.Py_ssize_t = -1
+    diff: cython.double = 0.0
+    highest: cython.double = 0.0
+    lowest: cython.double = 0.0
 
     while today <= endIdx:
         # Find lowest low in the period
@@ -189,8 +191,8 @@ def TA_STOCHF(
         today += 1
 
     # Calculate FastD by smoothing FastK with moving average
-    outBegIdx1 = np.zeros(1, dtype=np.intp)
-    outNBElement1 = np.zeros(1, dtype=np.intp)
+    outBegIdx1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
     retCode = TA_MA(
         0,
         outIdx - 1,
@@ -209,6 +211,7 @@ def TA_STOCHF(
 
     # Copy FastK values to output
     # np.copyto(outFastK, tempBuffer[lookbackFastD : lookbackFastD + outNBElement1[0]])
+    i: cython.Py_ssize_t = 0
     for i in range(outNBElement1[0]):
         outFastK[i] = tempBuffer[lookbackFastD + i]
 

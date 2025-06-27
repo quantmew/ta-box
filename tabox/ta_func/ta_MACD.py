@@ -3,9 +3,11 @@ import numpy as np
 from .ta_utils import check_array, check_begidx1
 from ..retcode import TA_RetCode
 from .ta_EMA import TA_EMA, TA_EMA_Lookback, TA_INT_EMA
-from .ta_utility import PER_TO_K, TA_INTEGER_DEFAULT
+from .ta_utility import PER_TO_K
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 
+if not cython.compiled:
+    from .ta_utility import TA_INTEGER_DEFAULT
 
 def TA_MACD_Lookback(
     optInFastPeriod: cython.int,

@@ -14,7 +14,7 @@ from talib import STOCHF as that_STOCHF
 
 @bench
 def bench_this_stochf():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         for fastk in [5, 10, 14]:
             for fastd in [3, 5, 10]:
                 high = np.random.random(i)
@@ -24,7 +24,7 @@ def bench_this_stochf():
 
 @bench
 def bench_that_stochf():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         for fastk in [5, 10, 14]:
             for fastd in [3, 5, 10]:
                 high = np.random.random(i)

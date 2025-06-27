@@ -2,7 +2,8 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
-from .ta_utility import TA_INTEGER_DEFAULT
+if not cython.compiled:
+    from .ta_utility import TA_INTEGER_DEFAULT
 from .ta_EMA import TA_EMA, TA_EMA_Lookback, TA_INT_EMA
 from .ta_ROC import TA_ROC, TA_ROC_Lookback
 from ..settings import TA_FUNC_NO_RANGE_CHECK

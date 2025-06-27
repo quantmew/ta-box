@@ -1,3 +1,4 @@
+from .ta_utility cimport TA_INTEGER_DEFAULT
 
 cpdef Py_ssize_t TA_APO_Lookback(int optInFastPeriod, int optInSlowPeriod, int optInMAType)
 cpdef int TA_INT_APO(

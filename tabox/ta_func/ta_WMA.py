@@ -4,7 +4,7 @@ from .ta_utils import check_array, check_begidx1, check_timeperiod
 from ..retcode import TA_RetCode
 
 
-def TA_WMA_Lookback(optInTimePeriod: cython.int) -> cython.int:
+def TA_WMA_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     return optInTimePeriod - 1
 
 
@@ -12,16 +12,16 @@ def TA_WMA_Lookback(optInTimePeriod: cython.int) -> cython.int:
 @cython.wraparound(False)
 @cython.cdivision(True)
 def TA_WMA(
-    startIdx: cython.int,
-    endIdx: cython.int,
+    startIdx: cython.Py_ssize_t,
+    endIdx: cython.Py_ssize_t,
     inReal: cython.double[::1],
     optInTimePeriod: cython.int,
     outBegIdx: cython.Py_ssize_t[::1],
     outNBElement: cython.Py_ssize_t[::1],
-    outReal: cython.double[::1],
+    outReal: cython.double[::1]
 ) -> cython.int:
     # Insert TA function code here.
-    lookbackTotal = optInTimePeriod - 1
+    lookbackTotal: cython.Py_ssize_t = optInTimePeriod - 1
 
     # Move up the start index if there is not enough initial data.
     if startIdx < lookbackTotal:
@@ -47,7 +47,7 @@ def TA_WMA(
     By induction: 1+2+3+4+'n' = n(n+1)/2
     '>>1' is usually faster than '/2' for unsigned.
     """
-    divider = (optInTimePeriod * (optInTimePeriod + 1)) // 2
+    divider: cython.int = (optInTimePeriod * (optInTimePeriod + 1)) // 2
 
     """
     The algo used here use a very basic property of
@@ -77,20 +77,24 @@ def TA_WMA(
     access and floating point operations are kept to a
     minimum with this algo.
     """
-    outIdx = 0
-    trailingIdx = startIdx - lookbackTotal
+    outIdx: cython.Py_ssize_t = 0
+    trailingIdx: cython.Py_ssize_t = startIdx - lookbackTotal
 
     # Evaluate the initial periodSum/periodSub and trailingValue.
-    periodSum = periodSub = 0.0
-    inIdx = trailingIdx
-    i = 1
+    periodSum: cython.double = 0.0
+    periodSub: cython.double = 0.0
+    inIdx: cython.Py_ssize_t = trailingIdx
+    i: cython.Py_ssize_t = 1
+
+    tempReal: cython.double = 0.0
+
     while inIdx < startIdx:
         tempReal = inReal[inIdx]
         inIdx += 1
         periodSub += tempReal
         periodSum += tempReal * i
         i += 1
-    trailingValue = 0.0
+    trailingValue: cython.double = 0.0
 
     # Tight loop for the requested range.
     while inIdx <= endIdx:

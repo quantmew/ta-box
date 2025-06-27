@@ -1,3 +1,4 @@
+from .ta_utility cimport TA_INTEGER_DEFAULT
 cpdef Py_ssize_t TA_TYPPRICE_Lookback()
 cpdef int TA_INT_TYPPRICE(
     Py_ssize_t startIdx,
