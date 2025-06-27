@@ -1,6 +1,6 @@
-cpdef bint TA_REAL_EQ(double x, double v, double ep)
-cpdef bint TA_IS_ZERO(double v)
-cpdef bint TA_IS_ZERO_OR_NEG(double v)
+cpdef inline bint TA_REAL_EQ(double x, double v, double ep) nogil
+cpdef inline bint TA_IS_ZERO(double v) nogil
+cpdef inline bint TA_IS_ZERO_OR_NEG(double v) nogil
 
 # Math Constants
 cdef double PI

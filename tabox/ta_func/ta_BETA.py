@@ -2,8 +2,12 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
-from .ta_utility import TA_IS_ZERO, TA_INTEGER_DEFAULT
+from .ta_utility import TA_INTEGER_DEFAULT
 from ..settings import TA_FUNC_NO_RANGE_CHECK
+
+
+def TA_IS_ZERO(v: cython.double) -> cython.bint:
+    return ((-0.00000001) < v) and (v < 0.00000001)
 
 def TA_BETA_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     if not TA_FUNC_NO_RANGE_CHECK:

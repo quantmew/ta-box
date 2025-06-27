@@ -1,37 +1,20 @@
 import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
-from ..retcode import TA_RetCode    
-from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO, TA_INTEGER_DEFAULT
+from ..retcode import TA_RetCode
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_INTEGER_DEFAULT
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 
 if not cython.compiled:
     from math import fabs
 
 
+def TA_IS_ZERO(v: cython.double) -> cython.bint:
+    return ((-0.00000001) < v) and (v < 0.00000001)
+
+
 def round_pos(x: cython.double) -> cython.double:
     return x
-
-def TA_ADX_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
-    """
-    TA_ADX_Lookback - Average Directional Movement Index Lookback
-
-    Input:
-        optInTimePeriod: (int) Number of period (From 2 to 100000)
-
-    Output:
-        (int) Number of lookback periods
-    """
-    if not TA_FUNC_NO_RANGE_CHECK:
-        if optInTimePeriod == TA_INTEGER_DEFAULT:
-            optInTimePeriod = 14
-        elif optInTimePeriod < 2 or optInTimePeriod > 100000:
-            return -1
-    return (
-        (2 * optInTimePeriod)
-        + TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_ADX)
-        - 1
-    )
 
 
 def TRUE_RANGE(
@@ -58,6 +41,31 @@ def TRUE_RANGE(
     return tr
 
 
+def TA_ADX_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
+    """
+    TA_ADX_Lookback - Average Directional Movement Index Lookback
+
+    Input:
+        optInTimePeriod: (int) Number of period (From 2 to 100000)
+
+    Output:
+        (int) Number of lookback periods
+    """
+    if not TA_FUNC_NO_RANGE_CHECK:
+        if optInTimePeriod == TA_INTEGER_DEFAULT:
+            optInTimePeriod = 14
+        elif optInTimePeriod < 2 or optInTimePeriod > 100000:
+            return -1
+    return (
+        (2 * optInTimePeriod)
+        + TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_ADX)
+        - 1
+    )
+
+
+@cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.cdivision(True)
 def TA_ADX(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -95,7 +103,7 @@ def TA_ADX(
         if outReal is None:
             return TA_RetCode.TA_BAD_PARAM
 
-    lookbackTotal = (
+    lookbackTotal: cython.Py_ssize_t = (
         (2 * optInTimePeriod)
         + TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_ADX)
         - 1
@@ -112,20 +120,30 @@ def TA_ADX(
         return TA_RetCode.TA_SUCCESS
 
     # Indicate where the next output should be put in the outReal
-    outIdx = 0
+    outIdx: cython.Py_ssize_t = 0
 
     # Process the initial DM and TR
-    today = startIdx
+    today: cython.Py_ssize_t = startIdx
     outBegIdx[0] = today
 
-    prevMinusDM = 0.0
-    prevPlusDM = 0.0
-    prevTR = 0.0
-    today = startIdx - lookbackTotal
-    prevHigh = inHigh[today]
-    prevLow = inLow[today]
-    prevClose = inClose[today]
-    i = optInTimePeriod - 1
+    prevMinusDM: cython.double = 0.0
+    prevPlusDM: cython.double = 0.0
+    prevTR: cython.double = 0.0
+    today: cython.Py_ssize_t = startIdx - lookbackTotal
+    prevHigh: cython.double = inHigh[today]
+    prevLow: cython.double = inLow[today]
+    prevClose: cython.double = inClose[today]
+
+    tempReal: cython.double = 0.0
+    diffP: cython.double = 0.0
+    diffM: cython.double = 0.0
+    tr: cython.double = 0.0
+    minusDI: cython.double = 0.0
+    plusDI: cython.double = 0.0
+    prevADX: cython.double = 0.0
+
+    # Calculate the initial DX
+    i: cython.Py_ssize_t = optInTimePeriod - 1
     while i > 0:
         i -= 1
         today += 1

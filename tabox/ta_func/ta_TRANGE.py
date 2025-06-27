@@ -16,6 +16,9 @@ def TA_TRANGE_Lookback() -> cython.Py_ssize_t:
     return 1
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.cdivision(True)
 def TA_TRANGE(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -60,8 +63,14 @@ def TA_TRANGE(
         outNBElement[0] = 0
         return TA_RetCode.TA_SUCCESS
 
-    outIdx = 0
-    today = startIdx
+    outIdx: cython.Py_ssize_t = 0
+    today: cython.Py_ssize_t = startIdx
+
+    tempLT: cython.double = 0.0
+    tempHT: cython.double = 0.0
+    tempCY: cython.double = 0.0
+    greatest: cython.double = 0.0
+
     while today <= endIdx:
         # Calculate three possible volatility values
         tempLT = inLow[today]
@@ -144,5 +153,5 @@ def TRANGE(
     )
 
     if retCode != TA_RetCode.TA_SUCCESS:
-        return outReal
+        raise ValueError(f"TA_TRANGE returned error code: {retCode}")
     return outReal

@@ -6,17 +6,16 @@ import numpy as np
 import talib
 from tabox import MINMAXINDEX
 from utils import *
-from tqdm import tqdm
 
 
 def bench_this_minmaxindex():
-    for i in tqdm(range(100, 10000, 100)):
+    for i in range(100, 10000, 100):
         data = np.random.random(i)
         MINMAXINDEX(data, timeperiod=30)
 
 
 def bench_that_minmaxindex():
-    for i in tqdm(range(100, 10000, 100)):
+    for i in range(100, 10000, 100):
         data = np.random.random(i)
         talib.MINMAXINDEX(data, timeperiod=30)
 

@@ -62,6 +62,7 @@ def TA_STOCH_Lookback(
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_STOCH(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -133,10 +134,10 @@ def TA_STOCH(
             return TA_RetCode.TA_BAD_PARAM
 
     # 计算所需的回溯期
-    lookbackK = optInFastK_Period - 1
-    lookbackKSlow = TA_MA_Lookback(optInSlowK_Period, optInSlowK_MAType)
-    lookbackDSlow = TA_MA_Lookback(optInSlowD_Period, optInSlowD_MAType)
-    lookbackTotal = lookbackK + lookbackKSlow + lookbackDSlow
+    lookbackK: cython.Py_ssize_t = optInFastK_Period - 1
+    lookbackKSlow: cython.Py_ssize_t = TA_MA_Lookback(optInSlowK_Period, optInSlowK_MAType)
+    lookbackDSlow: cython.Py_ssize_t = TA_MA_Lookback(optInSlowD_Period, optInSlowD_MAType)
+    lookbackTotal: cython.Py_ssize_t = lookbackK + lookbackKSlow + lookbackDSlow
 
     # 调整起始索引以确保有足够的数据
     if startIdx < lookbackTotal:
@@ -148,14 +149,20 @@ def TA_STOCH(
         return TA_RetCode.TA_SUCCESS
 
     # 计算Fast-K所需的临时缓冲区大小
-    tempBuffer_size = endIdx - (startIdx - lookbackTotal) + 1
-    tempBuffer = np.full(tempBuffer_size, np.nan, dtype=np.double)
+    tempBuffer_size: cython.Py_ssize_t = endIdx - (startIdx - lookbackTotal) + 1
+    tempBuffer: cython.double[::1] = np.full(tempBuffer_size, np.nan, dtype=np.double)
 
-    outIdx = 0
-    trailingIdx = startIdx - lookbackTotal
-    today = trailingIdx + lookbackK
-    lowestIdx = highestIdx = -1
-    diff = highest = lowest = 0.0
+    outIdx: cython.Py_ssize_t = 0
+    trailingIdx: cython.Py_ssize_t = startIdx - lookbackTotal
+    today: cython.Py_ssize_t = trailingIdx + lookbackK
+    lowestIdx: cython.Py_ssize_t = -1
+    highestIdx: cython.Py_ssize_t = -1
+    diff: cython.double = 0.0
+    highest: cython.double = 0.0
+    lowest: cython.double = 0.0
+
+    tmp: cython.double = 0.0
+    i: cython.Py_ssize_t = 0
 
     # 计算Fast-K值
     while today <= endIdx:
@@ -224,8 +231,8 @@ def TA_STOCH(
         return retCode
 
     # 计算Slow-D (对Slow-K进行移动平均)
-    outBegIdx2 = np.zeros(1, dtype=np.intp)
-    outNBElement2 = np.zeros(1, dtype=np.intp)
+    outBegIdx2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
     retCode = TA_MA(
         0,
         outNBElement1[0] - 1,
@@ -238,8 +245,8 @@ def TA_STOCH(
     )
 
     # 将Slow-K复制到输出数组
-    slowK_start = lookbackDSlow
-    slowK_count = outNBElement2[0]
+    slowK_start: cython.Py_ssize_t = lookbackDSlow
+    slowK_count: cython.Py_ssize_t = outNBElement2[0]
     for i in range(slowK_count):
         outSlowK[i] = tempBuffer[slowK_start + i]
 

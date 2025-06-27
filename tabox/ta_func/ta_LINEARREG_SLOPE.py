@@ -28,6 +28,7 @@ def TA_LINEARREG_SLOPE_Lookback(
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_LINEARREG_SLOPE(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -80,7 +81,7 @@ def TA_LINEARREG_SLOPE(
     """
 
     # 调整startIdx以考虑回溯期
-    lookbackTotal = TA_LINEARREG_SLOPE_Lookback(optInTimePeriod)
+    lookbackTotal: cython.Py_ssize_t = TA_LINEARREG_SLOPE_Lookback(optInTimePeriod)
     if startIdx < lookbackTotal:
         startIdx = lookbackTotal
 
@@ -90,13 +91,18 @@ def TA_LINEARREG_SLOPE(
         outNBElement[0] = 0
         return TA_RetCode.TA_SUCCESS
 
-    outIdx = 0  # 输出索引
-    today = startIdx
+    outIdx: cython.Py_ssize_t = 0  # 输出索引
+    today: cython.Py_ssize_t = startIdx
 
     # 预计算固定值
-    SumX = optInTimePeriod * (optInTimePeriod - 1) * 0.5
-    SumXSqr = optInTimePeriod * (optInTimePeriod - 1) * (2 * optInTimePeriod - 1) / 6
-    Divisor = SumX * SumX - optInTimePeriod * SumXSqr
+    SumX: cython.double = optInTimePeriod * (optInTimePeriod - 1) * 0.5
+    SumXSqr: cython.double = optInTimePeriod * (optInTimePeriod - 1) * (2 * optInTimePeriod - 1) / 6
+    Divisor: cython.double = SumX * SumX - optInTimePeriod * SumXSqr
+
+    SumXY: cython.double = 0.0
+    SumY: cython.double = 0.0
+    tempValue1: cython.double = 0.0
+    i: cython.Py_ssize_t = 0
 
     # 处理除零情况
     if Divisor == 0:

@@ -1,7 +1,10 @@
 cdef extern from "math.h":
     cpdef double fabs(double x)
 
-cpdef double TRUE_RANGE(
+cdef inline bint TA_IS_ZERO(double v) noexcept nogil
+cdef inline double round_pos(double x) noexcept nogil
+
+cdef inline double TRUE_RANGE(
     double th,
     double tl,
     double yc

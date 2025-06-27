@@ -13,6 +13,7 @@ def TA_ATR_Lookback(optInTimePeriod: cython.Py_ssize_t) -> cython.Py_ssize_t:
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_ATR(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -40,14 +41,14 @@ def TA_ATR(
         return TA_TRANGE(startIdx, endIdx, inHigh, inLow, inClose, outBegIdx, outNBElement, outReal)
 
     # 计算临时缓冲区大小，与C语言一致
-    buffer_size = lookbackTotal + (endIdx - startIdx) + 1
-    tempBuffer = np.zeros(buffer_size, dtype=float)
-    prevATRTemp = np.zeros(1, dtype=float)
-    outBegIdx1 = np.zeros(1, dtype=np.intp)
-    outNBElement1 = np.zeros(1, dtype=np.intp)
+    buffer_size: cython.Py_ssize_t = lookbackTotal + (endIdx - startIdx) + 1
+    tempBuffer: cython.double[::1] = np.zeros(buffer_size, dtype=float)
+    prevATRTemp: cython.double[::1] = np.zeros(1, dtype=float)
+    outBegIdx1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     # 计算真实范围(TRANGE)
-    tr_start = startIdx - lookbackTotal + 1
+    tr_start: cython.Py_ssize_t = startIdx - lookbackTotal + 1
     retCode = TA_TRANGE(tr_start, endIdx, inHigh, inLow, inClose, outBegIdx1, outNBElement1, tempBuffer)
     if retCode != TA_RetCode.TA_SUCCESS:
         return retCode
@@ -65,14 +66,14 @@ def TA_ATR(
     if retCode != TA_RetCode.TA_SUCCESS:
         return retCode
 
-    prevATR = prevATRTemp[0]
+    prevATR: cython.double = prevATRTemp[0]
 
     # 获取不稳定周期，修正之前的硬编码问题
-    unstablePeriod = TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_ATR)
+    unstablePeriod: cython.int = TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_ATR)
     
     # 处理不稳定周期
-    today = optInTimePeriod
-    outIdx = 0
+    today: cython.Py_ssize_t = optInTimePeriod
+    outIdx: cython.Py_ssize_t = 0
     while unstablePeriod != 0:
         prevATR *= optInTimePeriod - 1
         prevATR += tempBuffer[today]
@@ -85,7 +86,7 @@ def TA_ATR(
     outIdx += 1
 
     # 计算剩余的ATR值
-    nbATR = (endIdx - startIdx) + 1
+    nbATR: cython.Py_ssize_t = (endIdx - startIdx) + 1
     while nbATR - 1 != 0:
         nbATR -= 1
         prevATR *= optInTimePeriod - 1

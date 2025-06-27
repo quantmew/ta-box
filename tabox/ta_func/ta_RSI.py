@@ -6,12 +6,15 @@ from tabox.ta_func.ta_utility import (
     TA_Compatibility,
     TA_GLOBALS_COMPATIBILITY,
     TA_GLOBALS_UNSTABLE_PERIOD,
-    TA_IS_ZERO,
     TA_INTEGER_DEFAULT,
     TA_FuncUnstId,
 )
 from .ta_utils import check_array, check_begidx1, check_timeperiod, make_double_array
 from ..retcode import TA_RetCode
+
+
+def TA_IS_ZERO(v: cython.double) -> cython.bint:
+    return ((-0.00000001) < v) and (v < 0.00000001)
 
 
 def TA_RSI_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
@@ -242,7 +245,7 @@ def TA_RSI(
         """
         Here is the optimization of 'if not TA_IS_ZERO(tempValue1):'
         """
-        if not(((-0.00000001) < tempValue1) and (tempValue1 < 0.00000001)):
+        if not (((-0.00000001) < tempValue1) and (tempValue1 < 0.00000001)):
             outReal[outIdx] = 100.0 * (prevGain / tempValue1)
             outIdx += 1
         else:

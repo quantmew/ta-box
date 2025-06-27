@@ -4,10 +4,9 @@ from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
 from .ta_utility import TA_INTEGER_DEFAULT
 from ..settings import TA_FUNC_NO_RANGE_CHECK
-import math
 
-PI = math.pi
-
+if not cython.compiled:
+    from math import atan
 
 def TA_LINEARREG_ANGLE_Lookback(
     optInTimePeriod: cython.int,
@@ -51,6 +50,7 @@ def TA_LINEARREG_ANGLE(
     optInTimePeriod:(From 2 to 100000)
        Number of period
     """
+    PI: cython.double = 3.141592653589793
     # 参数检查
     if not TA_FUNC_NO_RANGE_CHECK:
         if startIdx < 0:
@@ -91,6 +91,7 @@ def TA_LINEARREG_ANGLE(
     while today <= endIdx:
         SumXY: cython.double = 0.0
         SumY: cython.double = 0.0
+        i: cython.Py_ssize_t = optInTimePeriod - 1
         for i in range(optInTimePeriod - 1, -1, -1):
             tempValue1: cython.double = inReal[today - i]
             SumY += tempValue1
@@ -99,7 +100,7 @@ def TA_LINEARREG_ANGLE(
         # 计算斜率 m
         m: cython.double = (optInTimePeriod * SumXY - SumX * SumY) / Divisor
         # 计算角度并转换为度数
-        outReal[outIdx] = math.atan(m) * (180.0 / PI)
+        outReal[outIdx] = atan(m) * (180.0 / PI)
         outIdx += 1
         today += 1
 

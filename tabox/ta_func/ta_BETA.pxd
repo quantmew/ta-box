@@ -1,3 +1,5 @@
+cdef inline bint TA_IS_ZERO(double v) nogil
+
 cpdef Py_ssize_t TA_BETA_Lookback(int optInTimePeriod)
 cpdef int TA_BETA(
     Py_ssize_t startIdx,

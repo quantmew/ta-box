@@ -13,10 +13,7 @@ from .ta_func.ta_LN import TA_LN, LN
 from .ta_func.ta_LOG10 import TA_LOG10, LOG10
 from .ta_func.ta_SINH import TA_SINH, SINH
 from .ta_func.ta_TANH import TA_TANH, TANH
-from .ta_func.ta_MAXINDEX import TA_MAXINDEX, MAXINDEX
-from .ta_func.ta_MININDEX import TA_MININDEX, MININDEX
-from .ta_func.ta_MINMAX import TA_MINMAX, MINMAX
-from .ta_func.ta_MINMAXINDEX import TA_MINMAXINDEX, MINMAXINDEX
+
 
 # Math Operators
 from .ta_func.ta_ADD import TA_ADD, ADD
@@ -25,6 +22,11 @@ from .ta_func.ta_MULT import TA_MULT, MULT
 from .ta_func.ta_DIV import TA_DIV, DIV
 from .ta_func.ta_MAX import TA_MAX, MAX
 from .ta_func.ta_MIN import TA_MIN, MIN
+from .ta_func.ta_MAXINDEX import TA_MAXINDEX, MAXINDEX
+from .ta_func.ta_MININDEX import TA_MININDEX, MININDEX
+from .ta_func.ta_MINMAX import TA_MINMAX, MINMAX
+from .ta_func.ta_MINMAXINDEX import TA_MINMAXINDEX, MINMAXINDEX
+from .ta_func.ta_SUM import TA_SUM, SUM
 
 # Momentum Indicators
 from .ta_func.ta_ADX import TA_ADX, ADX
