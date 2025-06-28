@@ -2,13 +2,16 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
-from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 from .ta_TRANGE import TA_TRANGE, TRANGE
 from .ta_SMA import TA_SMA, SMA
 
 if not cython.compiled:
     from .ta_utility import TA_INTEGER_DEFAULT
+
+def TA_IS_ZERO(v: cython.double):
+    return ((-0.00000001) < v) and (v < 0.00000001)
 
 def TA_NATR_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     """
@@ -29,6 +32,7 @@ def TA_NATR_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_NATR(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -69,7 +73,7 @@ def TA_NATR(
     outNBElement[0] = 0
 
     # Adjust startIdx to account for the lookback period
-    lookbackTotal = TA_NATR_Lookback(optInTimePeriod)
+    lookbackTotal: cython.Py_ssize_t = TA_NATR_Lookback(optInTimePeriod)
     if startIdx < lookbackTotal:
         startIdx = lookbackTotal
 
@@ -81,12 +85,12 @@ def TA_NATR(
         return TA_TRANGE(startIdx, endIdx, inHigh, inLow, inClose, outBegIdx, outNBElement, outReal)
 
     # Allocate an intermediate buffer for TRANGE
-    length = lookbackTotal + (endIdx - startIdx) + 1
-    tempBuffer = np.full(length, np.nan, dtype=np.double)
+    length: cython.Py_ssize_t = lookbackTotal + (endIdx - startIdx) + 1
+    tempBuffer: cython.double[::1] = np.full(length, np.nan, dtype=np.double)
 
     # Do TRANGE in the intermediate buffer
-    outBegIdx1 = np.zeros(1, dtype=np.intp)
-    outNbElement1 = np.zeros(1, dtype=np.intp)
+    outBegIdx1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNbElement1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
     retCode = TA_TRANGE(
         startIdx - lookbackTotal + 1, endIdx, inHigh, inLow, inClose,
         outBegIdx1, outNbElement1, tempBuffer
@@ -96,7 +100,7 @@ def TA_NATR(
         return retCode
 
     # First value of the ATR is a simple Average of the TRANGE output
-    prevATRTemp = np.zeros(1, dtype=np.double)
+    prevATRTemp: cython.double[::1] = np.zeros(1, dtype=np.double)
     retCode = TA_SMA(
         optInTimePeriod - 1, optInTimePeriod - 1, tempBuffer, optInTimePeriod,
         outBegIdx1, outNbElement1, prevATRTemp
@@ -105,9 +109,9 @@ def TA_NATR(
     if retCode != TA_RetCode.TA_SUCCESS:
         return retCode
 
-    prevATR = prevATRTemp[0]
-    today = optInTimePeriod
-    outIdx = TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_NATR)
+    prevATR: cython.double = prevATRTemp[0]
+    today: cython.Py_ssize_t = optInTimePeriod
+    outIdx: cython.Py_ssize_t = TA_GLOBALS_UNSTABLE_PERIOD(TA_FuncUnstId.TA_FUNC_UNST_NATR)
 
     # Skip the unstable period
     while outIdx != 0:
@@ -124,7 +128,7 @@ def TA_NATR(
         outReal[0] = (prevATR / tempValue) * 100.0
 
     outIdx = 1
-    nbATR = (endIdx - startIdx) + 1
+    nbATR: cython.Py_ssize_t = (endIdx - startIdx) + 1
 
     # Calculate the remaining range
     while nbATR > 1:

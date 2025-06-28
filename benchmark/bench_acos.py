@@ -1,5 +1,4 @@
 from utils import bench
-import tqdm
 import numpy as np
 
 import sys

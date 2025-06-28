@@ -1,17 +1,28 @@
 import cython
+
 import numpy as np
+from typing import List
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
 from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 
+
+if cython.compiled:
+    from cython.cimports.libc.stdlib import malloc, free
+
 if not cython.compiled:
     from .ta_utility import TA_INTEGER_DEFAULT
 
-class MoneyFlow:
-    def __init__(self):
-        self.positive: cython.double = 0.0
-        self.negative: cython.double = 0.0
+if not cython.compiled:
+
+    class MoneyFlow:
+        def __init__(self, positive: cython.double, negative: cython.double):
+            self.positive: cython.double = positive
+            self.negative: cython.double = negative
+
+else:
+    MoneyFlow = cython.struct(positive=cython.double, negative=cython.double)
 
 
 def TA_MFI_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
@@ -34,6 +45,7 @@ def TA_MFI_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_MFI(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -82,7 +94,6 @@ def TA_MFI(
     today: cython.Py_ssize_t
     mflow_idx: cython.Py_ssize_t = 0
     mflow_size: cython.Py_ssize_t = optInTimePeriod
-    mflow: list[MoneyFlow] = [MoneyFlow() for _ in range(mflow_size)]
 
     # Adjust startIdx to account for the lookback period
     lookbackTotal = optInTimePeriod + TA_GLOBALS_UNSTABLE_PERIOD(
@@ -98,50 +109,86 @@ def TA_MFI(
         outNBElement[0] = 0
         return TA_RetCode.TA_SUCCESS
 
-    outIdx = 0  # Index into the output
-
-    # Accumulate the positive and negative money flow among the initial period
-    today = startIdx - lookbackTotal
-    prevValue = (inHigh[today] + inLow[today] + inClose[today]) / 3.0
-
-    posSumMF = 0.0
-    negSumMF = 0.0
-    today += 1
-    for i in range(optInTimePeriod, 0, -1):
-        tempValue1 = (inHigh[today] + inLow[today] + inClose[today]) / 3.0
-        tempValue2 = tempValue1 - prevValue
-        prevValue = tempValue1
-        tempValue1 *= inVolume[today]
-        today += 1
-
-        if tempValue2 < 0:
-            mflow[mflow_idx].negative = tempValue1
-            negSumMF += tempValue1
-            mflow[mflow_idx].positive = 0.0
-        elif tempValue2 > 0:
-            mflow[mflow_idx].positive = tempValue1
-            posSumMF += tempValue1
-            mflow[mflow_idx].negative = 0.0
-        else:
-            mflow[mflow_idx].positive = 0.0
-            mflow[mflow_idx].negative = 0.0
-
-        mflow_idx = (mflow_idx + 1) % mflow_size
-
-    # The following two equations are equivalent:
-    #    MFI = 100 - (100 / 1 + (posSumMF/negSumMF))
-    #    MFI = 100 * (posSumMF/(posSumMF+negSumMF))
-    # The second equation is used here for speed optimization
-    if today > startIdx:
-        tempValue1 = posSumMF + negSumMF
-        if tempValue1 < 1.0:
-            outReal[outIdx] = 0.0
-        else:
-            outReal[outIdx] = 100.0 * (posSumMF / tempValue1)
-        outIdx += 1
+    if not cython.compiled:
+        mflow: List[MoneyFlow] = [MoneyFlow(0.0, 0.0) for _ in range(mflow_size)]
     else:
-        # Skip the unstable period. Do the processing but do not write it in the output
-        while today < startIdx:
+        mflow: cython.pointer[MoneyFlow] = cython.cast(
+            cython.pointer[MoneyFlow], malloc(mflow_size * cython.sizeof(MoneyFlow))
+        )
+        for i in range(mflow_size):
+            mflow[i].positive = 0.0
+            mflow[i].negative = 0.0
+
+    try:
+        outIdx = 0  # Index into the output
+
+        # Accumulate the positive and negative money flow among the initial period
+        today = startIdx - lookbackTotal
+        prevValue = (inHigh[today] + inLow[today] + inClose[today]) / 3.0
+
+        posSumMF = 0.0
+        negSumMF = 0.0
+        today += 1
+        for i in range(optInTimePeriod, 0, -1):
+            tempValue1 = (inHigh[today] + inLow[today] + inClose[today]) / 3.0
+            tempValue2 = tempValue1 - prevValue
+            prevValue = tempValue1
+            tempValue1 *= inVolume[today]
+            today += 1
+
+            if tempValue2 < 0:
+                mflow[mflow_idx].negative = tempValue1
+                negSumMF += tempValue1
+                mflow[mflow_idx].positive = 0.0
+            elif tempValue2 > 0:
+                mflow[mflow_idx].positive = tempValue1
+                posSumMF += tempValue1
+                mflow[mflow_idx].negative = 0.0
+            else:
+                mflow[mflow_idx].positive = 0.0
+                mflow[mflow_idx].negative = 0.0
+
+            mflow_idx = (mflow_idx + 1) % mflow_size
+
+        # The following two equations are equivalent:
+        #    MFI = 100 - (100 / 1 + (posSumMF/negSumMF))
+        #    MFI = 100 * (posSumMF/(posSumMF+negSumMF))
+        # The second equation is used here for speed optimization
+        if today > startIdx:
+            tempValue1 = posSumMF + negSumMF
+            if tempValue1 < 1.0:
+                outReal[outIdx] = 0.0
+            else:
+                outReal[outIdx] = 100.0 * (posSumMF / tempValue1)
+            outIdx += 1
+        else:
+            # Skip the unstable period. Do the processing but do not write it in the output
+            while today < startIdx:
+                posSumMF -= mflow[mflow_idx].positive
+                negSumMF -= mflow[mflow_idx].negative
+
+                tempValue1 = (inHigh[today] + inLow[today] + inClose[today]) / 3.0
+                tempValue2 = tempValue1 - prevValue
+                prevValue = tempValue1
+                tempValue1 *= inVolume[today]
+                today += 1
+
+                if tempValue2 < 0:
+                    mflow[mflow_idx].negative = tempValue1
+                    negSumMF += tempValue1
+                    mflow[mflow_idx].positive = 0.0
+                elif tempValue2 > 0:
+                    mflow[mflow_idx].positive = tempValue1
+                    posSumMF += tempValue1
+                    mflow[mflow_idx].negative = 0.0
+                else:
+                    mflow[mflow_idx].positive = 0.0
+                    mflow[mflow_idx].negative = 0.0
+
+                mflow_idx = (mflow_idx + 1) % mflow_size
+
+        # Unstable period skipped... now continue processing if needed
+        while today <= endIdx:
             posSumMF -= mflow[mflow_idx].positive
             negSumMF -= mflow[mflow_idx].negative
 
@@ -162,39 +209,17 @@ def TA_MFI(
             else:
                 mflow[mflow_idx].positive = 0.0
                 mflow[mflow_idx].negative = 0.0
-            
+
+            tempValue1 = posSumMF + negSumMF
+            if tempValue1 < 1.0:
+                outReal[outIdx] = 0.0
+            else:
+                outReal[outIdx] = 100.0 * (posSumMF / tempValue1)
+            outIdx += 1
             mflow_idx = (mflow_idx + 1) % mflow_size
-
-    # Unstable period skipped... now continue processing if needed
-    while today <= endIdx:
-        posSumMF -= mflow[mflow_idx].positive
-        negSumMF -= mflow[mflow_idx].negative
-
-        tempValue1 = (inHigh[today] + inLow[today] + inClose[today]) / 3.0
-        tempValue2 = tempValue1 - prevValue
-        prevValue = tempValue1
-        tempValue1 *= inVolume[today]
-        today += 1
-
-        if tempValue2 < 0:
-            mflow[mflow_idx].negative = tempValue1
-            negSumMF += tempValue1
-            mflow[mflow_idx].positive = 0.0
-        elif tempValue2 > 0:
-            mflow[mflow_idx].positive = tempValue1
-            posSumMF += tempValue1
-            mflow[mflow_idx].negative = 0.0
-        else:
-            mflow[mflow_idx].positive = 0.0
-            mflow[mflow_idx].negative = 0.0
-
-        tempValue1 = posSumMF + negSumMF
-        if tempValue1 < 1.0:
-            outReal[outIdx] = 0.0
-        else:
-            outReal[outIdx] = 100.0 * (posSumMF / tempValue1)
-        outIdx += 1
-        mflow_idx = (mflow_idx + 1) % mflow_size
+    finally:
+        if cython.compiled:
+            free(mflow)
 
     outBegIdx[0] = startIdx
     outNBElement[0] = outIdx

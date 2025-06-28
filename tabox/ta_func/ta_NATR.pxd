@@ -1,4 +1,5 @@
 from .ta_utility cimport TA_INTEGER_DEFAULT
+cdef bint TA_IS_ZERO(double v) noexcept nogil
 cpdef Py_ssize_t TA_NATR_Lookback(int optInTimePeriod)
 cpdef int TA_NATR(
     Py_ssize_t startIdx,

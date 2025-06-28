@@ -2,6 +2,7 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
+
 if not cython.compiled:
     from .ta_utility import TA_INTEGER_DEFAULT
 from ..settings import TA_FUNC_NO_RANGE_CHECK
@@ -42,6 +43,9 @@ def TA_MAVP_Lookback(
     return TA_MA_Lookback(optInMaxPeriod, optInMAType)
 
 
+@cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.cdivision(True)
 def TA_MAVP(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -93,9 +97,9 @@ def TA_MAVP(
         if inReal is None or inPeriods is None or outReal is None:
             return TA_RetCode.TA_BAD_PARAM
 
-    length = endIdx - startIdx + 1
-    tempBuffer = np.full(length, np.nan, dtype=np.double)
-    tempPeriodBuffer = np.zeros(length, dtype=np.int32)
+    length: cython.Py_ssize_t = endIdx - startIdx + 1
+    tempBuffer: cython.double[::1] = np.full(length, np.nan, dtype=np.double)
+    tempPeriodBuffer: cython.int[::1] = np.zeros(length, dtype=np.int32)
 
     retCode: cython.int
     i: cython.Py_ssize_t
@@ -108,7 +112,9 @@ def TA_MAVP(
     outNbElement1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     # 确定计算至少一个输出所需的最小价格柱数
-    lookbackTotal = TA_MAVP_Lookback(optInMinPeriod, optInMaxPeriod, optInMAType)
+    lookbackTotal: cython.Py_ssize_t = TA_MAVP_Lookback(
+        optInMinPeriod, optInMaxPeriod, optInMAType
+    )
 
     # 如果起始索引小于回溯期，则上移起始索引
     if startIdx < lookbackTotal:

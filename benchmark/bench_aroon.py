@@ -1,5 +1,4 @@
 from utils import bench
-import tqdm
 import numpy as np
 
 import sys
@@ -30,4 +29,4 @@ def bench_that_aroon():
 
 if __name__ == '__main__':
     bench_this_aroon()
-    bench_that_aroon() 
+    bench_that_aroon()

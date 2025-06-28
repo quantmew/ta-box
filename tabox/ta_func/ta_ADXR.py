@@ -72,10 +72,10 @@ def TA_ADXR(
         return TA_RetCode.TA_SUCCESS
 
     # Calculate ADX values first
-    adx_length = endIdx - startIdx + optInTimePeriod
-    adx = np.zeros(adx_length)
-    adx_begIdx = np.zeros(1, dtype=np.intp)
-    adx_nbElement = np.zeros(1, dtype=np.intp)
+    adx_length: cython.Py_ssize_t = endIdx - startIdx + optInTimePeriod
+    adx: cython.double[::1] = np.zeros(adx_length)
+    adx_begIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    adx_nbElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     retCode = TA_ADX(
         startIdx - (optInTimePeriod - 1),
@@ -93,10 +93,10 @@ def TA_ADXR(
         return retCode
 
     # Calculate ADXR values from ADX values
-    i = optInTimePeriod - 1
-    j = 0
-    outIdx = 0
-    nbElement = endIdx - startIdx + 1  # Fix: should be +1 instead of +2 as in C code
+    i: cython.Py_ssize_t = optInTimePeriod - 1
+    j: cython.Py_ssize_t = 0
+    outIdx: cython.Py_ssize_t = 0
+    nbElement: cython.Py_ssize_t = endIdx - startIdx + 1  # Fix: should be +1 instead of +2 as in C code
     
     while nbElement > 0:
         outReal[outIdx] = (adx[i] + adx[j]) / 2.0
@@ -132,15 +132,15 @@ def ADXR(high: np.ndarray, low: np.ndarray, close: np.ndarray, timeperiod: int =
     # Validate timeperiod
     check_timeperiod(timeperiod)
 
-    length = high.shape[0]
-    startIdx = check_begidx1(high)
-    endIdx = length - startIdx - 1
-    lookback = startIdx + TA_ADXR_Lookback(timeperiod)
+    length: cython.Py_ssize_t = high.shape[0]
+    startIdx: cython.Py_ssize_t = check_begidx1(high)
+    endIdx: cython.Py_ssize_t = length - startIdx - 1
+    lookback: cython.Py_ssize_t = startIdx + TA_ADXR_Lookback(timeperiod)
 
     # Initialize output array with NaN values
-    outReal = np.full_like(high, np.nan)
-    outBegIdx = np.zeros(1, dtype=np.intp)
-    outNBElement = np.zeros(1, dtype=np.intp)
+    outReal: cython.double[::1] = np.full_like(high, np.nan)
+    outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     # Calculate ADXR
     retCode = TA_ADXR(

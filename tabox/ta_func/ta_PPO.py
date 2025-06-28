@@ -2,7 +2,7 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
-from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 from .ta_MA import TA_MA, TA_MA_Lookback
 
@@ -10,6 +10,9 @@ from .ta_MA import TA_MA, TA_MA_Lookback
 if not cython.compiled:
     from .ta_utility import TA_INTEGER_DEFAULT
 
+
+def TA_IS_ZERO(v: cython.double):
+    return ((-0.00000001) < v) and (v < 0.00000001)
 
 def TA_PPO_Lookback(
     optInFastPeriod: cython.int, optInSlowPeriod: cython.int, optInMAType: cython.int
@@ -46,6 +49,7 @@ def TA_PPO_Lookback(
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_PPO(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -96,8 +100,8 @@ def TA_PPO(
         if inReal is None or outReal is None:
             return TA_RetCode.TA_BAD_PARAM
 
-    length = endIdx - startIdx + 1
-    tempBuffer = np.full(length, np.nan, dtype=np.double)
+    length: cython.Py_ssize_t = endIdx - startIdx + 1
+    tempBuffer: cython.double[::1] = np.full(length, np.nan, dtype=np.double)
 
     retCode: cython.int
     tempInteger: cython.int
@@ -143,15 +147,16 @@ def TA_PPO(
         if retCode == TA_RetCode.TA_SUCCESS:
             tempInteger = outBegIdx1[0] - outBegIdx2[0]
             # 计算百分比振荡器: ((快速MA - 慢速MA)/慢速MA) * 100
-            for i, j in zip(
-                range(outNbElement1[0]),
-                range(tempInteger, tempInteger + outNbElement1[0]),
-            ):
+            i = 0
+            j = tempInteger
+            while i < outNbElement1[0]:
                 tempReal = outReal[i]
                 if not TA_IS_ZERO(tempReal):
                     outReal[i] = ((tempBuffer[j] - tempReal) / tempReal) * 100.0
                 else:
                     outReal[i] = 0.0
+                i += 1
+                j += 1
 
             outBegIdx[0] = outBegIdx1[0]
             outNBElement[0] = outNbElement1[0]

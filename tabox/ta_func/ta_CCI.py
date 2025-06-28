@@ -27,6 +27,7 @@ def TA_CCI_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_CCI(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -65,9 +66,8 @@ def TA_CCI(
     tempReal2: cython.double
     theAverage: cython.double
     lastValue: cython.double
-    i: cython.Py_ssize_t
-    j: cython.Py_ssize_t
-    outIdx: cython.Py_ssize_t
+    i: cython.Py_ssize_t = 0
+    j: cython.Py_ssize_t = 0
     lookbackTotal: cython.Py_ssize_t
 
     # Identify the minimum number of price bar needed to calculate at least one output.
@@ -84,8 +84,8 @@ def TA_CCI(
         return TA_RetCode.TA_SUCCESS
 
     # Allocate a circular buffer equal to the requested period.
-    circBuffer = np.full(optInTimePeriod, 0.0, dtype=np.double)
-    circBuffer_Idx = 0
+    circBuffer: cython.double[::1] = np.full(optInTimePeriod, 0.0, dtype=np.double)
+    circBuffer_Idx: cython.Py_ssize_t = 0
 
     # Add-up the initial period, except for the last value. Fill up the circular buffer at the same time.
     i = startIdx - lookbackTotal
@@ -96,7 +96,7 @@ def TA_CCI(
             circBuffer_Idx = (circBuffer_Idx + 1) % optInTimePeriod
 
     # Proceed with the calculation for the requested range.
-    outIdx = 0
+    outIdx: cython.Py_ssize_t = 0
     i = startIdx
     while i <= endIdx:
         # Calculate the typical price
