@@ -3,13 +3,16 @@ import numpy as np
 from .ta_utils import check_array, check_begidx1
 from ..retcode import TA_RetCode
 from ..settings import TA_FUNC_NO_RANGE_CHECK
-from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId
 
 if not cython.compiled:
     from .ta_utility import TA_INTEGER_DEFAULT
 
 if not cython.compiled:
     from math import fabs
+
+if not cython.compiled:
+    from .ta_utility import TA_IS_ZERO
 
 
 @cython.cdivision(True)

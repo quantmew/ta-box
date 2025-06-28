@@ -14,14 +14,14 @@ from talib import MULT as that_MULT
 
 @bench
 def bench_this_mult():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         x = np.random.random(i)
         y = np.random.random(i)
         this_ret = this_MULT(x, y)
 
 @bench
 def bench_that_mult():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         x = np.random.random(i)
         y = np.random.random(i)
         that_ret = that_MULT(x, y)

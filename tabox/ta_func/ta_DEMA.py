@@ -38,8 +38,8 @@ def TA_DEMA(
     elif optInTimePeriod < 2 or optInTimePeriod > 100000:
         return TA_RetCode.TA_BAD_PARAM
 
-    lookbackEMA = TA_EMA_Lookback(optInTimePeriod)
-    lookbackTotal = lookbackEMA * 2
+    lookbackEMA: cython.Py_ssize_t = TA_EMA_Lookback(optInTimePeriod)
+    lookbackTotal: cython.Py_ssize_t = lookbackEMA * 2
 
     if startIdx < lookbackTotal:
         startIdx = lookbackTotal
@@ -49,12 +49,12 @@ def TA_DEMA(
         outNBElement[0] = 0
         return TA_RetCode.TA_SUCCESS
 
-    tempInteger = lookbackTotal + (endIdx - startIdx) + 1
-    firstEMA = np.zeros(tempInteger, dtype=np.float64)
+    tempInteger: cython.Py_ssize_t = lookbackTotal + (endIdx - startIdx) + 1
+    firstEMA: cython.double[::1] = np.zeros(tempInteger, dtype=np.float64)
 
-    k = 2.0 / (optInTimePeriod + 1)
-    outBegIdx1 = np.zeros(1, dtype=np.intp)
-    outNbElement1 = np.zeros(1, dtype=np.intp)
+    k: cython.double = 2.0 / (optInTimePeriod + 1)
+    outBegIdx1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNbElement1: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     # Calculate the first EMA
     retCode = TA_INT_EMA(startIdx - lookbackEMA, endIdx, inReal, optInTimePeriod, k,
@@ -63,9 +63,9 @@ def TA_DEMA(
         return retCode
 
     # Calculate the second EMA
-    secondEMA = np.zeros(outNbElement1[0], dtype=np.float64)
-    outBegIdx2 = np.zeros(1, dtype=np.intp)
-    outNbElement2 = np.zeros(1, dtype=np.intp)
+    secondEMA: cython.double[::1] = np.zeros(outNbElement1[0], dtype=np.float64)
+    outBegIdx2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+    outNbElement2: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
     retCode = TA_INT_EMA(0, outNbElement1[0] - 1, firstEMA, optInTimePeriod, k,
                          outBegIdx2, outNbElement2, secondEMA)
@@ -73,7 +73,8 @@ def TA_DEMA(
         return retCode
 
     # Calculate DEMA
-    firstEMAIdx = outBegIdx2[0]
+    firstEMAIdx: cython.Py_ssize_t = outBegIdx2[0]
+    i: cython.Py_ssize_t = 0
     for i in range(outNbElement2[0]):
         outReal[i] = 2.0 * firstEMA[firstEMAIdx + i] - secondEMA[i]
 

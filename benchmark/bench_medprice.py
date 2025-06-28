@@ -14,14 +14,14 @@ from talib import MEDPRICE as that_MEDPRICE
 
 @bench
 def bench_this_medprice():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         this_ret = this_MEDPRICE(high, low)
 
 @bench
 def bench_that_medprice():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         that_ret = that_MEDPRICE(high, low)

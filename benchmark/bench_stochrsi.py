@@ -14,17 +14,17 @@ from talib import STOCHRSI as that_STOCHRSI
 
 @bench
 def bench_this_stochrsi():
-    for i in range(100, 5000):
-        for t in [7, 14, 21]:
-            close = np.random.random(i)
-            this_ret = this_STOCHRSI(close, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        close = np.random.random(i)
+        this_ret = this_STOCHRSI(close, timeperiod=t)
 
 @bench
 def bench_that_stochrsi():
-    for i in range(100, 5000):
-        for t in [7, 14, 21]:
-            close = np.random.random(i)
-            that_ret = that_STOCHRSI(close, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        close = np.random.random(i)
+        that_ret = that_STOCHRSI(close, timeperiod=t)
 
 if __name__ == '__main__':
     bench_this_stochrsi()

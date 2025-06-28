@@ -14,17 +14,17 @@ from talib import CMO as that_CMO
 
 @bench
 def bench_this_cmo():
-    for i in range(100, 5000):
-        for t in [7, 14, 21]:
-            close = np.random.random(i)
-            this_ret = this_CMO(close, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        close = np.random.random(i)
+        this_ret = this_CMO(close, timeperiod=t)
 
 @bench
 def bench_that_cmo():
-    for i in range(100, 5000):
-        for t in [7, 14, 21]:
-            close = np.random.random(i)
-            that_ret = that_CMO(close, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        close = np.random.random(i)
+        that_ret = that_CMO(close, timeperiod=t)
 
 if __name__ == '__main__':
     bench_this_cmo()

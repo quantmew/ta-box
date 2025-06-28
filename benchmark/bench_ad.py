@@ -14,7 +14,7 @@ from talib import AD as that_AD
 
 @bench
 def bench_this_ad():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         close = np.random.random(i)
@@ -23,7 +23,7 @@ def bench_this_ad():
 
 @bench
 def bench_that_ad():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         close = np.random.random(i)

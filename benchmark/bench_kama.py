@@ -14,13 +14,13 @@ from talib import KAMA as that_KAMA
 
 @bench
 def bench_this_kama():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_kama = this_KAMA(close)
 
 @bench
 def bench_that_kama():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_kama = that_KAMA(close)
 

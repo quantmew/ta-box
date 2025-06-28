@@ -1,5 +1,4 @@
 from utils import bench
-import tqdm
 import numpy as np
 
 import sys
@@ -14,7 +13,7 @@ from talib import WCLPRICE as that_WCLPRICE
 
 @bench
 def bench_this_wclprice():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         close = np.random.random(i)
@@ -22,7 +21,7 @@ def bench_this_wclprice():
 
 @bench
 def bench_that_wclprice():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         close = np.random.random(i)

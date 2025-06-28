@@ -14,19 +14,19 @@ from talib import PLUS_DM as that_PLUS_DM
 
 @bench
 def bench_this_plus_dm():
-    for i in range(100, 5000):
-        for t in [7, 14, 21]:
-            high = np.random.random(i)
-            low = np.random.random(i)
-            this_ret = this_PLUS_DM(high, low, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        high = np.random.random(i)
+        low = np.random.random(i)
+        this_ret = this_PLUS_DM(high, low, timeperiod=t)
 
 @bench
 def bench_that_plus_dm():
-    for i in range(100, 5000):
-        for t in [7, 14, 21]:
-            high = np.random.random(i)
-            low = np.random.random(i)
-            that_ret = that_PLUS_DM(high, low, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        high = np.random.random(i)
+        low = np.random.random(i)
+        that_ret = that_PLUS_DM(high, low, timeperiod=t)
 
 if __name__ == '__main__':
     bench_this_plus_dm()

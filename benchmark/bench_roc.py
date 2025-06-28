@@ -14,17 +14,17 @@ from talib import ROC as that_ROC
 
 @bench
 def bench_this_roc():
-    for i in range(100, 5000):
-        for t in [5, 10, 20]:
-            close = np.random.random(i)
-            this_ret = this_ROC(close, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        close = np.random.random(i)
+        this_ret = this_ROC(close, timeperiod=t)
 
 @bench
 def bench_that_roc():
-    for i in range(100, 5000):
-        for t in [5, 10, 20]:
-            close = np.random.random(i)
-            that_ret = that_ROC(close, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        close = np.random.random(i)
+        that_ret = that_ROC(close, timeperiod=t)
 
 if __name__ == '__main__':
     bench_this_roc()

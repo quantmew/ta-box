@@ -1,5 +1,5 @@
 from .ta_utility cimport TA_INTEGER_DEFAULT
-cdef bint TA_IS_ZERO(double v) nogil
+from .ta_utility cimport TA_IS_ZERO
 
 cpdef Py_ssize_t TA_BETA_Lookback(int optInTimePeriod)
 cpdef int TA_BETA(

@@ -14,13 +14,13 @@ from talib import EMA as that_EMA
 
 @bench
 def bench_this_ema():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_ema = this_EMA(close)
 
 @bench
 def bench_that_ema():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_ema = that_EMA(close)
 

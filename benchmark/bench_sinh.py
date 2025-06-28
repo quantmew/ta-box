@@ -14,13 +14,13 @@ from talib import SINH as that_SINH
 
 @bench
 def bench_this_sinh():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_ret = this_SINH(close)
 
 @bench
 def bench_that_sinh():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_ret = that_SINH(close)
 

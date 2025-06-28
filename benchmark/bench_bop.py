@@ -14,7 +14,7 @@ from talib import BOP as that_BOP
 
 @bench
 def bench_this_bop():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         open_ = np.random.random(i)
         high = np.random.random(i)
         low = np.random.random(i)
@@ -23,7 +23,7 @@ def bench_this_bop():
 
 @bench
 def bench_that_bop():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         open_ = np.random.random(i)
         high = np.random.random(i)
         low = np.random.random(i)

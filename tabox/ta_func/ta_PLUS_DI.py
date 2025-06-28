@@ -2,11 +2,14 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
-from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 
 if not cython.compiled:
     from .ta_utility import TA_INTEGER_DEFAULT
+
+if not cython.compiled:
+    from .ta_utility import TA_IS_ZERO
 
 
 def TA_PLUS_DI_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
@@ -35,6 +38,7 @@ def TA_PLUS_DI_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_PLUS_DI(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -74,6 +78,7 @@ def TA_PLUS_DI(
             return TA_RetCode.TA_BAD_PARAM
 
     # 计算回溯期
+    lookbackTotal: cython.Py_ssize_t = 0
     if optInTimePeriod > 1:
         lookbackTotal = optInTimePeriod + TA_GLOBALS_UNSTABLE_PERIOD(
             TA_FuncUnstId.TA_FUNC_UNST_PLUS_DI
@@ -91,15 +96,19 @@ def TA_PLUS_DI(
         outNBElement[0] = 0
         return TA_RetCode.TA_SUCCESS
 
-    outIdx = 0
+    outIdx: cython.Py_ssize_t = 0
     outBegIdx[0] = startIdx
 
     # 处理不需要平滑的情况
     if optInTimePeriod <= 1:
-        today = startIdx - 1
-        prevHigh = inHigh[today]
-        prevLow = inLow[today]
-        prevClose = inClose[today]
+        today: cython.Py_ssize_t = startIdx - 1
+        prevHigh: cython.double = inHigh[today]
+        prevLow: cython.double = inLow[today]
+        prevClose: cython.double = inClose[today]
+        diffP: cython.double = 0.0
+        diffM: cython.double = 0.0
+        tempReal: cython.double = 0.0
+        tempReal2: cython.double = 0.0
 
         while today < endIdx:
             today += 1
@@ -143,7 +152,7 @@ def TA_PLUS_DI(
     prevLow = inLow[today]
     prevClose = inClose[today]
 
-    i = optInTimePeriod - 1
+    i: cython.Py_ssize_t = optInTimePeriod - 1
     while i > 0:
         today += 1
         diffP = inHigh[today] - prevHigh  # 正增量

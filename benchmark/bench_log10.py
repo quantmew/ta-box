@@ -14,13 +14,13 @@ from talib import LOG10 as that_LOG10
 
 @bench
 def bench_this_log10():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_ret = this_LOG10(close)
 
 @bench
 def bench_that_log10():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_ret = that_LOG10(close)
 

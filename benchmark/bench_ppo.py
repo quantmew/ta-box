@@ -14,19 +14,19 @@ from talib import PPO as that_PPO
 
 @bench
 def bench_this_ppo():
-    for i in range(100, 5000):
-        for fast in [3, 5, 10]:
-            for slow in [10, 20, 30]:
-                close = np.random.random(i)
-                this_ret = this_PPO(close, fastperiod=fast, slowperiod=slow)
+    for i in range(100, 2000):
+        fast = 12
+        slow = 26
+        close = np.random.random(i)
+        this_ret = this_PPO(close, fastperiod=fast, slowperiod=slow)
 
 @bench
 def bench_that_ppo():
-    for i in range(100, 5000):
-        for fast in [3, 5, 10]:
-            for slow in [10, 20, 30]:
-                close = np.random.random(i)
-                that_ret = that_PPO(close, fastperiod=fast, slowperiod=slow)
+    for i in range(100, 2000):
+        fast = 12
+        slow = 26
+        close = np.random.random(i)
+        that_ret = that_PPO(close, fastperiod=fast, slowperiod=slow)
 
 if __name__ == '__main__':
     bench_this_ppo()

@@ -14,17 +14,17 @@ from talib import TSF as that_TSF
 
 @bench
 def bench_this_tsf():
-    for i in range(100, 5000):
-        for t in [5, 10, 20]:
-            close = np.random.random(i)
-            this_ret = this_TSF(close, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        close = np.random.random(i)
+        this_ret = this_TSF(close, timeperiod=t)
 
 @bench
 def bench_that_tsf():
-    for i in range(100, 5000):
-        for t in [5, 10, 20]:
-            close = np.random.random(i)
-            that_ret = that_TSF(close, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        close = np.random.random(i)
+        that_ret = that_TSF(close, timeperiod=t)
 
 if __name__ == '__main__':
     bench_this_tsf()

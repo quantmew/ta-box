@@ -9,14 +9,14 @@ from utils import bench
 
 @bench
 def bench_this_maxindex():
-    for i in range(100, 10000, 5):
+    for i in range(100, 2000):
         data = np.random.random(i)
         this_MAXINDEX(data, timeperiod=30)
 
 
 @bench
 def bench_that_maxindex():
-    for i in range(100, 10000, 5):
+    for i in range(100, 2000):
         data = np.random.random(i)
         that_MAXINDEX(data, timeperiod=30)
 

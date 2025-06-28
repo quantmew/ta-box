@@ -14,14 +14,14 @@ from talib import SUB as that_SUB
 
 @bench
 def bench_this_sub():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         x = np.random.random(i)
         y = np.random.random(i)
         this_ret = this_SUB(x, y)
 
 @bench
 def bench_that_sub():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         x = np.random.random(i)
         y = np.random.random(i)
         that_ret = that_SUB(x, y)

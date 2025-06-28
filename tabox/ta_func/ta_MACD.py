@@ -3,11 +3,13 @@ import numpy as np
 from .ta_utils import check_array, check_begidx1
 from ..retcode import TA_RetCode
 from .ta_EMA import TA_EMA, TA_EMA_Lookback, TA_INT_EMA
-from .ta_utility import PER_TO_K
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 
 if not cython.compiled:
     from .ta_utility import TA_INTEGER_DEFAULT
+
+if not cython.compiled:
+    from .ta_utility import PER_TO_K
 
 def TA_MACD_Lookback(
     optInFastPeriod: cython.int,
@@ -69,8 +71,8 @@ def TA_INT_MACD(
         optInFastPeriod = 12
         k2 = 0.15  # fix 12
 
-    lookbackSignal = TA_EMA_Lookback(optInSignalPeriod_2)
-    lookbackTotal = lookbackSignal + TA_EMA_Lookback(optInSlowPeriod)
+    lookbackSignal: cython.Py_ssize_t = TA_EMA_Lookback(optInSignalPeriod_2)
+    lookbackTotal: cython.Py_ssize_t = lookbackSignal + TA_EMA_Lookback(optInSlowPeriod)
 
     if startIdx < lookbackTotal:
         startIdx = lookbackTotal
@@ -140,9 +142,7 @@ def TA_INT_MACD(
     # Copy MACD line to output
     # for i in range(outNbElement1[0] - lookbackSignal):
     #     outMACD[i] = fastEMABuffer[i + lookbackSignal]
-    outMACD[: outNbElement1[0] - lookbackSignal] = fastEMABuffer[
-        lookbackSignal : outNbElement1[0]
-    ]
+    outMACD[: outNbElement1[0] - lookbackSignal] = fastEMABuffer[lookbackSignal : outNbElement1[0]]
 
     # Calculate signal line
     retCode = TA_INT_EMA(

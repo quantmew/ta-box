@@ -1,34 +1,34 @@
-cpdef bint TA_REAL_EQ(double x, double v, double ep) noexcept nogil
-cpdef bint TA_IS_ZERO(double v) noexcept nogil
-cpdef bint TA_IS_ZERO_OR_NEG(double v) noexcept nogil
+cdef bint TA_REAL_EQ(double x, double v, double ep) noexcept nogil
+cdef bint TA_IS_ZERO(double v) noexcept nogil
+cdef bint TA_IS_ZERO_OR_NEG(double v) noexcept nogil
 
 # Math Constants
 cdef double PI
 
 # Math Functions
-cpdef double std_floor(double x)
-cpdef double std_ceil(double x)
-cpdef double std_fabs(double x)
-cpdef double std_atan(double x)
-cpdef double std_cos(double x)
-cpdef double std_sin(double x)
-cpdef double std_sqrt(double x)
-cpdef double std_tanh(double x)
-cpdef double std_tan(double x)
-cpdef double std_sinh(double x)
-cpdef double std_log10(double x)
-cpdef double std_log(double x)
-cpdef double std_exp(double x)
-cpdef double std_cosh(double x)
-cpdef double std_asin(double x)
-cpdef double std_acos(double x)
+cdef double std_floor(double x)
+cdef double std_ceil(double x)
+cdef double std_fabs(double x)
+cdef double std_atan(double x)
+cdef double std_cos(double x)
+cdef double std_sin(double x)
+cdef double std_sqrt(double x)
+cdef double std_tanh(double x)
+cdef double std_tan(double x)
+cdef double std_sinh(double x)
+cdef double std_log10(double x)
+cdef double std_log(double x)
+cdef double std_exp(double x)
+cdef double std_cosh(double x)
+cdef double std_asin(double x)
+cdef double std_acos(double x)
 
 # Helper Functions
-cpdef double round_pos(double x)
-cpdef double round_neg(double x)
-cpdef double round_pos_2(double x)
-cpdef double round_neg_2(double x)
-cpdef double PER_TO_K(int per)
+cdef double round_pos(double x)
+cdef double round_neg(double x)
+cdef double round_pos_2(double x)
+cdef double round_neg_2(double x)
+cdef double PER_TO_K(int per)
 
 # K-Line Related Functions
 cpdef double TA_REALBODY(double inClose, double inOpen)

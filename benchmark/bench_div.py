@@ -14,14 +14,14 @@ from talib import DIV as that_DIV
 
 @bench
 def bench_this_div():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         x = np.random.random(i)
         y = np.random.random(i)
         this_ret = this_DIV(x, y)
 
 @bench
 def bench_that_div():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         x = np.random.random(i)
         y = np.random.random(i)
         that_ret = that_DIV(x, y)

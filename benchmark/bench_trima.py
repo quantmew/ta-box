@@ -14,13 +14,13 @@ from talib import TRIMA as that_TRIMA
 
 @bench
 def bench_this_trima():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_trima = this_TRIMA(close)
 
 @bench
 def bench_that_trima():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_trima = that_TRIMA(close)
 

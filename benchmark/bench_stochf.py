@@ -15,22 +15,22 @@ from talib import STOCHF as that_STOCHF
 @bench
 def bench_this_stochf():
     for i in range(100, 2000):
-        for fastk in [5, 10, 14]:
-            for fastd in [3, 5, 10]:
-                high = np.random.random(i)
-                low = np.random.random(i)
-                close = np.random.random(i)
-                this_ret = this_STOCHF(high, low, close, fastk_period=fastk, fastd_period=fastd)
+        fastk = 5
+        fastd = 3
+        high = np.random.random(i)
+        low = np.random.random(i)
+        close = np.random.random(i)
+        this_ret = this_STOCHF(high, low, close, fastk_period=fastk, fastd_period=fastd)
 
 @bench
 def bench_that_stochf():
     for i in range(100, 2000):
-        for fastk in [5, 10, 14]:
-            for fastd in [3, 5, 10]:
-                high = np.random.random(i)
-                low = np.random.random(i)
-                close = np.random.random(i)
-                that_ret = that_STOCHF(high, low, close, fastk_period=fastk, fastd_period=fastd)
+        fastk = 5
+        fastd = 3
+        high = np.random.random(i)
+        low = np.random.random(i)
+        close = np.random.random(i)
+        that_ret = that_STOCHF(high, low, close, fastk_period=fastk, fastd_period=fastd)
 
 if __name__ == '__main__':
     bench_this_stochf()

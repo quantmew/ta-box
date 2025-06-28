@@ -2,11 +2,15 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
-from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO, TA_MAType
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_MAType
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 from .ta_MA import TA_MA, MA
+
 if not cython.compiled:
     from .ta_utility import TA_INTEGER_DEFAULT
+
+if not cython.compiled:
+    from .ta_utility import TA_IS_ZERO
 
 def TA_APO_Lookback(optInFastPeriod: cython.int, 
                    optInSlowPeriod: cython.int, 
@@ -43,6 +47,7 @@ def TA_APO_Lookback(optInFastPeriod: cython.int,
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_INT_APO(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -88,9 +93,20 @@ def TA_INT_APO(
         
         if retCode == TA_RetCode.TA_SUCCESS:
             tempInteger = outBegIdx1[0] - outBegIdx2[0]
+            i: cython.Py_ssize_t = 0
+            j: cython.Py_ssize_t = 0
             if doPercentageOutput != 0:
                 # Calculate ((fast MA)-(slow MA))/(slow MA)*100
-                for i, j in zip(range(outNbElement1[0]), range(tempInteger, tempInteger + outNbElement1[0])):
+                i = 0
+                j = tempInteger
+                while i < outNbElement1[0]:
+                    tempReal = outReal[i]
+                    if not TA_IS_ZERO(tempReal):
+                        outReal[i] = ((tempBuffer[j] - tempReal) / tempReal) * 100.0
+                    else:
+                        outReal[i] = 0.0
+                    i += 1
+                    j += 1
                     tempReal = outReal[i]
                     if not TA_IS_ZERO(tempReal):
                         outReal[i] = ((tempBuffer[j] - tempReal) / tempReal) * 100.0
@@ -98,8 +114,12 @@ def TA_INT_APO(
                         outReal[i] = 0.0
             else:
                 # Calculate (fast MA)-(slow MA)
-                for i, j in zip(range(outNbElement1[0]), range(tempInteger, tempInteger + outNbElement1[0])):
+                i = 0
+                j = tempInteger
+                while i < outNbElement1[0]:
                     outReal[i] = tempBuffer[j] - outReal[i]
+                    i += 1
+                    j += 1
             
             outBegIdx[0] = outBegIdx1[0]
             outNBElement[0] = outNbElement1[0]

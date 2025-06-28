@@ -3,21 +3,21 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
-import talib
-from tabox import MINMAX
+from tabox import MINMAX as this_MINMAX
+from talib import MINMAX as that_MINMAX
 from utils import *
 
 
 def bench_this_minmax():
-    for i in range(100, 10000, 100):
+    for i in range(100, 2000):
         data = np.random.random(i)
-        MINMAX(data, timeperiod=30)
+        this_MINMAX(data, timeperiod=30)
 
 
 def bench_that_minmax():
-    for i in range(100, 10000, 100):
+    for i in range(100, 2000):
         data = np.random.random(i)
-        talib.MINMAX(data, timeperiod=30)
+        that_MINMAX(data, timeperiod=30)
 
 
 if __name__ == "__main__":

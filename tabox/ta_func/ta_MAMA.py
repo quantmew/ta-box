@@ -3,7 +3,7 @@ import numpy as np
 from .ta_utils import check_array, check_begidx1
 from ..retcode import TA_RetCode
 from ..settings import TA_FUNC_NO_RANGE_CHECK
-from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId, TA_IS_ZERO
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_FuncUnstId
 from .hilbert_transform import HilbertVariable
 
 if not cython.compiled:
@@ -49,6 +49,7 @@ def TA_MAMA_Lookback(optInFastLimit: cython.double, optInSlowLimit: cython.doubl
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_MAMA(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -170,10 +171,10 @@ def TA_MAMA(
     hilbertIdx: cython.int = 0
 
     # Hilbert transform variables (circular buffers of size 3)
-    detrender = HilbertVariable()
-    Q1 = HilbertVariable()
-    jI = HilbertVariable()
-    jQ = HilbertVariable()
+    detrender: HilbertVariable = HilbertVariable()
+    Q1: HilbertVariable = HilbertVariable()
+    jI: HilbertVariable = HilbertVariable()
+    jQ: HilbertVariable = HilbertVariable()
 
     # Constants for Hilbert transform
     a: cython.double = 0.0962
@@ -216,43 +217,43 @@ def TA_MAMA(
         if (today % 2) == 0:
             # Hilbert Transforms for even price bar
             do_even(detrender, smoothedValue, hilbertIdx, a, b, adjustedPrevPeriod)
-            do_even(Q1, detrender.value, hilbertIdx, a, b, adjustedPrevPeriod)
+            do_even(Q1, detrender.current_value, hilbertIdx, a, b, adjustedPrevPeriod)
             do_even(jI, I1ForEvenPrev3, hilbertIdx, a, b, adjustedPrevPeriod)
-            do_even(jQ, Q1.value, hilbertIdx, a, b, adjustedPrevPeriod)
+            do_even(jQ, Q1.current_value, hilbertIdx, a, b, adjustedPrevPeriod)
  
             hilbertIdx += 1
             if hilbertIdx == 3:
                 hilbertIdx = 0
 
-            Q2 = (0.2 * (Q1.value + jI.value)) + (0.8 * prevQ2)
-            I2 = (0.2 * (I1ForEvenPrev3 - jQ.value)) + (0.8 * prevI2)
+            Q2 = (0.2 * (Q1.current_value + jI.current_value)) + (0.8 * prevQ2)
+            I2 = (0.2 * (I1ForEvenPrev3 - jQ.current_value)) + (0.8 * prevI2)
 
             # Save detrender for odd logic
             I1ForOddPrev3 = I1ForOddPrev2
-            I1ForOddPrev2 = detrender.value
+            I1ForOddPrev2 = detrender.current_value
 
             # Calculate Alpha
             if I1ForEvenPrev3 != 0.0:
-                tempReal2 = atan(Q1.value / I1ForEvenPrev3) * rad2Deg
+                tempReal2 = atan(Q1.current_value / I1ForEvenPrev3) * rad2Deg
             else:
                 tempReal2 = 0.0
         else:
             # Hilbert Transforms for odd price bar
             do_odd(detrender, smoothedValue, hilbertIdx, a, b, adjustedPrevPeriod)
-            do_odd(Q1, detrender.value, hilbertIdx, a, b, adjustedPrevPeriod)
+            do_odd(Q1, detrender.current_value, hilbertIdx, a, b, adjustedPrevPeriod)
             do_odd(jI, I1ForOddPrev3, hilbertIdx, a, b, adjustedPrevPeriod)
-            do_odd(jQ, Q1.value, hilbertIdx, a, b, adjustedPrevPeriod)
+            do_odd(jQ, Q1.current_value, hilbertIdx, a, b, adjustedPrevPeriod)
 
-            Q2 = (0.2 * (Q1.value + jI.value)) + (0.8 * prevQ2)
-            I2 = (0.2 * (I1ForOddPrev3 - jQ.value)) + (0.8 * prevI2)
+            Q2 = (0.2 * (Q1.current_value + jI.current_value)) + (0.8 * prevQ2)
+            I2 = (0.2 * (I1ForOddPrev3 - jQ.current_value)) + (0.8 * prevI2)
 
             # Save detrender for even logic
             I1ForEvenPrev3 = I1ForEvenPrev2
-            I1ForEvenPrev2 = detrender.value
+            I1ForEvenPrev2 = detrender.current_value
 
             # Calculate Alpha
             if I1ForOddPrev3 != 0.0:
-                tempReal2 = atan(Q1.value / I1ForOddPrev3) * rad2Deg
+                tempReal2 = atan(Q1.current_value / I1ForOddPrev3) * rad2Deg
             else:
                 tempReal2 = 0.0
 

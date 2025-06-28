@@ -36,6 +36,7 @@ def TA_PLUS_DM_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_PLUS_DM(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -92,8 +93,15 @@ def TA_PLUS_DM(
         outNBElement[0] = 0
         return TA_RetCode.TA_SUCCESS
 
-    outIdx = 0
+    outIdx: cython.Py_ssize_t = 0
     outBegIdx[0] = startIdx
+
+    today: cython.Py_ssize_t = 0
+    prevHigh: cython.double = 0.0
+    prevLow: cython.double = 0.0
+    prevPlusDM: cython.double = 0.0
+    diffP: cython.double = 0.0
+    diffM: cython.double = 0.0
 
     # 处理不需要平滑的情况
     if optInTimePeriod <= 1:
@@ -121,7 +129,7 @@ def TA_PLUS_DM(
     today = startIdx - lookbackTotal
     prevHigh = inHigh[today]
     prevLow = inLow[today]
-    i = optInTimePeriod - 1
+    i: cython.Py_ssize_t = optInTimePeriod - 1
     while i > 0:
         today += 1
         diffP = inHigh[today] - prevHigh

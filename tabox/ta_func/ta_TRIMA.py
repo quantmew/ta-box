@@ -17,6 +17,7 @@ def TA_TRIMA_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_TRIMA(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -37,7 +38,7 @@ def TA_TRIMA(
     elif optInTimePeriod < 2 or optInTimePeriod > 100000:
         return TA_RetCode.TA_BAD_PARAM
 
-    lookbackTotal = optInTimePeriod - 1
+    lookbackTotal: cython.Py_ssize_t = optInTimePeriod - 1
 
     if startIdx < lookbackTotal:
         startIdx = lookbackTotal
@@ -47,7 +48,15 @@ def TA_TRIMA(
         outNBElement[0] = 0
         return TA_RetCode.TA_SUCCESS
 
-    outIdx = 0
+    outIdx: cython.Py_ssize_t = 0
+    i: cython.Py_ssize_t = 0
+    factor: cython.double = 0.0
+    trailingIdx: cython.Py_ssize_t = 0
+    middleIdx: cython.Py_ssize_t = 0
+    todayIdx: cython.Py_ssize_t = 0
+    numerator: cython.double = 0.0
+    numeratorSub: cython.double = 0.0
+    numeratorAdd: cython.double = 0.0
     if (optInTimePeriod % 2) == 1:
         # Logic for Odd period
         i = (optInTimePeriod >> 1)

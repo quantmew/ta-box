@@ -14,7 +14,7 @@ from talib import AVGPRICE as that_AVGPRICE
 
 @bench
 def bench_this_avgprice():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         open_ = np.random.random(i)
         high = np.random.random(i)
         low = np.random.random(i)
@@ -23,7 +23,7 @@ def bench_this_avgprice():
 
 @bench
 def bench_that_avgprice():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         open_ = np.random.random(i)
         high = np.random.random(i)
         low = np.random.random(i)

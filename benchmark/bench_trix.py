@@ -14,17 +14,17 @@ from talib import TRIX as that_TRIX
 
 @bench
 def bench_this_trix():
-    for i in range(100, 5000):
-        for t in [5, 10, 20]:
-            close = np.random.random(i)
-            this_ret = this_TRIX(close, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        close = np.random.random(i)
+        this_ret = this_TRIX(close, timeperiod=t)
 
 @bench
 def bench_that_trix():
-    for i in range(100, 5000):
-        for t in [5, 10, 20]:
-            close = np.random.random(i)
-            that_ret = that_TRIX(close, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        close = np.random.random(i)
+        that_ret = that_TRIX(close, timeperiod=t)
 
 if __name__ == '__main__':
     bench_this_trix()

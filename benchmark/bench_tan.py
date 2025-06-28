@@ -14,13 +14,13 @@ from talib import TAN as that_TAN
 
 @bench
 def bench_this_tan():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_ret = this_TAN(close)
 
 @bench
 def bench_that_tan():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_ret = that_TAN(close)
 

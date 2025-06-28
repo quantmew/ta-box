@@ -22,6 +22,7 @@ def TA_T3_Lookback(optInTimePeriod: cython.int, optInVFactor: cython.double) -> 
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_T3(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -48,7 +49,7 @@ def TA_T3(
     elif optInVFactor < 0 or optInVFactor > 1:
         return TA_RetCode.TA_BAD_PARAM
 
-    lookbackTotal = 6 * (optInTimePeriod - 1)
+    lookbackTotal: cython.Py_ssize_t = 6 * (optInTimePeriod - 1)
     if startIdx <= lookbackTotal:
         startIdx = lookbackTotal
 
@@ -58,18 +59,19 @@ def TA_T3(
         return TA_RetCode.TA_SUCCESS
 
     outBegIdx[0] = startIdx
-    today = startIdx - lookbackTotal
+    today: cython.Py_ssize_t = startIdx - lookbackTotal
 
-    k = 2.0 / (optInTimePeriod + 1.0)
-    one_minus_k = 1.0 - k
+    k: cython.double = 2.0 / (optInTimePeriod + 1.0)
+    one_minus_k: cython.double = 1.0 - k
 
     # Initialize e1
-    tempReal = inReal[today]
+    i: cython.Py_ssize_t = 0
+    tempReal: cython.double = inReal[today]
     today += 1
     for i in range(optInTimePeriod - 1):
         tempReal += inReal[today]
         today += 1
-    e1 = tempReal / optInTimePeriod
+    e1: cython.double = tempReal / optInTimePeriod
 
     # Initialize e2
     tempReal = e1
@@ -77,7 +79,7 @@ def TA_T3(
         e1 = (k * inReal[today]) + (one_minus_k * e1)
         tempReal += e1
         today += 1
-    e2 = tempReal / optInTimePeriod
+    e2: cython.double = tempReal / optInTimePeriod
 
     # Initialize e3
     tempReal = e2
@@ -86,7 +88,7 @@ def TA_T3(
         e2 = (k * e1) + (one_minus_k * e2)
         tempReal += e2
         today += 1
-    e3 = tempReal / optInTimePeriod
+    e3: cython.double = tempReal / optInTimePeriod
 
     # Initialize e4
     tempReal = e3
@@ -96,7 +98,7 @@ def TA_T3(
         e3 = (k * e2) + (one_minus_k * e3)
         tempReal += e3
         today += 1
-    e4 = tempReal / optInTimePeriod
+    e4: cython.double = tempReal / optInTimePeriod
 
     # Initialize e5
     tempReal = e4
@@ -105,9 +107,9 @@ def TA_T3(
         e2 = (k * e1) + (one_minus_k * e2)
         e3 = (k * e2) + (one_minus_k * e3)
         e4 = (k * e3) + (one_minus_k * e4)
-        tempReal += e4
+        tempReal += e4 # type: ignore
         today += 1
-    e5 = tempReal / optInTimePeriod
+    e5: cython.double = tempReal / optInTimePeriod
 
     # Initialize e6
     tempReal = e5
@@ -119,7 +121,7 @@ def TA_T3(
         e5 = (k * e4) + (one_minus_k * e5)
         tempReal += e5
         today += 1
-    e6 = tempReal / optInTimePeriod
+    e6: cython.double = tempReal / optInTimePeriod
 
     # Skip the unstable period
     while today <= startIdx:
@@ -139,7 +141,7 @@ def TA_T3(
     c4 = 1.0 + 3.0 * optInVFactor - c1 + 3.0 * tempReal
 
     # Write the first output
-    outIdx = 0
+    outIdx: cython.Py_ssize_t = 0
     outReal[outIdx] = c1 * e6 + c2 * e5 + c3 * e4 + c4 * e3
     outIdx += 1
 

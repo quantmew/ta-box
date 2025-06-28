@@ -1,4 +1,6 @@
 from .ta_utility cimport TA_INTEGER_DEFAULT
+from .ta_utility cimport TA_IS_ZERO
+
 cdef extern from "math.h":
     cpdef double fabs(double x)
 

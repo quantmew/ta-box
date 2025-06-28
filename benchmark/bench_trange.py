@@ -14,7 +14,7 @@ from talib import TRANGE as that_TRANGE
 
 @bench
 def bench_this_trange():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         close = np.random.random(i)
@@ -22,7 +22,7 @@ def bench_this_trange():
 
 @bench
 def bench_that_trange():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         close = np.random.random(i)

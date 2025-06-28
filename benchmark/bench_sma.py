@@ -14,17 +14,17 @@ from talib import SMA as that_SMA
 
 @bench
 def bench_this_sma():
-    for i in range(100, 5000):
-        for t in [2, 3, 5, 10, 30, 50]:
-            close = np.random.random(i)
-            this_ret = this_SMA(close, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        close = np.random.random(i)
+        this_ret = this_SMA(close, timeperiod=t)
 
 @bench
 def bench_that_sma():
-    for i in range(100, 5000):
-        for t in [2, 3, 5, 10, 30, 50]:
-            close = np.random.random(i)
-            that_ret = that_SMA(close, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        close = np.random.random(i)
+        that_ret = that_SMA(close, timeperiod=t)
 
 if __name__ == '__main__':
     bench_this_sma()

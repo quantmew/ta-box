@@ -14,14 +14,14 @@ from talib import SAR as that_SAR
 
 @bench
 def bench_this_sar():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         this_ret = this_SAR(high, low)
 
 @bench
 def bench_that_sar():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         that_ret = that_SAR(high, low)

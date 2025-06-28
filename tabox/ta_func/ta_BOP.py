@@ -3,7 +3,9 @@ import numpy as np
 from .ta_utils import check_array, check_begidx1
 from ..retcode import TA_RetCode
 from ..settings import TA_FUNC_NO_RANGE_CHECK
-from .ta_utility import TA_IS_ZERO_OR_NEG
+
+if not cython.compiled:
+    from .ta_utility import TA_IS_ZERO_OR_NEG
 
 def TA_BOP_Lookback() -> cython.Py_ssize_t:
     """

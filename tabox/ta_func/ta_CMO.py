@@ -2,11 +2,14 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
-from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_GLOBALS_COMPATIBILITY, TA_Compatibility, TA_FuncUnstId, TA_IS_ZERO
+from .ta_utility import TA_GLOBALS_UNSTABLE_PERIOD, TA_GLOBALS_COMPATIBILITY, TA_Compatibility, TA_FuncUnstId
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 
 if not cython.compiled:
     from .ta_utility import TA_INTEGER_DEFAULT
+
+if not cython.compiled:
+    from .ta_utility import TA_IS_ZERO
 
 def TA_CMO_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     """

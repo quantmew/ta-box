@@ -14,13 +14,13 @@ from talib import MACD as that_MACD
 
 @bench
 def bench_this_macd():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_macd, this_signal, this_hist = this_MACD(close)
 
 @bench
 def bench_that_macd():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_macd, that_signal, that_hist = that_MACD(close)
 

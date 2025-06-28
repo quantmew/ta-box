@@ -2,12 +2,18 @@ import cython
 import numpy as np
 from .ta_utils import check_array, check_timeperiod, check_begidx1
 from ..retcode import TA_RetCode
-from .ta_utility import TA_IS_ZERO_OR_NEG
 
 from ..settings import TA_FUNC_NO_RANGE_CHECK
 
 if not cython.compiled:
+    from math import sqrt
+
+if not cython.compiled:
     from .ta_utility import TA_INTEGER_DEFAULT
+
+def TA_IS_ZERO_OR_NEG(v: cython.double):
+    return v < 0.00000001
+
 
 def TA_CORREL_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
     """
@@ -28,6 +34,7 @@ def TA_CORREL_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:
 
 @cython.boundscheck(False)
 @cython.wraparound(False)
+@cython.cdivision(True)
 def TA_CORREL(
     startIdx: cython.Py_ssize_t,
     endIdx: cython.Py_ssize_t,
@@ -104,7 +111,7 @@ def TA_CORREL(
     trailingY: cython.double = inReal1[trailingIdx]
     tempReal: cython.double = (sumX2 - (sumX * sumX) / optInTimePeriod) * (sumY2 - (sumY * sumY) / optInTimePeriod)
     if not TA_IS_ZERO_OR_NEG(tempReal):
-        outReal[0] = (sumXY - (sumX * sumY) / optInTimePeriod) / np.sqrt(tempReal)
+        outReal[0] = (sumXY - (sumX * sumY) / optInTimePeriod) / sqrt(tempReal)
     else:
         outReal[0] = 0.0
 
@@ -137,7 +144,7 @@ def TA_CORREL(
         trailingY = inReal1[trailingIdx]
         tempReal = (sumX2 - (sumX * sumX) / optInTimePeriod) * (sumY2 - (sumY * sumY) / optInTimePeriod)
         if not TA_IS_ZERO_OR_NEG(tempReal):
-            outReal[outIdx] = (sumXY - (sumX * sumY) / optInTimePeriod) / np.sqrt(tempReal)
+            outReal[outIdx] = (sumXY - (sumX * sumY) / optInTimePeriod) / sqrt(tempReal)
         else:
             outReal[outIdx] = 0.0
 

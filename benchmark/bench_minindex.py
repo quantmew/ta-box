@@ -3,21 +3,21 @@ import os
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 import numpy as np
-import talib
-from tabox import MININDEX
+from tabox import MININDEX as this_MININDEX
+from talib import MININDEX as that_MININDEX
 from utils import *
 
 
 def bench_this_minindex():
-    for i in range(100, 10000, 100):
+    for i in range(100, 2000):
         data = np.random.random(i)
-        MININDEX(data, timeperiod=30)
+        this_MININDEX(data, timeperiod=30)
 
 
 def bench_that_minindex():
-    for i in range(100, 10000, 100):
+    for i in range(100, 2000):
         data = np.random.random(i)
-        talib.MININDEX(data, timeperiod=30)
+        that_MININDEX(data, timeperiod=30)
 
 
 if __name__ == "__main__":

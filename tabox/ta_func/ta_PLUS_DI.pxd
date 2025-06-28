@@ -1,4 +1,6 @@
 from .ta_utility cimport TA_INTEGER_DEFAULT
+from .ta_utility cimport TA_IS_ZERO
+
 cpdef Py_ssize_t TA_PLUS_DI_Lookback(int optInTimePeriod)
 cpdef int TA_PLUS_DI(
     Py_ssize_t startIdx,

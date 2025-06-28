@@ -8,13 +8,13 @@ from talib import MAMA as that_MAMA
 
 @bench
 def bench_this_mama():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_MAMA(close)
 
 @bench
 def bench_that_mama():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_MAMA(close)
 

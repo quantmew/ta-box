@@ -14,7 +14,7 @@ from talib import TYPPRICE as that_TYPPRICE
 
 @bench
 def bench_this_typprice():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         close = np.random.random(i)
@@ -22,7 +22,7 @@ def bench_this_typprice():
 
 @bench
 def bench_that_typprice():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         close = np.random.random(i)

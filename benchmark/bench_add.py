@@ -14,14 +14,14 @@ from talib import ADD as that_ADD
 
 @bench
 def bench_this_add():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         close1 = np.random.random(i)
         close2 = np.random.random(i)
         this_ret = this_ADD(close1, close2)
 
 @bench
 def bench_that_add():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         close1 = np.random.random(i)
         close2 = np.random.random(i)
         that_ret = that_ADD(close1, close2)

@@ -14,13 +14,13 @@ from talib import CEIL as that_CEIL
 
 @bench
 def bench_this_ceil():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_ret = this_CEIL(close)
 
 @bench
 def bench_that_ceil():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_ret = that_CEIL(close)
 

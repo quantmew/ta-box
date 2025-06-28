@@ -14,13 +14,13 @@ from talib import DEMA as that_DEMA
 
 @bench
 def bench_this_dema():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_dema = this_DEMA(close)
 
 @bench
 def bench_that_dema():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_dema = that_DEMA(close)
 

@@ -11,9 +11,8 @@ if not cython.compiled:
 if not cython.compiled:
     from math import fabs
 
-
-def TA_IS_ZERO(v: cython.double) -> cython.bint:
-    return ((-0.00000001) < v) and (v < 0.00000001)
+if not cython.compiled:
+    from .ta_utility import TA_IS_ZERO
 
 
 def round_pos(x: cython.double) -> cython.double:

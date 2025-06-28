@@ -14,13 +14,13 @@ from talib import ATAN as that_ATAN
 
 @bench
 def bench_this_atan():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_ret = this_ATAN(close)
 
 @bench
 def bench_that_atan():
-    for i in range(100, 10000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_ret = that_ATAN(close)
 

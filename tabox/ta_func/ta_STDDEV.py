@@ -7,7 +7,9 @@ from .ta_VAR import TA_INT_VAR
 if not cython.compiled:
     from math import sqrt
 
-
+@cython.boundscheck(False)
+@cython.wraparound(False)
+@cython.cdivision(True)
 def INT_stddev_using_precalc_ma(
     inReal: cython.double[::1],
     inMovAvg: cython.double[::1],
@@ -29,15 +31,17 @@ def INT_stddev_using_precalc_ma(
     Outputs:
         (any ndarray)
     """
-    # Initialize output array
-    output = outReal
-
     # Calculate start and end indices for the sum of squares
-    startSum = 1 + inMovAvgBegIdx - timePeriod
-    endSum = inMovAvgBegIdx
+    startSum: cython.Py_ssize_t = 1 + inMovAvgBegIdx - timePeriod
+    endSum: cython.Py_ssize_t = inMovAvgBegIdx
 
     # Initialize the sum of squares for the period
-    periodTotal2 = 0.0
+    periodTotal2: cython.double = 0.0
+
+    outIdx: cython.Py_ssize_t = 0
+    tempReal: cython.double = 0.0
+    tempReal_squared: cython.double = 0.0
+    meanValue2: cython.double = 0.0
 
     # Calculate the sum of squares for the initial period
     for outIdx in range(startSum, endSum):
@@ -67,15 +71,15 @@ def INT_stddev_using_precalc_ma(
 
         # Calculate the standard deviation
         if meanValue2 > 0:  # Avoid taking the square root of a negative number
-            output[outIdx] = np.sqrt(meanValue2)
+            outReal[outIdx] = sqrt(meanValue2)
         else:
-            output[outIdx] = 0.0
+            outReal[outIdx] = 0.0
 
         # Update indices
         startSum += 1
         endSum += 1
 
-    return output
+    return outReal
 
 
 def TA_STDDEV_Lookback(optInTimePeriod: cython.int) -> cython.Py_ssize_t:

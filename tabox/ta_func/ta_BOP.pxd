@@ -1,4 +1,6 @@
 from .ta_utility cimport TA_INTEGER_DEFAULT
+from .ta_utility cimport TA_IS_ZERO_OR_NEG
+
 cpdef Py_ssize_t TA_BOP_Lookback()
 cpdef int TA_BOP(
     Py_ssize_t startIdx,

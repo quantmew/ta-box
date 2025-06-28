@@ -98,15 +98,14 @@ def TA_INT_BBANDS(
         INT_stddev_using_precalc_ma(inReal, tempBuffer1, outBegIdx[0], outNBElement[0], optInTimePeriod, tempBuffer2)
     else:
         # Use standard STDDEV calculation
-        from .ta_STDDEV import TA_STDDEV
-        stddev_startIdx = outBegIdx[0]
-        stddev_endIdx = endIdx
-        stddev_optInTimePeriod = optInTimePeriod
-        stddev_optInNbDev = 1.0
+        stddev_startIdx: cython.Py_ssize_t = outBegIdx[0]
+        stddev_endIdx: cython.Py_ssize_t = endIdx
+        stddev_optInTimePeriod: cython.int = optInTimePeriod
+        stddev_optInNbDev: cython.double = 1.0
         
-        stddev_outBegIdx = np.zeros(1, dtype=np.intp)
-        stddev_outNBElement = np.zeros(1, dtype=np.intp)
-        stddev_outReal = np.full_like(inReal, 0.0)
+        stddev_outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+        stddev_outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
+        stddev_outReal: cython.double[::1] = np.full_like(inReal, 0.0)
         
         retCode = TA_STDDEV(
             stddev_startIdx, stddev_endIdx, inReal,

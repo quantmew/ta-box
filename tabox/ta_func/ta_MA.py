@@ -12,7 +12,10 @@ from .ta_KAMA import TA_KAMA, TA_KAMA_Lookback
 from .ta_MAMA import TA_MAMA, TA_MAMA_Lookback
 from .ta_T3 import TA_T3, TA_T3_Lookback
 
-def TA_MA_Lookback(optInTimePeriod: cython.int, optInMAType: cython.int) -> cython.Py_ssize_t:
+
+def TA_MA_Lookback(
+    optInTimePeriod: cython.int, optInMAType: cython.int
+) -> cython.Py_ssize_t:
     """TA_MA_Lookback(optInTimePeriod, optInMAType) -> Py_ssize_t
 
     Moving Average Lookback
@@ -51,6 +54,7 @@ def TA_MA_Lookback(optInTimePeriod: cython.int, optInMAType: cython.int) -> cyth
     else:
         return 0
 
+
 @cython.boundscheck(False)
 @cython.wraparound(False)
 def TA_MA(
@@ -88,26 +92,60 @@ def TA_MA(
         return TA_RetCode.TA_SUCCESS
 
     if optInMAType == 0:  # SMA
-        return TA_SMA(startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal)
+        return TA_SMA(
+            startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal
+        )
     elif optInMAType == 1:  # EMA
-        return TA_EMA(startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal)
+        return TA_EMA(
+            startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal
+        )
     elif optInMAType == 2:  # WMA
-        return TA_WMA(startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal)
+        return TA_WMA(
+            startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal
+        )
     elif optInMAType == 3:  # DEMA
-        return TA_DEMA(startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal)
+        return TA_DEMA(
+            startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal
+        )
     elif optInMAType == 4:  # TEMA
-        return TA_TEMA(startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal)
+        return TA_TEMA(
+            startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal
+        )
     elif optInMAType == 5:  # TRIMA
-        return TA_TRIMA(startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal)
+        return TA_TRIMA(
+            startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal
+        )
     elif optInMAType == 6:  # KAMA
-        return TA_KAMA(startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal)
+        return TA_KAMA(
+            startIdx, endIdx, inReal, optInTimePeriod, outBegIdx, outNBElement, outReal
+        )
     elif optInMAType == 7:  # MAMA
         dummyBuffer = np.zeros(endIdx - startIdx + 1, dtype=np.float64)
-        return TA_MAMA(startIdx, endIdx, inReal, 0.5, 0.05, outBegIdx, outNBElement, outReal, dummyBuffer)
+        return TA_MAMA(
+            startIdx,
+            endIdx,
+            inReal,
+            0.5,
+            0.05,
+            outBegIdx,
+            outNBElement,
+            outReal,
+            dummyBuffer,
+        )
     elif optInMAType == 8:  # T3
-        return TA_T3(startIdx, endIdx, inReal, optInTimePeriod, 0.7, outBegIdx, outNBElement, outReal)
+        return TA_T3(
+            startIdx,
+            endIdx,
+            inReal,
+            optInTimePeriod,
+            0.7,
+            outBegIdx,
+            outNBElement,
+            outReal,
+        )
     else:
         return TA_RetCode.TA_BAD_PARAM
+
 
 def MA(real: np.ndarray, timeperiod: int = 30, matype: int = 0):
     """MA(real, timeperiod=30, matype=0)
@@ -142,6 +180,14 @@ def MA(real: np.ndarray, timeperiod: int = 30, matype: int = 0):
     outBegIdx: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
     outNBElement: cython.Py_ssize_t[::1] = np.zeros(1, dtype=np.intp)
 
-    TA_MA(0, endIdx, real[startIdx:], timeperiod, matype,
-          outBegIdx, outNBElement, outReal[lookback:])
+    TA_MA(
+        0,
+        endIdx,
+        real[startIdx:],
+        timeperiod,
+        matype,
+        outBegIdx,
+        outNBElement,
+        outReal[lookback:],
+    )
     return outReal

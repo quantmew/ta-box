@@ -8,13 +8,13 @@ from talib import T3 as that_T3
 
 @bench
 def bench_this_t3():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_T3(close)
 
 @bench
 def bench_that_t3():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_T3(close)
 

@@ -14,13 +14,13 @@ from talib import TEMA as that_TEMA
 
 @bench
 def bench_this_tema():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_tema = this_TEMA(close)
 
 @bench
 def bench_that_tema():
-    for i in range(100, 1000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_tema = that_TEMA(close)
 

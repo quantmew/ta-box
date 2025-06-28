@@ -14,19 +14,19 @@ from talib import CORREL as that_CORREL
 
 @bench
 def bench_this_correl():
-    for i in range(100, 5000):
-        for t in [5, 10, 20]:
-            x = np.random.random(i)
-            y = np.random.random(i)
-            this_ret = this_CORREL(x, y, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        x = np.random.random(i)
+        y = np.random.random(i)
+        this_ret = this_CORREL(x, y, timeperiod=t)
 
 @bench
 def bench_that_correl():
-    for i in range(100, 5000):
-        for t in [5, 10, 20]:
-            x = np.random.random(i)
-            y = np.random.random(i)
-            that_ret = that_CORREL(x, y, timeperiod=t)
+    for i in range(100, 2000):
+        t = 14
+        x = np.random.random(i)
+        y = np.random.random(i)
+        that_ret = that_CORREL(x, y, timeperiod=t)
 
 if __name__ == '__main__':
     bench_this_correl()

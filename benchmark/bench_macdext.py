@@ -14,13 +14,13 @@ from talib import MACDEXT as that_MACDEXT
 
 @bench
 def bench_this_macdext():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         this_ret = this_MACDEXT(close)
 
 @bench
 def bench_that_macdext():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         that_ret = that_MACDEXT(close)
 

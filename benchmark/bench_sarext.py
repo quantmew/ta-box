@@ -14,14 +14,14 @@ from talib import SAREXT as that_SAREXT
 
 @bench
 def bench_this_sarext():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         this_ret = this_SAREXT(high, low)
 
 @bench
 def bench_that_sarext():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         high = np.random.random(i)
         low = np.random.random(i)
         that_ret = that_SAREXT(high, low)

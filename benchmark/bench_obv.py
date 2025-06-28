@@ -14,14 +14,14 @@ from talib import OBV as that_OBV
 
 @bench
 def bench_this_obv():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         volume = np.random.random(i)
         this_ret = this_OBV(close, volume)
 
 @bench
 def bench_that_obv():
-    for i in range(100, 5000):
+    for i in range(100, 2000):
         close = np.random.random(i)
         volume = np.random.random(i)
         that_ret = that_OBV(close, volume)
