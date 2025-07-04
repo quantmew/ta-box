@@ -188,7 +188,7 @@ print(ema)
   
   - EMA✓
   
-  - HT_TRENDLINE
+  - HT_TRENDLINE✓
   
   - KAMA✓
   
