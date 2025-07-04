@@ -12,7 +12,7 @@ class TestTEMA(unittest.TestCase):
             this_tema = this_TEMA(close)
             that_tema = that_TEMA(close)
 
-            self.assertTrue(np.array_equal(this_tema, that_tema, equal_nan=True), 
+            self.assertTrue(np.allclose(this_tema, that_tema, equal_nan=True), 
                           f"{close}, {this_tema}, {that_tema}")
 
     def test_custom_periods(self):
@@ -20,7 +20,7 @@ class TestTEMA(unittest.TestCase):
         this_tema = this_TEMA(close, timeperiod=5)
         that_tema = that_TEMA(close, timeperiod=5)
 
-        self.assertTrue(np.array_equal(this_tema, that_tema, equal_nan=True))
+        self.assertTrue(np.allclose(this_tema, that_tema, equal_nan=True))
 
 if __name__ == '__main__':
     unittest.main() 

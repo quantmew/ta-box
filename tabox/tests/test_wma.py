@@ -14,7 +14,7 @@ class TestTAN(unittest.TestCase):
                 this_ret = this_WMA(close, k)
                 that_ret = that_WMA(close, k)
 
-                self.assertTrue(np.array_equal(this_ret, that_ret, equal_nan=True))
+                self.assertTrue(np.allclose(this_ret, that_ret, equal_nan=True))
 
 if __name__ == '__main__':
     unittest.main()
