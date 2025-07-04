@@ -61,6 +61,7 @@ from .ta_func.ta_MIDPRICE import TA_MIDPRICE, MIDPRICE
 from .ta_func.ta_MAVP import TA_MAVP, MAVP
 from .ta_func.ta_SAR import TA_SAR, SAR
 from .ta_func.ta_SAREXT import TA_SAREXT, SAREXT
+from .ta_func.ta_HT_TRENDLINE import TA_HT_TRENDLINE, HT_TRENDLINE
 
 # Momentum Indicators
 from .ta_func.ta_MACD import TA_MACD, MACD
