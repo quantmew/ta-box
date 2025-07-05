@@ -1,4 +1,9 @@
 from .ta_utility cimport TA_INTEGER_DEFAULT
+cdef extern from "math.h":
+    double fabs(double x)
+    double fmin(double x, double y)
+
+
 cdef bint TA_IS_ZERO(double v) noexcept nogil
 
 cdef extern from *:
@@ -8,7 +13,7 @@ cdef extern from *:
         double tempLT = ((double *) inLow.data)[day];                  \
         double tempHT = ((double *) inHigh.data)[day];                 \
         double tempCY = ((double *) inClose.data)[day-1];              \
-        trueLow = min( tempLT, tempCY );                               \
+        trueLow = fmin( tempLT, tempCY );                               \
         closeMinusTrueLow = ((double *) inClose.data)[day] - trueLow;  \
         trueRange = tempHT - tempLT;                                   \
         double tempDouble = fabs( tempCY - tempHT );                   \

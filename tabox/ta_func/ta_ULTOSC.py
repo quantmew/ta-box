@@ -8,6 +8,8 @@ from .ta_SMA import TA_SMA, TA_SMA_Lookback
 
 if not cython.compiled:
     from .ta_utility import TA_INTEGER_DEFAULT
+    from math import fabs
+    fmin = min
 
 def TA_IS_ZERO(v: cython.double) -> cython.bint:
     return ((-0.00000001) < v) and (v < 0.00000001)
