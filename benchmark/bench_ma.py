@@ -16,15 +16,17 @@ from talib import MA as that_MA
 def bench_this_ma():
     for i in range(100, 2000):
         t = 14
+        matype = 0  # SMA
         close = np.random.random(i)
-        this_ret = this_MA(close, timeperiod=t)
+        this_ret = this_MA(close, timeperiod=t, matype=matype)
 
 @bench
 def bench_that_ma():
     for i in range(100, 2000):
         t = 14
+        matype = 0  # SMA
         close = np.random.random(i)
-        that_ret = that_MA(close, timeperiod=t)
+        that_ret = that_MA(close, timeperiod=t, matype=matype)
 
 if __name__ == '__main__':
     bench_this_ma()
